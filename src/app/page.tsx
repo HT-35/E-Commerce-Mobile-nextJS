@@ -1,5 +1,3 @@
-import * as React from 'react';
-
 import Image from 'next/image';
 
 import { StarFilledIcon, StarIcon } from '@radix-ui/react-icons';
@@ -7,14 +5,15 @@ import Navigation from '@/components/navigation/Navigation';
 
 import ResponsiveBanner from '@/components/banner/BannerHome';
 import Title from '@/components/title/Title';
+import Link from 'next/link';
 
 const brandArr = [
-  { brand: 'Apple' },
-  { brand: 'Samsung' },
-  { brand: 'Xiaomi' },
-  { brand: 'OPPO' },
-  { brand: 'Nokia' },
-  { brand: 'Xem tất cả' },
+  { brand: 'Apple', href: '/Apple' },
+  { brand: 'Samsung', href: '/Samsung' },
+  { brand: 'Xiaomi', href: '/Xiaomi' },
+  { brand: 'OPPO', href: '/OPPO' },
+  { brand: 'Nokia', href: '/Nokia' },
+  { brand: 'Xem tất cả', href: '/product' },
 ];
 
 const product = [
@@ -109,24 +108,29 @@ export default function Home() {
       {/* SmartPhone Nổi Bật Nhất */}
       <div className="my-6">
         <div className="title flex max-lg:justify-between  max-lg:items-center">
-          <h1 className="font-bold text-xl px-2 py-1 lg:basis-2/5     max-lg:text-base">
+          <div className="font-bold text-xl px-2 py-1 lg:basis-2/5     max-lg:text-base">
             <Title> ĐIỆN THOẠI NỔI BẬT NHẤT</Title>
-          </h1>
+          </div>
           <div className="brand  flex justify-between items-center basis-3/5 max-lg:hidden ">
             {brandArr.map((item, index) => {
               return (
-                <span
-                  className="px-2 py-1 border-2 rounded-lg bg-[#F3F4F6] dark:text-black"
+                <Link
                   key={index}
+                  href={item.href}
+                  className="px-2 py-1 border-2 rounded-lg bg-[#F3F4F6] dark:text-black"
                 >
                   {item.brand}
-                </span>
+                </Link>
               );
             })}
           </div>
-          <div className="max-lg:text-xs text-blue-500 underline lg:hidden">
+
+          <Link
+            href={'/product'}
+            className="max-lg:text-xs text-blue-500 underline lg:hidden"
+          >
             Xem Tất Cả
-          </div>
+          </Link>
         </div>
 
         <div className="product grid grid-cols-4  w-full h-full gap-8 my-4   max-lg:grid-cols-2  max-lg:gap-2">

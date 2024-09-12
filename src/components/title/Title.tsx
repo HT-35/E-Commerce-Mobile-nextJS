@@ -1,14 +1,9 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-import React from 'react';
-
 const Title = ({
   children,
   className,
-  ...props
 }: {
   children: string;
   className?: string;
-  props?: React.ReactNode;
 }) => {
   return (
     <h1

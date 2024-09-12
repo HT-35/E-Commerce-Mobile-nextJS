@@ -1,8 +1,11 @@
 /* eslint-disable react/prop-types */
 'use client';
+import { SelectForm } from '@/app/product/Filter';
 import Navigation from '@/components/navigation/Navigation';
-import { NavigationFilter } from '@/components/navigationFilter/NavigationFilter';
 import Title from '@/components/title/Title';
+import { Button } from '@/components/ui/button';
+import { StarFilledIcon, StarIcon } from '@radix-ui/react-icons';
+import Image from 'next/image';
 
 const subBanner = [
   {
@@ -64,43 +67,78 @@ const ListBrand = [
   },
 ];
 
-const filterPrice: { lable: string }[] = [
+const product = [
   {
-    lable: 'dưới 2 tr',
+    img: 'https://clickbuy.com.vn/uploads/pro/thumbs/galaxy-z-flip-6_207748.png?v=webp',
+    title: 'Samsung Galaxy Z Flip6 (5G) 12GB 256GB Chính Hãng',
+    price: '21.990.000',
   },
   {
-    lable: 'từ 2 - 4 tr',
+    img: 'https://clickbuy.com.vn/uploads/images/2023/09/iphone-15-pro-max-titan-1.png?v=webp',
+    title: 'iPhone 15 Pro Max 256GB VN/A ',
+    price: '28.490.000 ',
   },
   {
-    lable: 'từ 4 - 8 tr',
+    img: 'https://clickbuy.com.vn/uploads/pro/thumbs/xiaomi-14-ultra-chinh-hang_197730.jpeg?v=webp',
+    title: 'Xiaomi 14 Ultra 16GB 512GB Chính Hãng',
+    price: '26.990.000',
   },
-  {
-    lable: 'từ 8 - 12 tr',
-  },
-];
 
-const filterRam: { lable: string }[] = [
   {
-    lable: '8 GB',
+    img: 'https://clickbuy.com.vn/uploads/images/2022/03/ipad-5-4.jpg?v=webp',
+    title: 'iPad Air 5 (2022) Wifi 64GB',
+    price: '14.390.000',
   },
   {
-    lable: '16 GB',
+    img: 'https://clickbuy.com.vn/uploads/pro/thumbs/galaxy-z-flip-6_207748.png?v=webp',
+    title: 'Samsung Galaxy Z Flip6 (5G) 12GB 256GB Chính Hãng',
+    price: '21.990.000',
   },
   {
-    lable: '32 GB',
+    img: 'https://clickbuy.com.vn/uploads/images/2023/09/iphone-15-pro-max-titan-1.png?v=webp',
+    title: 'iPhone 15 Pro Max 256GB VN/A ',
+    price: '28.490.000 ',
+  },
+  {
+    img: 'https://clickbuy.com.vn/uploads/pro/thumbs/xiaomi-14-ultra-chinh-hang_197730.jpeg?v=webp',
+    title: 'Xiaomi 14 Ultra 16GB 512GB Chính Hãng',
+    price: '26.990.000',
+  },
+  {
+    img: 'https://clickbuy.com.vn/uploads/images/2022/03/ipad-5-4.jpg?v=webp',
+    title: 'iPad Air 5 (2022) Wifi 64GB',
+    price: '14.390.000',
+  },
+  {
+    img: 'https://clickbuy.com.vn/uploads/pro/thumbs/galaxy-z-flip-6_207748.png?v=webp',
+    title: 'Samsung Galaxy Z Flip6 (5G) 12GB 256GB Chính Hãng',
+    price: '21.990.000',
+  },
+  {
+    img: 'https://clickbuy.com.vn/uploads/images/2023/09/iphone-15-pro-max-titan-1.png?v=webp',
+    title: 'iPhone 15 Pro Max 256GB VN/A ',
+    price: '28.490.000 ',
+  },
+  {
+    img: 'https://clickbuy.com.vn/uploads/pro/thumbs/xiaomi-14-ultra-chinh-hang_197730.jpeg?v=webp',
+    title: 'Xiaomi 14 Ultra 16GB 512GB Chính Hãng',
+    price: '26.990.000',
+  },
+  {
+    img: 'https://clickbuy.com.vn/uploads/images/2022/03/ipad-5-4.jpg?v=webp',
+    title: 'iPad Air 5 (2022) Wifi 64GB',
+    price: '14.390.000',
   },
 ];
 
 const ProductPage = () => {
   return (
     <div className="min-h-[10000px] overflow-x-hidden select-none">
-      <div className="navigation">
-        <Navigation
-          menu={false}
-          Banner={Banner}
-          subBanner={subBanner}
-        ></Navigation>
-      </div>
+      <Navigation
+        menu={false}
+        Banner={Banner}
+        subBanner={subBanner}
+      ></Navigation>
 
       <Title className="mt-5 mb-2 ">Hãng Điện Thoại</Title>
 
@@ -121,21 +159,85 @@ const ProductPage = () => {
         })}
       </div>
 
-      {/*<div className="flex justify-start items-center gap-3 my-4">
+      <div className="flex justify-start items-center  my-4   ">
         <div className="">
-          <Title className=" ">Bộ Lọc</Title>
+          <Title className=" lg:min-w-32">Bộ Lọc</Title>
         </div>
-        <div className="filter price">
-          <NavigationFilter
-            filterData={filterPrice}
-            lable="Price"
-          ></NavigationFilter>
-          <NavigationFilter
-            filterData={filterRam}
-            lable="Ram"
-          ></NavigationFilter>
+        <div className=" w-full">
+          <SelectForm></SelectForm>
         </div>
-      </div>*/}
+      </div>
+
+      <div className="flex justify-start items-center gap-3 my-4">
+        <div className="min-w-32">
+          <Title className=" ">Sắp Xếp</Title>
+        </div>
+        <div className="filter price flex justify-between items-center gap-4">
+          <Button className="px-4 py-1 border-2  rounded-3xl bg-transparent text-black hover:bg-[#F3F4F6]">
+            Giá Từ Cao Đến Thấp
+          </Button>
+          <Button className="px-4 py-1 border-2  rounded-3xl bg-transparent text-black  hover:bg-[#F3F4F6]">
+            Giá Từ Thấp Đến Cao
+          </Button>
+        </div>
+      </div>
+
+      {/* Product */}
+
+      <div className="product grid grid-cols-4  w-full h-full gap-8 my-4   max-lg:grid-cols-2  max-lg:gap-2">
+        {product.map((item, index) => {
+          return (
+            <div key={index} className="product shadow-lg rounded-lg ">
+              <div className="img    flex items-center justify-center ">
+                <Image
+                  src={item.img}
+                  alt="smart-phone"
+                  width="0"
+                  height="0"
+                  sizes="100vw"
+                  className="w-full h-autorounded-lg"
+                  priority
+                ></Image>
+              </div>
+              <div className="title px-4 py-2  text-xs">
+                <div className="title font-semibold min-h-14  text-xs">
+                  {item.title}
+                </div>
+                <div className="price font-semibold text-red-600  min-h-8">
+                  {item.price} đ
+                </div>
+                <div className="text-[10px] p-2 border-2 rounded-lg bg-[#F3F4F6] ">
+                  Giảm đến 500K khi trả góp thẻ tín dụng Sacombank qua cổng MPOS
+                </div>
+
+                <div className="like flex justify-between  my-2 mt-3  text-xs">
+                  <div className="start my-2 text-lg flex ">
+                    {Array(5)
+                      .fill(null)
+                      .map((_, index) => (
+                        <StarFilledIcon
+                          key={index}
+                          color="#F59E0B"
+                          //width="18px"
+                          //height="18px"
+                          className=" w-[18px] h-[18px] max-lg:w-[10px] "
+                        ></StarFilledIcon>
+                      ))}
+                  </div>
+
+                  <div className=" flex items-center gap-1 cursor-pointer">
+                    <span className="text-[12px]">Yêu Thích </span>
+                    <StarIcon
+                      color="#F59E0B"
+                      className=" w-[18px] h-[18px] max-lg:w-[10px] "
+                    ></StarIcon>
+                  </div>
+                </div>
+              </div>
+            </div>
+          );
+        })}
+      </div>
     </div>
   );
 };
