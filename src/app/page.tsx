@@ -136,7 +136,10 @@ export default function Home() {
         <div className="product grid grid-cols-4  w-full h-full gap-8 my-4   max-lg:grid-cols-2  max-lg:gap-2">
           {product.map((item, index) => {
             return (
-              <div key={index} className="product shadow-lg rounded-lg ">
+              <div
+                key={index}
+                className="product shadow-lg rounded-lg bg-white pt-1"
+              >
                 <div className="img    flex items-center justify-center ">
                   <Image
                     src={item.img}
@@ -148,6 +151,7 @@ export default function Home() {
                     priority
                   ></Image>
                 </div>
+
                 <div className="title px-4 py-2  text-xs">
                   <div className="title font-semibold min-h-14  text-xs">
                     {item.title}

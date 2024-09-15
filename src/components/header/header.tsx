@@ -62,9 +62,11 @@ const Header = () => {
             </div>
           </Link>
 
-          <div className="cart flex justify-between items-center gap-2 hover:bg-white hover:bg-opacity-50 p-2 rounded-md cursor-pointer">
-            <CartIcon /> Giỏ Hàng
-          </div>
+          <Link href={'/cart'}>
+            <div className="cart flex justify-between items-center gap-2 hover:bg-white hover:bg-opacity-50 p-2 rounded-md cursor-pointer">
+              <CartIcon /> Giỏ Hàng
+            </div>
+          </Link>
 
           <div className="account flex justify-between items-center gap-2 hover:bg-white hover:bg-opacity-50 p-2 rounded-md cursor-pointer">
             <UserIcon></UserIcon>

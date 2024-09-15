@@ -250,7 +250,7 @@ const ProductPage = () => {
       <div className="product grid grid-cols-4  w-full h-full gap-8 my-4   max-lg:grid-cols-2  max-lg:gap-2">
         {product.map((item, index) => {
           return (
-            <div key={index} className="product  rounded-lg ">
+            <div key={index} className="product  rounded-lg bg-white pt-1">
               <Link href={'/product/iphone-11'}>
                 <div className="img    flex items-center justify-center ">
                   <Image

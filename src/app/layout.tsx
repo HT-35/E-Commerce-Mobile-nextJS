@@ -22,7 +22,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={` overflow-x-hidden ${roboto.className}`}>
+      <body className={`bg-[#F4F6F8] overflow-x-hidden ${roboto.className}`}>
         <ThemeProvider
           attribute="class"
           defaultTheme="system"
