@@ -1,8 +1,8 @@
-"use client";
+'use client';
 
-import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
-import { ArrowLeftIcon, TrashIcon } from "@radix-ui/react-icons";
+import { Button } from '@/components/ui/button';
+import { Checkbox } from '@/components/ui/checkbox';
+import { ArrowLeftIcon, TrashIcon } from '@radix-ui/react-icons';
 
 const Cart = () => {
   return (
