@@ -21,11 +21,13 @@ import Image from 'next/image';
 const Slider = ({
   menu = true,
   Banner,
+  witdh,
 }: {
   menu?: boolean;
   Banner: {
     index: number;
     url: string;
+    witdh?: string;
   }[];
 }) => {
   return (
@@ -42,9 +44,11 @@ const Slider = ({
         {Banner.map((item, index) => {
           return (
             <CarouselItem key={index}>
+              {/*      ${witdh ? '' : 'lg:w-2/4 lg:h-[380px]'} */}
               <Card
                 className={`flex w-full lg:h-[480px]   items-center justify-center rounded-lg relative  lg:max-h-[480px]
 									${menu ? 'lg:h-[480px]' : 'lg:h-[230px]'}
+             
 									`}
               >
                 <Image

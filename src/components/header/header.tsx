@@ -2,23 +2,18 @@
 
 import React, { useState, useEffect } from 'react';
 import { Input } from '@/components/ui/input';
-import {
-  CartIcon,
-  ContactIcon,
-  GuaranteeIcon,
-  IconSearch,
-  LocationIcon,
-  UserIcon,
-} from '@/components/icons';
+import { CartIcon, IconSearch, UserIcon } from '@/components/icons';
+import { ListBulletIcon } from '@radix-ui/react-icons';
 import ButtonMenu from '@/components/ui/ButtonMenu';
 import Link from 'next/link';
 
 const Header = () => {
-  useEffect(() => {
-    if (typeof window === 'undefined') return; // Chỉ chạy trên client-side
-  }, []);
+  const [isMounted, setIsMounted] = useState(false);
+  const [isLargeScreen, setIsLargeScreen] = useState<boolean>(false); // useState luôn được gọi
 
-  const [isLargeScreen, setIsLargeScreen] = useState<boolean>(false);
+  useEffect(() => {
+    setIsMounted(true); // Chỉ định rằng component đã mount
+  }, []);
 
   useEffect(() => {
     const mediaQuery = window.matchMedia('(min-width: 1024px)');
@@ -37,7 +32,9 @@ const Header = () => {
     return () => {
       mediaQuery.removeEventListener('change', handleResize);
     };
-  }, []);
+  }, []); // useEffect vẫn được gọi mà không phụ thuộc vào isMounted
+
+  if (!isMounted) return null; // Chỉ render sau khi component đã mount
 
   return (
     <>
@@ -55,30 +52,20 @@ const Header = () => {
               <IconSearch></IconSearch>
             </div>
           </div>
+
+          <Link href={'/product'}>
+            <div className="guarantee flex justify-between items-center gap-2 hover:bg-white hover:bg-opacity-50 p-2 rounded-md cursor-pointer">
+              <ListBulletIcon className="w-7 h-7"></ListBulletIcon>
+              <div>
+                <div className="">Sản Phẩm</div>
+              </div>
+            </div>
+          </Link>
+
           <div className="cart flex justify-between items-center gap-2 hover:bg-white hover:bg-opacity-50 p-2 rounded-md cursor-pointer">
             <CartIcon /> Giỏ Hàng
           </div>
-          <div className="contact flex justify-between items-center gap-2 hover:bg-white hover:bg-opacity-50 p-2 rounded-md cursor-pointer">
-            <ContactIcon></ContactIcon>
-            <div>
-              <div className="">Gọi Mua Hàng</div>
-              <div className="">0343.128.733</div>
-            </div>
-          </div>
-          <div className="guarantee flex justify-between items-center gap-2 hover:bg-white hover:bg-opacity-50 p-2 rounded-md cursor-pointer">
-            <GuaranteeIcon></GuaranteeIcon>
-            <div>
-              <div className="">Chính Sách</div>
-              <div className=""> Bảo Hành</div>
-            </div>
-          </div>
-          <div className="listStore flex justify-between items-center gap-2 hover:bg-white hover:bg-opacity-50 p-2 rounded-md cursor-pointer">
-            <LocationIcon></LocationIcon>
-            <div className="">
-              <div>Hệ Thống</div>
-              <div>Cửa Hàng</div>
-            </div>
-          </div>
+
           <div className="account flex justify-between items-center gap-2 hover:bg-white hover:bg-opacity-50 p-2 rounded-md cursor-pointer">
             <UserIcon></UserIcon>
             <div>
@@ -90,7 +77,9 @@ const Header = () => {
       ) : (
         <div className="lg:hidden py-1 text-white text-xs fixed w-full bg-[#DD0000] px-2 font-medium mb-20 z-50">
           <div className="flex justify-between items-center">
-            <div className="logo text-sm cursor-pointer">HTS Store</div>
+            <Link href={'/'}>
+              <div className="logo text-sm cursor-pointer">HTS Store</div>
+            </Link>
             <div className="cart flex justify-between items-center gap-2 hover:bg-white hover:bg-opacity-50 p-2 rounded-md cursor-pointer text-xs">
               <CartIcon /> Giỏ Hàng
             </div>

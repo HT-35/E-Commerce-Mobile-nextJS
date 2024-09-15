@@ -6,6 +6,19 @@ import Title from '@/components/title/Title';
 import { Button } from '@/components/ui/button';
 import { StarFilledIcon, StarIcon } from '@radix-ui/react-icons';
 import Image from 'next/image';
+import Link from 'next/link';
+
+///
+import { Swiper, SwiperSlide } from 'swiper/react';
+
+// Import Swiper styles
+import 'swiper/css';
+import 'swiper/css/pagination';
+
+import './styles.css';
+
+// import required modules
+import { Scrollbar } from 'swiper/modules';
 
 const subBanner = [
   {
@@ -33,6 +46,38 @@ const Banner = [
 ];
 
 const ListBrand = [
+  {
+    brand: 'Samsung',
+    img: 'https://cdnv2.tgdd.vn/mwg-static/common/Category/31/ce/31ce9dafafac121361ee7cbd313ae76b.png',
+  },
+  {
+    brand: 'iPhone',
+    img: 'https://cdnv2.tgdd.vn/mwg-static/common/Category/92/e5/92e5003382a0bada9a770618b6c6099b.png',
+  },
+  {
+    brand: 'Xiaomi',
+    img: 'https://cdnv2.tgdd.vn/mwg-static/common/Category/e6/02/e602583e5e16acedfe54ab41b08b5d4f.png',
+  },
+  {
+    brand: 'Oppo',
+    img: 'https://cdnv2.tgdd.vn/mwg-static/common/Category/b6/26/b62674c18cc7ec4de1de3670812af13d.png',
+  },
+  {
+    brand: 'Samsung',
+    img: 'https://cdnv2.tgdd.vn/mwg-static/common/Category/31/ce/31ce9dafafac121361ee7cbd313ae76b.png',
+  },
+  {
+    brand: 'iPhone',
+    img: 'https://cdnv2.tgdd.vn/mwg-static/common/Category/92/e5/92e5003382a0bada9a770618b6c6099b.png',
+  },
+  {
+    brand: 'Xiaomi',
+    img: 'https://cdnv2.tgdd.vn/mwg-static/common/Category/e6/02/e602583e5e16acedfe54ab41b08b5d4f.png',
+  },
+  {
+    brand: 'Oppo',
+    img: 'https://cdnv2.tgdd.vn/mwg-static/common/Category/b6/26/b62674c18cc7ec4de1de3670812af13d.png',
+  },
   {
     brand: 'Samsung',
     img: 'https://cdnv2.tgdd.vn/mwg-static/common/Category/31/ce/31ce9dafafac121361ee7cbd313ae76b.png',
@@ -133,30 +178,48 @@ const product = [
 
 const ProductPage = () => {
   return (
-    <div className="min-h-[10000px] overflow-x-hidden select-none">
+    <div className="min-h-[10000px] overflow-x-hidden select-none max-lg:banner lg:mt-4">
       <Navigation
         menu={false}
         Banner={Banner}
         subBanner={subBanner}
       ></Navigation>
 
-      <Title className="mt-5 mb-2 ">Hãng Điện Thoại</Title>
+      <Title className="mt-5  ">Hãng Điện Thoại</Title>
 
-      <div className="brand flex  justify-between items-center ">
-        {ListBrand.map((item, index) => {
-          return (
-            <div
-              className={`px-4 py-1 border-2  rounded-3xl  ${index === 0 ? 'bg-[#F3F4F6]' : ''}`}
-              key={index}
-            >
-              <img
-                src={item.img}
-                alt={item.brand}
-                className="w-[91px]  h-[20px]"
-              />
-            </div>
-          );
-        })}
+      <div className=" min-h-[60px] max-lg:min-h-[100px]">
+        <Swiper
+          slidesPerView={8}
+          spaceBetween={20}
+          breakpoints={{
+            1024: {
+              slidesPerView: 8,
+            },
+            768: {
+              slidesPerView: 6,
+              spaceBetween: 20,
+            },
+            0: {
+              slidesPerView: 3,
+              spaceBetween: 20,
+            },
+          }}
+          scrollbar={{
+            hide: true,
+          }}
+          modules={[Scrollbar]}
+          className="mySwiper "
+        >
+          {ListBrand.map((item, index) => {
+            return (
+              <SwiperSlide key={index}>
+                <Button className="bg-transparent hover:bg-slate-100 border-[1px] border-slate-400">
+                  <img src={item.img} alt={item.brand} className="" />
+                </Button>
+              </SwiperSlide>
+            );
+          })}
+        </Swiper>
       </div>
 
       <div className="flex justify-start items-center  my-4   ">
@@ -173,10 +236,10 @@ const ProductPage = () => {
           <Title className=" ">Sắp Xếp</Title>
         </div>
         <div className="filter price flex justify-between items-center gap-4">
-          <Button className="px-4 py-1 border-2  rounded-3xl bg-transparent text-black hover:bg-[#F3F4F6]">
+          <Button className="px-4 py-1 border-[1px] border-slate-400 text-center   rounded-lg bg-transparent text-black hover:bg-[#F3F4F6]">
             Giá Từ Cao Đến Thấp
           </Button>
-          <Button className="px-4 py-1 border-2  rounded-3xl bg-transparent text-black  hover:bg-[#F3F4F6]">
+          <Button className="px-4 py-1 border-[1px] border-slate-400 text-center   rounded-lg  bg-transparent text-black  hover:bg-[#F3F4F6]">
             Giá Từ Thấp Đến Cao
           </Button>
         </div>
@@ -187,22 +250,26 @@ const ProductPage = () => {
       <div className="product grid grid-cols-4  w-full h-full gap-8 my-4   max-lg:grid-cols-2  max-lg:gap-2">
         {product.map((item, index) => {
           return (
-            <div key={index} className="product shadow-lg rounded-lg ">
-              <div className="img    flex items-center justify-center ">
-                <Image
-                  src={item.img}
-                  alt="smart-phone"
-                  width="0"
-                  height="0"
-                  sizes="100vw"
-                  className="w-full h-autorounded-lg"
-                  priority
-                ></Image>
-              </div>
-              <div className="title px-4 py-2  text-xs">
-                <div className="title font-semibold min-h-14  text-xs">
-                  {item.title}
+            <div key={index} className="product  rounded-lg ">
+              <Link href={'/product/iphone-11'}>
+                <div className="img    flex items-center justify-center ">
+                  <Image
+                    src={item.img}
+                    alt="smart-phone"
+                    width="0"
+                    height="0"
+                    sizes="100vw"
+                    className="w-full h-autorounded-lg"
+                    priority
+                  ></Image>
                 </div>
+              </Link>
+              <div className="title px-4 py-2  text-xs">
+                <Link href={'/product/iphone-11'}>
+                  <div className="title font-semibold min-h-14  text-xs">
+                    {item.title}
+                  </div>
+                </Link>
                 <div className="price font-semibold text-red-600  min-h-8">
                   {item.price} đ
                 </div>

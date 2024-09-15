@@ -96,7 +96,7 @@ const Banner = [
 
 export default function Home() {
   return (
-    <div className="min-h-[10000px] overflow-x-hidden select-none">
+    <div className="min-h-[10000px] overflow-x-hidden select-none banner">
       {/* Navigator */}
       <Navigation menu subBanner={subBanner} Banner={Banner}></Navigation>
       {/* banner */}

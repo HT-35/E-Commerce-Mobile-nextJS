@@ -104,20 +104,22 @@ export function SelectForm() {
     console.log(data);
   }
 
+  //className="border-[1px] border-slate-400"
+
   return (
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
-        className=" flex justify-between items-center"
+        className=" flex justify-between items-center flex-wrap  "
       >
         {/* Price */}
         <FormField
           control={form.control}
           name="Price"
           render={({ field }) => (
-            <FormItem>
+            <FormItem className="  outline-none ">
               <Select onValueChange={field.onChange} defaultValue={field.value}>
-                <FormControl>
+                <FormControl className="border-[1px] border-slate-400">
                   <SelectTrigger>
                     <SelectValue placeholder="Price" />
                   </SelectTrigger>
@@ -143,7 +145,7 @@ export function SelectForm() {
           render={({ field }) => (
             <FormItem>
               <Select onValueChange={field.onChange} defaultValue={field.value}>
-                <FormControl>
+                <FormControl className="border-[1px] border-slate-400">
                   <SelectTrigger>
                     <SelectValue placeholder="OS" />
                   </SelectTrigger>
@@ -169,7 +171,7 @@ export function SelectForm() {
           render={({ field }) => (
             <FormItem>
               <Select onValueChange={field.onChange} defaultValue={field.value}>
-                <FormControl>
+                <FormControl className="border-[1px] border-slate-400">
                   <SelectTrigger>
                     <SelectValue placeholder=" RAM " />
                   </SelectTrigger>
@@ -194,7 +196,7 @@ export function SelectForm() {
           render={({ field }) => (
             <FormItem>
               <Select onValueChange={field.onChange} defaultValue={field.value}>
-                <FormControl>
+                <FormControl className="border-[1px] border-slate-400">
                   <SelectTrigger>
                     <SelectValue placeholder="ROM" />
                   </SelectTrigger>
@@ -220,7 +222,7 @@ export function SelectForm() {
           render={({ field }) => (
             <FormItem>
               <Select onValueChange={field.onChange} defaultValue={field.value}>
-                <FormControl>
+                <FormControl className="border-[1px] border-slate-400">
                   <SelectTrigger>
                     <SelectValue placeholder="Pin" />
                   </SelectTrigger>
@@ -239,7 +241,7 @@ export function SelectForm() {
           )}
         />
 
-        <Button type="submit">Bộ Lọc</Button>
+        <Button type="submit">Lọc</Button>
       </form>
     </Form>
   );
