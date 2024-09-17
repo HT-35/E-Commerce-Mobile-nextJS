@@ -174,11 +174,13 @@ const Payment = () => {
                 </div>
               </div>
 
-              <div className="">
+              <div className="select-none">
                 <Title>Thông tin thanh toán</Title>
                 <div className="Info Payment bg-white px-4 py-4 rounded-lg flex flex-col gap-4">
                   <div
-                    className={`flex gap-5 items-center  lg:min-h-[64px] hover:border-2 hover:border-slate-400 px-4  rounded-lg ${pay === payType.VNPAY ? 'border-2  border-slate-400' : ''}`}
+                    className={`flex gap-5 items-center  lg:min-h-[64px] hover:border-2 hover:border-slate-400 px-4  rounded-lg
+                      cursor-pointer
+                        ${pay === payType.VNPAY ? 'border-2  border-slate-400' : ''}`}
                     onClick={() => {
                       setPay(payType.VNPAY);
                     }}
@@ -194,7 +196,9 @@ const Payment = () => {
                     <span>VNPAY</span>
                   </div>
                   <div
-                    className={`flex gap-5 items-center  lg:min-h-[64px] hover:border-2 hover:border-slate-400 px-4  rounded-lg  ${pay === payType.COD ? 'border-2  border-slate-400' : ''}`}
+                    className={`flex gap-5 items-center  lg:min-h-[64px] hover:border-2 hover:border-slate-400 px-4  rounded-lg 
+                       cursor-pointer
+                        ${pay === payType.COD ? 'border-2  border-slate-400' : ''}`}
                     onClick={() => {
                       setPay(payType.COD);
                     }}
