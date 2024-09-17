@@ -3,6 +3,7 @@
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { ArrowLeftIcon, TrashIcon } from '@radix-ui/react-icons';
+import Link from 'next/link';
 
 const Cart = () => {
   return (
@@ -16,7 +17,7 @@ const Cart = () => {
           <p></p>
         </div>
       </div>
-      <div className="flex flex-nowrap overflow-x-auto p-0 max-w-[600px] mt-4">
+      <div className="flex flex-nowrap overflow-x-auto p-0 max-w-[800px] mt-4">
         <Button className="bg-[#d70018] text-white font-medium border border-white">
           Giỏ hàng
         </Button>
@@ -78,7 +79,9 @@ const Cart = () => {
             </p>
           </div>
         </div>
-        <Button className="bg-[#d1041d]">Mua ngay</Button>
+        <Link href="cart/payment">
+          <Button className="bg-[#d1041d]">Mua ngay</Button>
+        </Link>
       </div>
     </div>
   );

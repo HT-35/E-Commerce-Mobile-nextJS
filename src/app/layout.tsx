@@ -30,7 +30,7 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <Header></Header>
-          <div className="lg:px-16   pt-20 overflow-x-hidden max-lg:px-3  max-lg:pt-[136px]">
+          <div className="lg:px-16   pt-16 overflow-x-hidden max-lg:px-3  max-lg:pt-[136px]">
             {children}
           </div>
         </ThemeProvider>

@@ -208,12 +208,12 @@ const ProductPage = () => {
             hide: true,
           }}
           modules={[Scrollbar]}
-          className="mySwiper "
+          className="mySwiper bg-transparent"
         >
           {ListBrand.map((item, index) => {
             return (
               <SwiperSlide key={index}>
-                <Button className="bg-transparent hover:bg-slate-100 border-[1px] border-slate-400">
+                <Button className=" bg-white hover:bg-slate-100 border-[1px] border-slate-400">
                   <img src={item.img} alt={item.brand} className="" />
                 </Button>
               </SwiperSlide>
