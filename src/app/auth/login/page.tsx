@@ -1,7 +1,7 @@
-import { auth } from "@/auth";
-import FormLogin from "@/components/auth/login";
+import { auth } from '@/auth';
+import FormLogin from '@/components/auth/login';
 
-import React from "react";
+import React from 'react';
 
 const LoginPage = async () => {
   // const session = await auth();

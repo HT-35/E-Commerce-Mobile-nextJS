@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import Link from "next/link";
-import { usePathname } from "next/navigation";
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 
 const LayOutAuth = ({ children }: { children: React.ReactNode }) => {
   const pathname = usePathname();
@@ -15,9 +15,9 @@ const LayOutAuth = ({ children }: { children: React.ReactNode }) => {
         <div className="flex justify-center items-center  shadow-xl  rounded-xl ">
           <Link
             className={`${
-              pathname === "/auth/login"
-                ? "bg-[#dc0000] text-white"
-                : " hover:bg-white"
+              pathname === '/auth/login'
+                ? 'bg-[#dc0000] text-white'
+                : ' hover:bg-white'
             } rounded-xl  py-2 px-8 transition-all duration-300 min-w-32 text-center text-sm `}
             href="/auth/login"
           >
@@ -25,9 +25,9 @@ const LayOutAuth = ({ children }: { children: React.ReactNode }) => {
           </Link>
           <Link
             className={`${
-              pathname === "/auth/register"
-                ? "bg-[#dc0000] text-white"
-                : "hover:bg-white"
+              pathname === '/auth/register'
+                ? 'bg-[#dc0000] text-white'
+                : 'hover:bg-white'
             } rounded-xl  py-2 px-8 transition-all duration-300 min-w-32 text-center text-sm   `}
             href="/auth/register"
           >
