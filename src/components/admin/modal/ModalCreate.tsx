@@ -1,0 +1,59 @@
+'use client';
+
+import { Button } from '@/components/ui/button';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog';
+
+import React from 'react';
+
+// =========
+
+import { DialogDescription, DialogTrigger } from '@radix-ui/react-dialog';
+import { FormCreateProduct } from '@/components/admin/form/CreateProduct';
+
+// =========
+
+//
+export default function ModalCreate({
+  children,
+  title,
+}: {
+  title?: string;
+  children?: React.ReactNode;
+}) {
+  return (
+    <div className="">
+      <Dialog>
+        <DialogTrigger asChild className="rounded-lg">
+          <Button className="text-white  hover:text-black  hover:bg-slate-400">
+            {title}
+          </Button>
+        </DialogTrigger>
+        <DialogContent
+          className="xl:max-w-[1200px] lg:min-h-[700px] max-h-[80vh] max-md:max-w-[380px] overflow-y-auto" // Điều chỉnh chiều cao tối đa và cuộn
+          onEscapeKeyDown={(e) => e.preventDefault()}
+          onInteractOutside={(e) => e.preventDefault()}
+        >
+          <DialogHeader>
+            <DialogTitle className="text-center text-xl">{title}</DialogTitle>
+
+            <DialogDescription></DialogDescription>
+          </DialogHeader>
+
+          <div className="grid gap-4 ">
+            {/*<FormCreateProduct />*/}
+            {children}
+          </div>
+
+          {/*<DialogFooter>
+          <Button type="submit">Save changes</Button>
+        </DialogFooter>*/}
+        </DialogContent>
+      </Dialog>
+    </div>
+  );
+}

@@ -19,6 +19,7 @@ import './styles.css';
 
 // import required modules
 import { Scrollbar } from 'swiper/modules';
+import { useEffect, useState } from 'react';
 
 const subBanner = [
   {
@@ -177,6 +178,9 @@ const product = [
 ];
 
 const ProductPage = () => {
+  const [productList, setProductList] = useState([]);
+
+  console.log(productList);
   return (
     <div className="min-h-[10000px] overflow-x-hidden select-none max-lg:banner lg:mt-4">
       <Navigation

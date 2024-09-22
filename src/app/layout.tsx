@@ -7,6 +7,7 @@ import Header from '@/components/header/header';
 
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { ModeToggle } from '@/components/ModeToggle';
 
 const roboto = Roboto({
   weight: '400',
@@ -33,6 +34,7 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <Header></Header>
+
           <div className="lg:px-16   pt-16 overflow-x-hidden max-lg:px-3  max-lg:pt-[136px]">
             {children}
           </div>

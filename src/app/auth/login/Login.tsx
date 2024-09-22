@@ -27,6 +27,7 @@ import {
 import { Input } from '@/components/ui/input';
 import { Bounce, toast } from 'react-toastify';
 import { useState } from 'react';
+import ModalForgetPassword from '@/app/auth/login/modalForgetPassword';
 
 export function Login() {
   const [openPassword, setOpenPassword] = useState<boolean>(false);
@@ -93,57 +94,64 @@ export function Login() {
           />
         </div>
 
-        <div className="group relative  transition-all duration-500">
-          <FormField
-            control={form.control}
-            name="password"
-            render={({ field }) => (
-              <FormItem className="relative">
-                <FormLabel
-                  className={`absolute text-black  text-xl top-0 left-0 transform translate-y-4 scale-75 origin-top-left transition-transform duration-300 ease-in-out group-hover:-translate-y-5 group-focus:scale-75 z-0
+        <div className="">
+          <div className="group relative  transition-all duration-500">
+            <FormField
+              control={form.control}
+              name="password"
+              render={({ field }) => (
+                <FormItem className="relative">
+                  <FormLabel
+                    className={`absolute text-black  text-xl top-0 left-0 transform translate-y-4 scale-75 origin-top-left transition-transform duration-300 ease-in-out group-hover:-translate-y-5 group-focus:scale-75 z-0
                     ${getValues('password').length > 0 ? '-translate-y-5 rounded-lg' : ''}
                     `}
-                >
-                  Mật Khẩu
-                </FormLabel>
-                <FormControl className="relative z-10 ">
-                  <Input
-                    type={openPassword ? 'text' : 'password'}
-                    className="relative pr-40 placeholder:text-black  p-0 bg-white z-10 border-0 border-b-2 rounded-none shadow-none
+                  >
+                    Mật Khẩu
+                  </FormLabel>
+
+                  <FormControl className="relative z-10 ">
+                    <Input
+                      type={openPassword ? 'text' : 'password'}
+                      className="relative  p-0 placeholder:text-black   bg-white z-10 border-0 border-b-2 rounded-none shadow-none
                     focus:border-0
                     focus-visible:ring-0 focus-visible:border-b-2 focus-visible:border-red-500
                      group-hover:border-red-500
                      group-hover:placeholder-transparent 
                     "
-                    style={{
-                      paddingRight: '50px',
-                    }}
-                    placeholder="  Mật Khẩu"
-                    {...field}
-                  />
-                </FormControl>
+                      style={{
+                        paddingRight: '50px',
+                      }}
+                      placeholder="  Mật Khẩu"
+                      {...field}
+                    />
+                  </FormControl>
 
-                <div className="absolute top-0 right-1 z-20">
-                  {getValues('password')?.length > 0 &&
-                    (openPassword ? (
-                      <EyeNoneIcon
-                        width={25}
-                        height={25}
-                        onClick={() => setOpenPassword((prev) => !prev)}
-                      />
-                    ) : (
-                      <EyeOpenIcon
-                        width={25}
-                        height={25}
-                        onClick={() => setOpenPassword((prev) => !prev)}
-                      />
-                    ))}
-                </div>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+                  <div className="absolute top-0 right-1 z-20">
+                    {getValues('password')?.length > 0 &&
+                      (openPassword ? (
+                        <EyeNoneIcon
+                          width={25}
+                          height={25}
+                          onClick={() => setOpenPassword((prev) => !prev)}
+                        />
+                      ) : (
+                        <EyeOpenIcon
+                          width={25}
+                          height={25}
+                          onClick={() => setOpenPassword((prev) => !prev)}
+                        />
+                      ))}
+                  </div>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
+          <div className="forgetPassword text-xs my-2  text-slate-400 cursor-pointer">
+            <ModalForgetPassword> Quên mật khẩu ?</ModalForgetPassword>
+          </div>{' '}
         </div>
+
         <Button type="submit" className="w-full bg-red-500">
           Đăng Nhập
         </Button>

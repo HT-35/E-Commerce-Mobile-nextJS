@@ -45,7 +45,7 @@ const Header = () => {
           </Link>
           <div className="search relative w-full max-2xl:max-w-[20%] 2xl:max-w-[350px]">
             <Input
-              className="pr-10  placeholder:text-white"
+              className="pr-10  placeholder:text-white focus:placeholder:text-transparent  focus:outline-none focus:border-0 focus:ring-1 focus:ring-ring"
               placeholder="Bạn tìm gì ..."
             ></Input>
             <div className="absolute top-[50%] -translate-y-[50%] right-2">

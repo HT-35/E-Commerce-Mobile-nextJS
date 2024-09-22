@@ -43,8 +43,11 @@ import { Input } from '@/components/ui/input';
 import { Bounce, toast } from 'react-toastify';
 import { EyeNoneIcon, EyeOpenIcon } from '@radix-ui/react-icons';
 import { useState } from 'react';
+import ModalActiveAccount from '@/app/auth/register/modalActive';
 
 export function Register() {
+  const [activeAccount, setActiveAccount] = useState<boolean>(false);
+
   const [openPassword, setOpenPassword] = useState<boolean>(false);
 
   const [disableBtn, SetDisableBtn] = useState<boolean>(false);
@@ -80,17 +83,18 @@ export function Register() {
         transition: Bounce,
       });
     }
-    toast.success('Register Successfull!', {
-      position: 'top-right',
-      autoClose: 5000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-      theme: 'light',
-      transition: Bounce,
-    });
+    //toast.success('Register Successfull!', {
+    //  position: 'top-right',
+    //  autoClose: 5000,
+    //  hideProgressBar: false,
+    //  closeOnClick: true,
+    //  pauseOnHover: true,
+    //  draggable: true,
+    //  progress: undefined,
+    //  theme: 'light',
+    //  transition: Bounce,
+    //});
+    setActiveAccount(true);
   }
 
   return (
@@ -294,6 +298,7 @@ export function Register() {
           Đăng Kí
         </Button>
       </form>
+      <ModalActiveAccount open={activeAccount} setOpen={setActiveAccount} />
     </Form>
   );
 }
