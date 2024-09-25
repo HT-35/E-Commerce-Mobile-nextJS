@@ -22,10 +22,12 @@ declare global {
 
   // type dữ liệu User trả về khi call Api
   export interface IUser {
-    _id: string;
-    name: string;
-    email: string;
-    access_token?: string;
+    _id: string | undefined;
+    accessToken: string | undefined;
+    name: string | undefined;
+    roles: string | undefined;
+    email?: string | undefined;
+    cart?: any;
   }
 
   export interface IRegisterUser {
@@ -36,5 +38,14 @@ declare global {
 
     isActive: boolean;
     __v: 0;
+  }
+
+  interface initialDataAccount {
+    _id?: string;
+    accessToken?: string;
+    name?: string;
+    email?: string;
+    cart?: any;
+    roles?: string;
   }
 }

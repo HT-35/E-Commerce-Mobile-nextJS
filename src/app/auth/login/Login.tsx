@@ -26,11 +26,25 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Bounce, toast } from 'react-toastify';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import ModalForgetPassword from '@/app/auth/login/modalForgetPassword';
+import { sendRequest } from '@/utils/fetchApi';
+import { useAppDispatch, useAppSelector } from '@/lib/redux/hooks';
+import {
+  InitialAccountRedux,
+  setDataAccount,
+} from '@/lib/redux/slices/accountSlice';
 
 export function Login() {
   const [openPassword, setOpenPassword] = useState<boolean>(false);
+
+  const dispatch = useAppDispatch();
+
+  const dataAccount = useAppSelector((state: any) => state.account);
+
+  useEffect(() => {
+    console.log(' >>> redux :', dataAccount);
+  }, [dataAccount]);
 
   // 1. Define your form.
   const form = useForm<z.infer<typeof formSchema>>({
@@ -44,8 +58,19 @@ export function Login() {
   const { getValues } = form;
 
   // 2. Define a submit handler.
-  function onSubmit(values: z.infer<typeof formSchema>) {
+  async function onSubmit(values: z.infer<typeof formSchema>) {
     console.log(values);
+
+    const res: any = await sendRequest<IBackendRes<IUser>>({
+      method: 'POST',
+      url: 'localhost:3000/api/auth/login',
+      body: { ...values },
+    });
+
+    console.log(res);
+
+    dispatch(setDataAccount(res.data.user));
+
     toast.success('Login Successfull!', {
       position: 'top-right',
       autoClose: 5000,

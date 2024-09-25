@@ -2,10 +2,17 @@
 
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
+import { useAppSelector } from '@/lib/redux/hooks';
 import { ArrowLeftIcon, TrashIcon } from '@radix-ui/react-icons';
 import Link from 'next/link';
 
 const Cart = () => {
+
+  // test Redux
+
+  const info = useAppSelector((state: any) => state.account);
+  console.log(`info:`, info);
+
   return (
     <div className="lg:m-4 m-2 min-h-[40px] relative bg-white rounded-lg lg:px-4 py-2 px-2 shadow-lg ">
       <div className="cart-header border-b border-[#e5e5e5] text-[#323232] p-2.5">
