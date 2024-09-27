@@ -77,3 +77,23 @@
   width: 100%;
   z-index: -1;
 }
+
+/*.messageUser {
+  -webkit-border-radius: 100px;
+  -webkit-border-bottom-left-radius: 0;
+  -moz-border-radius: 100px;
+  -moz-border-radius-bottomleft: 0;
+  border-radius: 100px;
+  border-bottom-left-radius: 0;
+  @apply pl-5 py-2 pr-2 bg-slate-400  h-auto;
+}
+
+.messageEmployee {
+  -webkit-border-radius: 100px;
+  -webkit-border-bottom-right-radius: 0;
+  -moz-border-radius: 100px;
+  -moz-border-radius-bottomright: 0;
+  border-radius: 100px;
+  border-bottom-right-radius: 0;
+  @apply pl-5 py-2 pr-2 bg-slate-400  h-auto;
+}*/

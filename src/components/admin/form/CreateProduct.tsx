@@ -166,6 +166,7 @@ export function FormCreateProduct() {
             );
           })}
         </div>
+
         {/* Input cho option (bao gồm color, price và img upload) */}
         <div className="col-span-3 grid">
           <h3>Options</h3>

@@ -11,7 +11,6 @@ import {
 
 import { InputSearch } from '@/components/input/InputSearch';
 import { Button } from '@/components/ui/button';
-import ModalCreateProduct from '@/components/admin/modal/ModalCreateProduct';
 import ModalCreate from '@/components/admin/modal/ModalCreate';
 import { FormCreateProduct } from '@/components/admin/form/CreateProduct';
 import FormCreateUser from '@/components/admin/form/CreateUser';

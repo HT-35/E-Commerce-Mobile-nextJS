@@ -1,3 +1,4 @@
+import ChatEmployee from '@/components/admin/ChatEmployee';
 import MangegerAccount from '@/components/admin/MangegerAccount';
 import MangegerProduct from '@/components/admin/MangegerProduct';
 import { PhoneIcon } from '@/components/icons';
@@ -43,14 +44,15 @@ const MenuAdmin: {
     value: 'chat',
     icon: <ChatBubbleIcon className="w-6 h-6" />,
     title: 'chat',
+    component: <ChatEmployee />,
   },
 ];
 
 export default function TabsDemo() {
   return (
     <Tabs
-      defaultValue="managerProduct"
-      className=" flex mt-10 items-start justify-center min-h-[500px] gap-4"
+      defaultValue="chat"
+      className=" flex mt-3 items-start justify-center min-h-[500px] gap-4"
     >
       <TabsList className="  flex flex-col items-start  gap-4  h-full   bg-white px-2">
         {MenuAdmin.map((item, index) => {
@@ -66,7 +68,7 @@ export default function TabsDemo() {
           );
         })}
       </TabsList>
-      <div className=" w-full  h-full p-[5px] px-4 bg-white rounded-xl  flex flex-col gap-5">
+      <div className=" w-full  h-full px-[4px]  bg-white rounded-xl  flex flex-col gap-5">
         {MenuAdmin.map((item, index) => {
           return (
             <TabsContent key={index} value={item.value}>

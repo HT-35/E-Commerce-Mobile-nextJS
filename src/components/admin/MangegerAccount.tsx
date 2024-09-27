@@ -14,6 +14,7 @@ import { Button } from '@/components/ui/button';
 import ModalCreate from '@/components/admin/modal/ModalCreate';
 import { FormCreateProduct } from '@/components/admin/form/CreateProduct';
 import FormCreateUser from '@/components/admin/form/CreateUser';
+import Image from 'next/image';
 
 const listAccount: {
   name: string;
@@ -23,9 +24,9 @@ const listAccount: {
 }[] = [
   {
     name: 'Trần Quang Huy',
-    email: 'huytran.itvn@gmial.com',
     role: 'admin',
-    phone: 'phone',
+    email: 'huytran.itvn@gmial.com',
+    phone: '0343128733',
   },
 ];
 
@@ -54,9 +55,10 @@ const MangegerAccount = () => {
             <TableHead>STT</TableHead>
             <TableHead>Tên Người Dùng</TableHead>
 
-            <TableHead>Email</TableHead>
             <TableHead>Quyền</TableHead>
+            <TableHead>Email</TableHead>
             <TableHead>Số Điện Thoại</TableHead>
+            <TableHead>Hình Ảnh</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -66,9 +68,25 @@ const MangegerAccount = () => {
                 <TableCell>{index + 1}</TableCell>
                 <TableCell>{item.name}</TableCell>
 
-                <TableCell>{item.email}</TableCell>
                 <TableCell>{item.role}</TableCell>
+                <TableCell>{item.email}</TableCell>
                 <TableCell>{item.phone}</TableCell>
+                <TableCell>
+                  <Image
+                    src={
+                      'https://avatars.githubusercontent.com/u/88173515?s=400&u=7d08d05134d70ba96aaf7b8da859322edd4853ee&v=4'
+                    }
+                    width="0"
+                    height="0"
+                    sizes="100vw"
+                    style={{
+                      width: '70px',
+                      height: 'auto',
+                      borderRadius: '100px',
+                    }}
+                    alt="Picture of the author"
+                  ></Image>
+                </TableCell>
               </TableRow>
             );
           })}

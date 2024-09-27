@@ -7,6 +7,7 @@ import { z } from 'zod';
 import {
   Form,
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -14,6 +15,15 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
+import Image from 'next/image';
+import { useRef, useState } from 'react';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 
 const listFieldSchema = [
   {
@@ -21,16 +31,12 @@ const listFieldSchema = [
     title: 'Tên Người Dùng',
     message: 'Tên người dùng phải từ 3 kí tự trở lên',
   },
-  {
-    name: 'email',
-    title: 'Email',
-    message: 'Email phải từ 6 kí tự trở lên',
-  },
-  {
-    name: 'role',
-    title: 'Quyền',
-    message: '',
-  },
+
+  //{
+  //  name: 'role',
+  //  title: 'Quyền',
+  //  message: 'Quyền phải là admin hoặc employee',
+  //},
 ];
 
 const FormSchema = z.object({
@@ -43,6 +49,17 @@ const FormSchema = z.object({
     },
     {} as Record<string, z.ZodString>
   ),
+  email: z
+    .string({ message: 'Bắt buộc phải nhập email' })
+    .email('Phải nhập đúng định dạng email')
+    .min(5),
+  role: z.string({ required_error: 'Bắt buộc phải nhập email' }),
+  phoneNumber: z
+    .string({ message: 'Bắt buộc phải nhập số điện thoại' })
+    .refine((val) => /^\d{10}$/.test(val), {
+      message: 'Số điện thoại phải là 10 chữ số',
+    }),
+  image: z.instanceof(File, { message: 'Vui lòng thêm hình ảnh' }),
 });
 
 const defaultValues = {
@@ -53,9 +70,23 @@ const defaultValues = {
     },
     {} as Record<string, string>
   ),
+  role: '',
+  phoneNumber: '',
+  image: (undefined as unknown as File) || '',
 };
 
 export default function FormCreateUser() {
+  const [fileImg, setFileImg] = useState<any>(undefined);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const deleteImg = () => {
+    setFileImg(undefined as unknown as File);
+
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+    }
+  };
+
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues,
@@ -65,6 +96,9 @@ export default function FormCreateUser() {
 
   function onSubmit(data: z.infer<typeof FormSchema>) {
     console.log('Form submitted:', data);
+
+    const formData = new FormData();
+    formData.append('file', fileImg);
   }
 
   function onError(errors: any) {
@@ -73,8 +107,8 @@ export default function FormCreateUser() {
 
   return (
     <Form {...form}>
-      <form onSubmit={handleSubmit(onSubmit, onError)} className="w-full">
-        <div className="grid grid-cols-3 max-xl:grid-cols-2 max-lg:grid-cols-1 gap-5">
+      <form onSubmit={handleSubmit(onSubmit, onError)} className="w-full ">
+        <div className="grid grid-cols-1 max-xl:grid-cols-1 max-lg:grid-cols-1 gap-5">
           {listFieldSchema.map((item, index) => {
             return (
               <div
@@ -101,9 +135,125 @@ export default function FormCreateUser() {
               </div>
             );
           })}
+
+          <FormField
+            control={form.control}
+            name="role"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Quyền</FormLabel>
+                <Select
+                  onValueChange={field.onChange}
+                  defaultValue={field.value}
+                >
+                  <FormControl>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Chọn Quyền" />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent>
+                    <SelectItem value="admin">admin</SelectItem>
+                    <SelectItem value="employee">employee</SelectItem>
+                  </SelectContent>
+                </Select>
+
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={control}
+            name="email"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Email</FormLabel>
+                <FormControl>
+                  <Input
+                    autoComplete="off"
+                    className="p-0 border-0 border-b-2 rounded-none shadow-none focus:border-0 focus-visible:ring-0 focus-visible:border-b-2 group-hover:border-red-500"
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={control}
+            name="phoneNumber"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Số Điện Thoại</FormLabel>
+                <FormControl>
+                  <Input
+                    type="number"
+                    autoComplete="off"
+                    className="p-0 border-0 border-b-2 rounded-none shadow-none focus:border-0 focus-visible:ring-0 focus-visible:border-b-2 group-hover:border-red-500"
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name={'image'}
+            render={({ field }) => {
+              return (
+                <FormItem>
+                  <FormLabel>Hình Ảnh</FormLabel>
+                  <FormControl>
+                    <Input
+                      name={'image'}
+                      className="w-full"
+                      type="file"
+                      placeholder={'Thêm Hình Ảnh'}
+                      onChange={(e) => {
+                        const file = e.target.files?.[0];
+                        if (file) {
+                          setFileImg(file);
+                          field.onChange(file);
+                        }
+                      }}
+                      onBlur={field.onBlur}
+                      disabled={field.disabled}
+                      ref={fileInputRef}
+                    />
+                  </FormControl>
+
+                  <FormMessage />
+
+                  {fileImg && (
+                    <div className="relative">
+                      <Image
+                        src={URL.createObjectURL(fileImg)}
+                        //width={150}
+                        //height={150}
+                        width="0"
+                        height="0"
+                        sizes="100vw"
+                        style={{ width: '150px', height: 'auto' }}
+                        alt="Picture of the author"
+                      />
+                      <Button
+                        type="button"
+                        onClick={deleteImg}
+                        className="rounded-full top-0 left-0 absolute  "
+                      >
+                        x
+                      </Button>
+                    </div>
+                  )}
+                </FormItem>
+              );
+            }}
+          />
         </div>
         <Button type="submit" className="xl:mt-20 mt-8 w-full bg-green-400">
-          Submit
+          Tạo Tài Khoản
         </Button>
       </form>
     </Form>

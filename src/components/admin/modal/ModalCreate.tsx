@@ -39,7 +39,7 @@ export default function ModalCreate({
           onInteractOutside={(e) => e.preventDefault()}
         >
           <DialogHeader>
-            <DialogTitle className="text-center text-xl">{title}</DialogTitle>
+            <DialogTitle className="text-left text-xl">{title}</DialogTitle>
 
             <DialogDescription></DialogDescription>
           </DialogHeader>
