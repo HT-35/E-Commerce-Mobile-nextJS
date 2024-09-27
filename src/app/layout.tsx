@@ -44,12 +44,12 @@ export default async function RootLayout({
     headers: { Authorization: `Bearer ${accessToken_cookie?.value}` },
   });
 
-  console.log('');
-  console.log('');
-  console.log('');
-  console.log('res', res);
-  console.log('');
-  console.log('');
+  //console.log('');
+  //console.log('');
+  //console.log('');
+  //console.log('res', res);
+  //console.log('');
+  //console.log('');
 
   initialDataAccount = {
     _id: res.data?._id,
