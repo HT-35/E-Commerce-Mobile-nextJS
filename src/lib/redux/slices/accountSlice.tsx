@@ -1,4 +1,4 @@
-// redux/slices/accountSlice.ts
+// src/lib/redux/slices/accountSlice.ts
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 export interface InitialAccountRedux {
@@ -15,26 +15,32 @@ const initialState: InitialAccountRedux = {
   accessToken: '',
   name: '',
   email: '',
-  cart: '',
+  cart: [],
   roles: '',
 };
 
 export const accountSlice = createSlice({
   name: 'account',
-  initialState, // Giá trị khởi tạo có thể bị ghi đè bởi preloadedState
+  initialState, 
   reducers: {
     setDataAccount: (state, action: PayloadAction<InitialAccountRedux>) => {
-      console.log(action);
-
       state._id = action.payload._id ?? state._id;
       state.roles = action.payload.roles ?? state.roles;
-      state.name = action.payload.name ?? state.name; // Cập nhật đúng tên state
+      state.name = action.payload.name ?? state.name; 
       state.email = action.payload.email ?? state.email;
+    },
+    logout: (state) => {
+      // Clear account state
+      state._id = '';
+      state.accessToken = '';
+      state.name = '';
+      state.email = '';
+      state.cart = [];
+      state.roles = '';
     },
   },
 });
 
-// redux/slices/accountSlice.ts
-export const { setDataAccount } = accountSlice.actions;
+export const { setDataAccount, logout } = accountSlice.actions;
 
 export default accountSlice.reducer;

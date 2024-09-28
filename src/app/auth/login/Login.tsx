@@ -4,6 +4,8 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
+import { usePathname, useRouter } from 'next/navigation';
+
 import { EyeOpenIcon, EyeNoneIcon } from '@radix-ui/react-icons';
 
 const formSchema = z.object({
@@ -38,6 +40,7 @@ import {
 export function Login() {
   const [openPassword, setOpenPassword] = useState<boolean>(false);
 
+  const router = useRouter();
   const dispatch = useAppDispatch();
 
   const dataAccount = useAppSelector((state: any) => state.account);
@@ -82,6 +85,8 @@ export function Login() {
       theme: 'light',
       transition: Bounce,
     });
+
+    router.push('/');
   }
 
   return (
