@@ -54,12 +54,16 @@ const Slider = ({
                 <Image
                   src={`${item.url}`}
                   alt="smart-phone"
-                  width="500"
-                  height="500"
+                  width={0} // Chỉ định width cố định
+                  height={0} // Chỉ định height cố định
                   quality={100}
                   sizes="100vw"
-                  style={{ objectFit: 'cover' }}
-                  className="w-full object-cover rounded-lg h-full"
+                  style={{
+                    objectFit: 'cover',
+                    width: '100%', // Để hình ảnh chiếm toàn bộ chiều rộng
+                    height: 'auto', // Đảm bảo tỷ lệ không bị thay đổi
+                  }}
+                  className="rounded-lg "
                   priority
                 />
               </Card>

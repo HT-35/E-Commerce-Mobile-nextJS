@@ -59,7 +59,7 @@ export function Login() {
 
   // 2. Define a submit handler.
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values);
+    //console.log(values);
 
     const res: any = await sendRequest<IBackendRes<IUser>>({
       method: 'POST',

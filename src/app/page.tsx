@@ -6,6 +6,7 @@ import Navigation from '@/components/navigation/Navigation';
 import ResponsiveBanner from '@/components/banner/BannerHome';
 import Title from '@/components/title/Title';
 import Link from 'next/link';
+import ChatClient from '@/components/chatClient/ChatClient';
 
 const brandArr = [
   { brand: 'Apple', href: '/Apple' },
@@ -96,7 +97,11 @@ const Banner = [
 
 export default function Home() {
   return (
-    <div className="min-h-[10000px] overflow-x-hidden select-none banner">
+    <div className="min-h-[1000px] overflow-x-hidden  banner">
+      <div className="fixed bottom-5 right-4 z-[9999]">
+        <ChatClient />
+      </div>
+
       {/* Navigator */}
       <Navigation menu subBanner={subBanner} Banner={Banner}></Navigation>
       {/* banner */}

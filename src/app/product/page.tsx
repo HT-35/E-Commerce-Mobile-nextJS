@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 /* eslint-disable react/prop-types */
 'use client';
 import { SelectForm } from '@/app/product/Filter';
@@ -20,6 +21,7 @@ import './styles.css';
 // import required modules
 import { Scrollbar } from 'swiper/modules';
 import { useEffect, useState } from 'react';
+import ChatClient from '@/components/chatClient/ChatClient';
 
 const subBanner = [
   {
@@ -182,7 +184,11 @@ const ProductPage = () => {
 
   console.log(productList);
   return (
-    <div className="min-h-[10000px] overflow-x-hidden select-none max-lg:banner lg:mt-4">
+    <div className="min-h-[10000px] overflow-x-hidden  max-lg:banner lg:mt-4">
+      {/*<div className="fixed bottom-5 right-4 z-[9999]">
+        <ChatClient />
+      </div>*/}
+
       <Navigation
         menu={false}
         Banner={Banner}

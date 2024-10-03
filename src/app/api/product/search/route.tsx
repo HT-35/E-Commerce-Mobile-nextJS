@@ -2,7 +2,7 @@ import { sendRequest } from '@/utils/fetchApi';
 import { env } from '@/utils/listENV';
 import { NextRequest } from 'next/server';
 
-const PORT = await env.PORT_NEST_SERVER();
+const PORT = await env.NEXT_PUBLIC_PORT_NEST_SERVER();
 
 export const GET = async (request: NextRequest) => {
   try {

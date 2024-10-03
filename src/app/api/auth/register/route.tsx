@@ -1,7 +1,7 @@
 import { checkMissingData } from '@/utils/checkMissingData';
 import { sendRequest } from '@/utils/fetchApi';
 
-const Port = process.env.PORT_NEST_SERVER;
+const Port = process.env.NEXT_PUBLIC_PORT_NEST_SERVER;
 
 export async function POST(request: Request) {
   try {

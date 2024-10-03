@@ -4,7 +4,7 @@ import { error } from 'console';
 import { headers } from 'next/headers';
 import { NextRequest } from 'next/server';
 
-const PORT = await env.PORT_NEST_SERVER();
+const PORT = await env.NEXT_PUBLIC_PORT_NEST_SERVER();
 
 // get all product
 export async function GET(request: NextRequest) {

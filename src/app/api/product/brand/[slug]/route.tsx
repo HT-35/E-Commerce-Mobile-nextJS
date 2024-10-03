@@ -1,6 +1,6 @@
 import { sendRequest } from '@/utils/fetchApi';
 
-const Port = process.env.PORT_NEST_SERVER;
+const Port = process.env.NEXT_PUBLIC_PORT_NEST_SERVER;
 
 // get detail by slug
 export async function GET({ params }: { params: { slug: string } }) {

@@ -2,7 +2,7 @@ import { sendRequest } from '@/utils/fetchApi';
 
 import { NextRequest } from 'next/server';
 
-const Port = process.env.PORT_NEST_SERVER;
+const Port = process.env.NEXT_PUBLIC_PORT_NEST_SERVER;
 
 export async function GET(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams;

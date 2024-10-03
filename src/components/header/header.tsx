@@ -6,10 +6,14 @@ import { CartIcon, IconSearch, UserIcon } from '@/components/icons';
 import { ListBulletIcon } from '@radix-ui/react-icons';
 import ButtonMenu from '@/components/ui/ButtonMenu';
 import Link from 'next/link';
+import { useAppSelector } from '@/lib/redux/hooks';
 
 const Header = () => {
   const [isMounted, setIsMounted] = useState(false);
   const [isLargeScreen, setIsLargeScreen] = useState<boolean>(false); // useState luôn được gọi
+
+  const { name } = useAppSelector((state: any) => state.account);
+  //console.log(`userClient:`, userClient);
 
   useEffect(() => {
     setIsMounted(true); // Chỉ định rằng component đã mount
@@ -71,8 +75,12 @@ const Header = () => {
           <div className="account flex justify-between items-center gap-2 hover:bg-white hover:bg-opacity-50 p-2 rounded-md cursor-pointer">
             <UserIcon></UserIcon>
             <div>
-              <div className="">Tài Khoản</div>
-              <div className="">Đơn Hàng</div>
+              {name ?? (
+                <>
+                  <div className="">Tài Khoản</div>
+                  <div className="">Đơn Hàng</div>
+                </>
+              )}
             </div>
           </div>
         </div>
@@ -87,10 +95,16 @@ const Header = () => {
             </div>
             <div className="account flex justify-between items-center gap-2 hover:bg-white hover:bg-opacity-50 p-2 rounded-md cursor-pointer">
               <UserIcon></UserIcon>
-              <div>
+              {/*<div>
                 <div className="">Tài Khoản</div>
                 <div className="">Đơn Hàng</div>
-              </div>
+              </div>*/}
+              {name ?? (
+                <>
+                  <div className="">Tài Khoản</div>
+                  <div className="">Đơn Hàng</div>
+                </>
+              )}
             </div>
           </div>
           <div className="flex gap-4 justify-center items-center">

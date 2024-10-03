@@ -2,11 +2,12 @@ import { checkMissingData } from '@/utils/checkMissingData';
 import { sendRequest } from '@/utils/fetchApi';
 import { cookies } from 'next/headers';
 
-const Port = process.env.PORT_NEST_SERVER;
+const Port = process.env.NEXT_PUBLIC_PORT_NEST_SERVER;
 
 export async function POST(request: Request) {
   try {
     const dataBody = await checkMissingData(request);
+    console.log(`dataBody:`, dataBody);
 
     const res: any = await sendRequest<IBackendRes<IRegisterUser>>({
       method: 'POST',

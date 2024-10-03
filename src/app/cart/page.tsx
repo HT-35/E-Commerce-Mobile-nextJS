@@ -7,7 +7,6 @@ import { ArrowLeftIcon, TrashIcon } from '@radix-ui/react-icons';
 import Link from 'next/link';
 
 const Cart = () => {
-
   // test Redux
 
   const info = useAppSelector((state: any) => state.account);

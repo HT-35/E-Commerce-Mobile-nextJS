@@ -1,5 +1,5 @@
 export const env = {
-  PORT_NEST_SERVER: async () => {
-    return await process.env.PORT_NEST_SERVER;
-  },
+  NEXT_PUBLIC_PORT_NEST_SERVER: () => process.env.NEXT_PUBLIC_PORT_NEST_SERVER,
+  NEXT_PUBLIC_PORT_SOCKET_SERVER: () =>
+    process.env.NEXT_PUBLIC_PORT_SOCKET_SERVER,
 };
