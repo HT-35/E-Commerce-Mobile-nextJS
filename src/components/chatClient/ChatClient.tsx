@@ -25,10 +25,6 @@ export interface typeMessage {
 const ChatClient = () => {
   const { name, _id, accessToken } = useAppSelector((state: any) => state.account);
 
-  socket.on('isConnect', (newMessage) => {});
-
-  socket.emit('joinRoom', _id);
-
   const { active, handleActive } = useActive(false);
 
   // list tin nhắn cũ of customer
@@ -37,28 +33,36 @@ const ChatClient = () => {
   //lưu text of input
   const [message, setMessage] = useState('');
 
+  if (_id) {
+    socket.on('isConnect', (newMessage) => {});
+
+    socket.emit('joinRoom', _id);
+  }
+
   //  // lấy các tin nhắn cũ của customer
   useEffect(() => {
-    const messageOld = async () => {
-      const res = await sendRequest<IBackendRes<any>>({
-        method: 'GET',
-        url: `localhost:4000/chat/room/${_id}`,
-        headers: { Authorization: `Bearer ${accessToken}` },
-      });
-      //console.log(res);
-
-      if (res.data !== null) {
-        const newArrMessage = await res.data.messages?.map((item: any) => {
-          return {
-            sender: item.sender,
-            message: item.content,
-          };
+    if (_id) {
+      const messageOld = async () => {
+        const res = await sendRequest<IBackendRes<any>>({
+          method: 'GET',
+          url: `localhost:4000/chat/room/${_id}`,
+          headers: { Authorization: `Bearer ${accessToken}` },
         });
-        setShowMessages(newArrMessage);
-        //console.log(newArrMessage);
-      }
-    };
-    messageOld();
+        //console.log(res);
+
+        if (res.data !== null) {
+          const newArrMessage = await res?.data?.messages?.map((item: any) => {
+            return {
+              sender: item.sender,
+              message: item.content,
+            };
+          });
+          setShowMessages(newArrMessage);
+          //console.log(newArrMessage);
+        }
+      };
+      messageOld();
+    }
     return () => {};
   }, [_id, accessToken]);
 
@@ -82,7 +86,7 @@ const ChatClient = () => {
   const sendMessage = async () => {
     //console.log(message);
 
-    if (message.length > 0) {
+    if (message.length > 0 && _id) {
       // lưu tin nhắn vào db
       await saveMessage({
         url: `localhost:${NEXT_PUBLIC_PORT_NEST_SERVER}/chat/send`,
@@ -124,6 +128,7 @@ const ChatClient = () => {
         setMessage={setMessage}
         message={message}
         showMessages={showMessages}
+        _id={_id}
       />
     </div>
   );

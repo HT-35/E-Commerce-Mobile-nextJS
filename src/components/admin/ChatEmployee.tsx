@@ -114,7 +114,7 @@ const ChatEmployee = () => {
     });
 
     if (res.data !== null) {
-      const newArrMessage = await res.data.messages?.map((item: any) => {
+      const newArrMessage = await res?.data?.messages?.map((item: any) => {
         return {
           sender: item.sender,
           message: item.content,
