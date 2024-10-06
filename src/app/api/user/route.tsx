@@ -118,12 +118,7 @@ export const DELETE = async (request: NextRequest) => {
 
   const id = request.nextUrl.searchParams.get('id');
 
-  console.log('');
-  console.log('');
-  console.log('');
-  console.log('slug', id);
-  console.log('');
-  console.log('');
+
 
   try {
     if (!id) {

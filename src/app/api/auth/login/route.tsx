@@ -7,7 +7,7 @@ const Port = process.env.NEXT_PUBLIC_PORT_NEST_SERVER;
 export async function POST(request: Request) {
   try {
     const dataBody = await checkMissingData(request);
-    console.log(`dataBody:`, dataBody);
+    //console.log(`dataBody:`, dataBody);
 
     const res: any = await sendRequest<IBackendRes<IRegisterUser>>({
       method: 'POST',

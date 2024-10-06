@@ -6,7 +6,7 @@ const Port = process.env.NEXT_PUBLIC_PORT_NEST_SERVER;
 export async function GET({ params }: { params: { slug: string } }) {
   const brand = params.slug;
 
-  console.log(`localhost:${Port}/product/brand/${brand}`);
+  //console.log(`localhost:${Port}/product/brand/${brand}`);
   try {
     const res: any = await sendRequest<IBackendRes<any>>({
       method: 'GET',

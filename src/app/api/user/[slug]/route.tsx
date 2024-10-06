@@ -5,12 +5,8 @@ import { NextRequest } from 'next/server';
 
 const PORT = await env.NEXT_PUBLIC_PORT_NEST_SERVER();
 
-export const GET = async (
-  request: NextRequest,
-  { params }: { params: { slug: string } }
-) => {
+export const GET = async (request: NextRequest, { params }: { params: { slug: string } }) => {
   const slug = params?.slug;
-  console.log('slug:', slug);
 
   const bearerToken = headers().get('authorization');
 

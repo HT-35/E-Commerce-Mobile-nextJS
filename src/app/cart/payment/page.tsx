@@ -53,7 +53,6 @@ const Payment = () => {
 
   // Hàm handleSubmit để gọi từ button "Tiếp tục"
   const onSubmit = (values: z.infer<typeof formSchema>) => {
-    console.log(values);
     setInfoActive(true); // Chuyển sang bước thanh toán
     setInfoReceive(values); // lưu thông tin nhận hàng vào state
   };

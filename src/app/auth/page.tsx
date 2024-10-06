@@ -6,7 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 function TabsDemo() {
   return (
-    <Tabs defaultValue="Login" className="w-full  snap-none">
+    <Tabs defaultValue="Login" className="w-full  snap-none formatPage">
       <TabsList className="grid w-full grid-cols-2 shadow-xl">
         <TabsTrigger value="Login">Đăng Nhặp</TabsTrigger>
         <TabsTrigger value="Register">Đăng Kí</TabsTrigger>
@@ -14,9 +14,7 @@ function TabsDemo() {
       <TabsContent value="Login">
         <Card>
           <CardHeader>
-            <CardTitle className="text-center text-xl max-lg:text-base">
-              Đăng Nhặp
-            </CardTitle>
+            <CardTitle className="text-center text-xl max-lg:text-base">Đăng Nhặp</CardTitle>
           </CardHeader>
           <CardContent className="space-y-5">
             <Login></Login>
@@ -27,9 +25,7 @@ function TabsDemo() {
       <TabsContent value="Register">
         <Card>
           <CardHeader>
-            <CardTitle className="text-center text-xl max-lg:text-base">
-              Đăng Kí
-            </CardTitle>
+            <CardTitle className="text-center text-xl max-lg:text-base">Đăng Kí</CardTitle>
           </CardHeader>
           <CardContent className="space-y-5">
             <Register></Register>

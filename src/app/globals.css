@@ -97,3 +97,7 @@
   border-bottom-right-radius: 0;
   @apply pl-5 py-2 pr-2 bg-slate-400  h-auto;
 }*/
+
+.formatPage {
+  @apply lg:px-16  pt-16  overflow-x-hidden max-lg:px-3 max-lg:pt-[136px];
+}

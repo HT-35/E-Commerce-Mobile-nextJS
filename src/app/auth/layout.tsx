@@ -3,7 +3,7 @@ const LayOutPage = async ({
 }: Readonly<{
   children: React.ReactNode;
 }>) => {
-  return <div className="max-w-[600px] mx-auto lg:mt-9  ">{children}</div>;
+  return <div className="max-w-[600px] mx-auto   ">{children}</div>;
 };
 
 export default LayOutPage;

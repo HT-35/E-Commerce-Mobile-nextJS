@@ -182,18 +182,9 @@ const product = [
 const ProductPage = () => {
   const [productList, setProductList] = useState([]);
 
-  console.log(productList);
   return (
-    <div className="min-h-[10000px] overflow-x-hidden  max-lg:banner lg:mt-4">
-      {/*<div className="fixed bottom-5 right-4 z-[9999]">
-        <ChatClient />
-      </div>*/}
-
-      <Navigation
-        menu={false}
-        Banner={Banner}
-        subBanner={subBanner}
-      ></Navigation>
+    <div className="min-h-[10000px] overflow-x-hidden  max-lg:banner  formatPage">
+      <Navigation menu={false} Banner={Banner} subBanner={subBanner}></Navigation>
 
       <Title className="mt-5  ">Hãng Điện Thoại</Title>
 
@@ -276,13 +267,9 @@ const ProductPage = () => {
               </Link>
               <div className="title px-4 py-2  text-xs">
                 <Link href={'/product/iphone-11'}>
-                  <div className="title font-semibold min-h-14  text-xs">
-                    {item.title}
-                  </div>
+                  <div className="title font-semibold min-h-14  text-xs">{item.title}</div>
                 </Link>
-                <div className="price font-semibold text-red-600  min-h-8">
-                  {item.price} đ
-                </div>
+                <div className="price font-semibold text-red-600  min-h-8">{item.price} đ</div>
                 <div className="text-[10px] p-2 border-2 rounded-lg bg-[#F3F4F6] ">
                   Giảm đến 500K khi trả góp thẻ tín dụng Sacombank qua cổng MPOS
                 </div>
@@ -304,10 +291,7 @@ const ProductPage = () => {
 
                   <div className=" flex items-center gap-1 cursor-pointer">
                     <span className="text-[12px]">Yêu Thích </span>
-                    <StarIcon
-                      color="#F59E0B"
-                      className=" w-[18px] h-[18px] max-lg:w-[10px] "
-                    ></StarIcon>
+                    <StarIcon color="#F59E0B" className=" w-[18px] h-[18px] max-lg:w-[10px] "></StarIcon>
                   </div>
                 </div>
               </div>

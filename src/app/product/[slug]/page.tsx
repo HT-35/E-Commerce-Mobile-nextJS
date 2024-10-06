@@ -93,7 +93,6 @@ const page = ({ params }: { params: { slug: string } }) => {
               {specification.map((item, index) => {
                 const backgroundWhite = index % 2 ? 'bg-white' : '';
 
-                console.log(backgroundWhite);
 
                 return (
                   <TableRow key={index} className={`${backgroundWhite}`}>

@@ -10,7 +10,7 @@ export const POST = async (
   { params }: { params: { slug: string } }
 ) => {
   const slug = params?.slug;
-  console.log('slug:', slug);
+  //console.log('slug:', slug);
 
   const bearerToken = headers().get('authorization');
 

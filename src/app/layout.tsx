@@ -47,7 +47,7 @@ export default async function RootLayout({
         url: `localhost:3000/api/user/${id?.value}`,
         headers: { Authorization: `Bearer ${accessToken_cookie?.value}` },
       });
-      console.log(`res:`, res);
+      //console.log(`res:`, res);
     } catch (error) {
       console.log(error);
     }

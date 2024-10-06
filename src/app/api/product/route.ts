@@ -88,7 +88,7 @@ export const PATCH = async (request: NextRequest) => {
   const token = headers().get('authorization');
 
   const slug = request.nextUrl.searchParams.get('slug');
-  console.log('slug:', slug);
+  //console.log('slug:', slug);
 
   try {
     const dataText = await request.text();
@@ -111,7 +111,7 @@ export const PATCH = async (request: NextRequest) => {
       headers: { Authorization: token },
     });
 
-    console.log('res:', res);
+    //console.log('res:', res);
     return Response.json(
       {
         res,
@@ -155,7 +155,7 @@ export const DELETE = async (request: NextRequest) => {
       headers: { Authorization: token },
     });
 
-    console.log('res:', res);
+    //console.log('res:', res);
     return Response.json(
       {
         res,

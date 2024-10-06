@@ -67,7 +67,6 @@ export function Register() {
 
   // 2. Define a submit handler.
   function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values);
 
     if (values.password !== values.reEnterPassword) {
       SetDisableBtn(true);

@@ -7,6 +7,7 @@ import { useMemo } from 'react';
 import { createStore } from '@/lib/redux/store';
 import Header from '@/components/header/header';
 import { usePathname } from 'next/navigation';
+import ChatClient from '@/components/chatClient/ChatClient';
 
 export default function ProviderRedux({
   children,
@@ -26,20 +27,12 @@ export default function ProviderRedux({
   return (
     <Provider store={store}>
       {!pathname.startsWith('/admin') && <Header />}
-      {/*<div className="lg:px-16   pt-8 overflow-x-hidden max-lg:px-3  max-lg:pt-[136px]"> {children}</div>*/}
-      {/*<div className="mt-4"> {children}</div>*/}
-
-      <div
-        className={` 
-    ${
-      pathname.startsWith('/admin')
-        ? 'lg:px-16 p-2 !important overflow-x-hidden max-lg:px-3'
-        : 'lg:px-16  pt-16 !important overflow-x-hidden max-lg:px-3 max-lg:pt-[136px]'
-    }
-  `}
-      >
-        {children}
-      </div>
+      <div className=""> {children}</div>
+      {!pathname.startsWith('/admin') && (
+        <div className="fixed bottom-5 right-4 z-[9999]">
+          <ChatClient />
+        </div>
+      )}
     </Provider>
   );
 }

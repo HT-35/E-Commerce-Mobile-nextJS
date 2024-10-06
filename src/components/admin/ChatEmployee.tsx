@@ -29,7 +29,6 @@ const ChatEmployee = () => {
   const messageEndRef = useRef<HTMLDivElement>(null);
 
   socket.on('isConnect', (newMessage) => {
-    console.log('kết nối', newMessage);
   });
 
   const { name, _id, accessToken, email } = useAppSelector((item) => item.account);
@@ -69,7 +68,6 @@ const ChatEmployee = () => {
   //nhận tin nhắn từ customer
   useEffect(() => {
     socket.on('AdminReceiveMessageByUser', async ({ userId, name, message }) => {
-      console.log(`message:`, message);
       const res = await sendRequest<IBackendRes<any>>({
         url: `localhost:${PORT_NEST}/chat/all`,
         method: 'GET',
@@ -126,7 +124,6 @@ const ChatEmployee = () => {
 
   const replyMessage = async (message: string) => {
     if (currentUserId && message.length > 0) {
-      console.log('currentUserId  :', currentUserId.userId);
 
       const saveMessage123 = await saveMessage({
         url: `localhost:${PORT_NEST}/chat/reply/`,
