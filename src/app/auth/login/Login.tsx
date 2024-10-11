@@ -74,7 +74,7 @@ export function Login() {
 
     dispatch(setDataAccount(res.data.user));
 
-    toast.success('Login Successfull!', {
+    toast.success('Đăng nhập thành công', {
       position: 'top-right',
       autoClose: 5000,
       hideProgressBar: false,

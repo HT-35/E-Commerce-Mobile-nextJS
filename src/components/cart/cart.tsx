@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { ArrowLeftIcon, TrashIcon } from '@radix-ui/react-icons';
 import { useAppSelector, useAppDispatch } from '@/lib/redux/hooks';
-import { setDataAccount } from '@/lib/redux/slices/accountSlice';
+import { setDataAccount, updateProductQuantity, removeFromCart } from '@/lib/redux/slices/accountSlice';
 import Link from 'next/link';
 
 const Cart = () => {
@@ -51,20 +51,31 @@ const Cart = () => {
       .reduce((total, product) => total + product.price * product.quatity, 0);
   };
 
+  // const handleQuantityChange = (id, newQuantity) => {
+  //   if (newQuantity < 1) return;
+
+  //   const updatedProducts = cart.map((product) =>
+  //     product._id === id ? { ...product, quatity: newQuantity } : product
+  //   );
+  //   dispatch(setDataAccount({ cart: updatedProducts })); // Update cart in Redux
+  // };
+
   const handleQuantityChange = (id, newQuantity) => {
     if (newQuantity < 1) return;
 
-    const updatedProducts = cart.map((product) =>
-      product._id === id ? { ...product, quatity: newQuantity } : product
-    );
-    dispatch(setDataAccount({ cart: updatedProducts })); // Update cart in Redux
+    // Dispatch action to update product quantity
+    dispatch(updateProductQuantity({ id, quantity: newQuantity }));
+  };
+
+  const handleRemoveFromCart = (id) => {
+    dispatch(removeFromCart(id)); // Dispatch action to remove from cart
   };
 
   const totalPrice = calculateTotalPrice();
 
   return (
     <div className="lg:m-4 m-2 min-h-[40px] relative bg-white rounded-lg lg:px-4 py-2 px-2 shadow-lg ">
-      {cart.length > 0 || totalPrice > 0 ? (
+      {cart && cart.length > 0 || totalPrice > 0 ? (
         <>
           <div className="cart-header border-b border-[#e5e5e5] text-[#323232] p-2.5">
             <div className="go-back flex justify-between">
@@ -116,7 +127,7 @@ const Cart = () => {
                     <div className="product-info w-3/4">
                       <div className="flex justify-between items-start max-lg:text-sm">
                         <p>{product.slug}</p>
-                        <TrashIcon className="bg-transparent border-0 cursor-pointer p-0 z-10 w-6 h-7" />
+                        <TrashIcon className="bg-transparent border-0 cursor-pointer p-0 z-10 w-6 h-7" onClick={() => handleRemoveFromCart(product._id)}/>
                       </div>
                       <div className="flex justify-between mt-[10px]">
                         <div className="price">

@@ -15,7 +15,7 @@ const LayOutUser = ({ children }: { children: React.ReactNode }) => {
   const menuItems = [
     { path: '/user/profile', label: 'Tài khoản của bạn', icon: <PersonIcon /> },
     { path: '/user/password', label: 'Đổi mật khẩu', icon: <UpdateIcon /> },
-    { path: '/user/purchase', label: 'Lịch sử mua hàng', icon: <ReaderIcon /> },
+    { path: '/user/purchase/pending', label: 'Lịch sử mua hàng', icon: <ReaderIcon /> },
     { path: '', label: 'Thoát tài khoản', icon: <ResetIcon /> },
   ];
 

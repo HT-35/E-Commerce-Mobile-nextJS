@@ -226,7 +226,7 @@ const Payment = () => {
           <div className="price-temp">
             <div className="font-semibold w-full flex justify-between items-center text-xl">
               <div className="">Tổng tiền tạm tính:</div>
-              <div className="text-red-600/100">26.890.000 đ</div>
+              <div className="text-red-600/100">26.890.000đ</div>
             </div>
           </div>
 

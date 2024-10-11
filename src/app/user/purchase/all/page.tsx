@@ -1,5 +1,7 @@
 import { user } from '@/user';
 import Purchase from '@/components/user/orders/purchase';
+import All from '@/components/user/orders/all/all';
+
 
 import React from 'react';
 
@@ -9,6 +11,7 @@ const OrderPage = async () => {
   return (
     <>
       <Purchase></Purchase>
+      <All></All>
     </>
   );
 };
