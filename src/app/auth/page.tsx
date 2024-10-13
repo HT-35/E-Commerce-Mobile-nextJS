@@ -6,10 +6,14 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 function TabsDemo() {
   return (
-    <Tabs defaultValue="Login" className="w-full  snap-none formatPage">
-      <TabsList className="grid w-full grid-cols-2 shadow-xl">
-        <TabsTrigger value="Login">Đăng Nhặp</TabsTrigger>
-        <TabsTrigger value="Register">Đăng Kí</TabsTrigger>
+    <Tabs defaultValue="Login" className="w-full  snap-none ">
+      <TabsList className="grid w-full grid-cols-2 shadow-xl h-[50px] bg-slate-200 mb-10 ">
+        <TabsTrigger value="Login" className="h-[40px]">
+          Đăng Nhặp
+        </TabsTrigger>
+        <TabsTrigger value="Register" className="h-[40px]">
+          Đăng Kí
+        </TabsTrigger>
       </TabsList>
       <TabsContent value="Login">
         <Card>

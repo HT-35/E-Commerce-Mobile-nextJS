@@ -3,10 +3,28 @@ import ChatEmployee from '@/components/admin/ChatEmployee';
 import LiveStreamAdmin from '@/components/admin/LiveStreamAdmin';
 import MangegerAccount from '@/components/admin/MangegerAccount';
 import MangegerProduct from '@/components/admin/MangegerProduct';
+import useScreen from '@/components/hooks/useScreen';
 import { PhoneIcon } from '@/components/icons';
+import { DropdownMenuGroup, DropdownMenuSeparator } from '@/components/ui/dropdown-menu';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuLabel,
+  DropdownMenuTrigger,
+} from '@radix-ui/react-dropdown-menu';
 
-import { HomeIcon, PersonIcon, ClipboardIcon, ChatBubbleIcon, CameraIcon } from '@radix-ui/react-icons';
+import {
+  HomeIcon,
+  PersonIcon,
+  ClipboardIcon,
+  ChatBubbleIcon,
+  CameraIcon,
+  Cross1Icon,
+  HamburgerMenuIcon,
+  FileIcon,
+} from '@radix-ui/react-icons';
+import { useEffect, useState } from 'react';
 
 const MenuAdmin: {
   value: string;
@@ -48,32 +66,93 @@ const MenuAdmin: {
     icon: <CameraIcon className="w-6 h-6" />,
     title: 'Livestream',
     component: <LiveStreamAdmin />,
+    //component: <></>,
   },
 ];
 
 export default function TabsDemo() {
-  return (
-    <div className="xl:px-4 xl:py-2">
-      <Tabs
-        defaultValue="livestream"
-        className=" xl:flex mt-3 items-start justify-center min-h-[500px] gap-4  max-lg:grid max-xl:grid-cols-1"
-      >
-        <TabsList className="  flex flex-col items-start  gap-4  h-full   bg-white px-2 max-xl:flex-row max-xl:flex-wrap max-xl:pb-5">
-          {MenuAdmin.map((item, index) => {
-            return (
-              <TabsTrigger
-                key={index}
-                value={item.value}
-                className="xl:min-w-[225px] flex justify-start items-center gap-3 max-xl:text-sm"
-              >
-                {item.icon}
-                {item.title}
-              </TabsTrigger>
-            );
-          })}
-        </TabsList>
+  const [active, setActive] = useState(false);
+  //const [isMounted, setIsMounted] = useState(false);
 
-        <div className=" w-full  h-full px-[14px]  bg-white rounded-xl  flex flex-col gap-5">
+  //useEffect(() => {
+  //  setIsMounted(true); // Chỉ định rằng component đã mount
+  //}, []);
+  //if (!isMounted) return null;
+
+  // button menu
+
+  const handleActive = () => {
+    setActive((prev) => !prev);
+  };
+
+  const isLargeScreen = useScreen()?.isLargeScreen ?? false;
+  //console.log(isLargeScreen);
+
+  return (
+    <div className="xl:px-10 px-4 ">
+      <Tabs defaultValue="livestream" className="  gap-2  grid grid-cols-1">
+        {isLargeScreen ? (
+          <TabsList
+            className="   xl:h-[80px] h-auto  bg-white rounded-md px-2 py-2 
+        flex justify-between items-center flex-row   max-xl:flex-wrap "
+          >
+            {MenuAdmin.map((item, index) => {
+              return (
+                <TabsTrigger
+                  key={index}
+                  value={item.value}
+                  className="xl:min-w-[190px] flex justify-start items-center gap-3 max-xl:text-sm"
+                >
+                  {item.icon}
+                  {item.title}
+                </TabsTrigger>
+              );
+            })}
+          </TabsList>
+        ) : (
+          <>
+            <TabsList
+              className="   xl:h-[80px] h-auto  bg-white rounded-md px-2 py-2 
+        flex justify-between items-center flex-row   max-xl:flex-wrap "
+            >
+              <TabsTrigger
+                value={'home'}
+                className="xl:min-w-[200px] flex justify-start items-center gap-3 max-xl:text-sm"
+              >
+                <HomeIcon className="w-6 h-6" />
+                Trang Chủ
+              </TabsTrigger>
+
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild onClick={() => handleActive()}>
+                  {active ? <Cross1Icon height={40} width={40} /> : <HamburgerMenuIcon height={40} width={40} />}
+                </DropdownMenuTrigger>
+
+                <DropdownMenuContent className="w-56 bg-slate-300 text-black p-2 rounded-lg relative z-[9999]">
+                  <DropdownMenuGroup>
+                    {MenuAdmin.map((item, index) => {
+                      if (index === 0) {
+                        return;
+                      }
+                      return (
+                        <TabsTrigger
+                          key={index}
+                          value={item.value}
+                          className="w-full flex justify-start items-center gap-3 max-xl:text-sm"
+                        >
+                          {item.icon}
+                          {item.title}
+                        </TabsTrigger>
+                      );
+                    })}
+                  </DropdownMenuGroup>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </TabsList>
+          </>
+        )}
+
+        <div className=" w-full xl:h-[630px] px-[14px]  bg-white rounded-xl  flex flex-col gap-5">
           {MenuAdmin.map((item, index) => {
             return (
               <TabsContent key={index} value={item.value}>

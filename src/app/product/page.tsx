@@ -183,7 +183,7 @@ const ProductPage = () => {
   const [productList, setProductList] = useState([]);
 
   return (
-    <div className="min-h-[10000px] overflow-x-hidden  max-lg:banner  formatPage">
+    <div className="min-h-[10000px] overflow-x-hidden  max-lg:banner  ">
       <Navigation menu={false} Banner={Banner} subBanner={subBanner}></Navigation>
 
       <Title className="mt-5  ">Hãng Điện Thoại</Title>

@@ -31,11 +31,7 @@ const ButtonMenu = () => {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild onClick={() => handleActive()}>
-        {active ? (
-          <Cross1Icon height={40} width={40} />
-        ) : (
-          <HamburgerMenuIcon height={40} width={40} />
-        )}
+        {active ? <Cross1Icon height={40} width={40} /> : <HamburgerMenuIcon height={40} width={40} />}
       </DropdownMenuTrigger>
 
       <DropdownMenuContent className="w-56">

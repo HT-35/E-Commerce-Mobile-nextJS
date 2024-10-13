@@ -18,10 +18,10 @@ const UserChat = ({
 }) => {
   return (
     <div
-      className={`user flex justify-start items-center gap-4 cursor-pointer  rounded-lg  ${active ? 'bg-slate-300' : ''}`}
+      className={`user flex justify-start items-center gap-4 cursor-pointer  rounded-lg p-1 md:p-2 ${active ? 'bg-slate-300' : ''}`}
       //onClick={joinRoom({ name, userId })}
     >
-      <div className="img xl:w-10 max-xl:w-5">
+      <div className="img xl:w-7 max-xl:w-5 max-md:hidden">
         <Image
           src={'/imgs/employee.png'}
           width="0"
@@ -37,7 +37,7 @@ const UserChat = ({
       </div>
 
       <div className={`message ${className}`}>
-        <h1 className="xl:text-lg max-xl:text-sm">{name}</h1>
+        <h1 className="xl:text-sm max-xl:text-sm">{name}</h1>
         <div className="message text-sm ">{children}</div>
       </div>
     </div>

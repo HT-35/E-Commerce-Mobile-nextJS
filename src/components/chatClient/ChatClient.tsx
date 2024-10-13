@@ -135,7 +135,3 @@ const ChatClient = () => {
 };
 
 export default ChatClient;
-
-//const ChatClient = () => {};
-
-//export default ChatClient;

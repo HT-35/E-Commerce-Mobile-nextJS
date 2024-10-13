@@ -5,13 +5,6 @@ import { ContactIcon } from './ContactIcon';
 import { GuaranteeIcon } from '@/components/icons/Guarantee';
 import { UserIcon } from '@/components/icons/UserIcon';
 import { PhoneIcon } from '@/components/icons/PhoneIcon';
+import SmileIcon from '@/components/icons/SmileIcon';
 
-export {
-  IconSearch,
-  CartIcon,
-  LocationIcon,
-  GuaranteeIcon,
-  ContactIcon,
-  UserIcon,
-  PhoneIcon,
-};
+export { IconSearch, CartIcon, LocationIcon, GuaranteeIcon, ContactIcon, UserIcon, PhoneIcon, SmileIcon };

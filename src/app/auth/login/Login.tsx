@@ -24,8 +24,11 @@ import ModalForgetPassword from '@/app/auth/login/modalForgetPassword';
 import { sendRequest } from '@/utils/fetchApi';
 import { useAppDispatch, useAppSelector } from '@/lib/redux/hooks';
 import { InitialAccountRedux, setDataAccount } from '@/lib/redux/slices/accountSlice';
+import { useRouter } from 'next/navigation';
 
 export function Login() {
+  const router = useRouter();
+
   const [openPassword, setOpenPassword] = useState<boolean>(false);
 
   const dispatch = useAppDispatch();
@@ -53,12 +56,11 @@ export function Login() {
       body: { ...values },
     });
 
-
     dispatch(setDataAccount(res.data.user));
 
     toast.success('Login Successfull!', {
       position: 'top-right',
-      autoClose: 5000,
+      autoClose: 3000,
       hideProgressBar: false,
       closeOnClick: true,
       pauseOnHover: true,
@@ -67,6 +69,9 @@ export function Login() {
       theme: 'light',
       transition: Bounce,
     });
+    router.push('/');
+
+    router.refresh();
   }
 
   return (

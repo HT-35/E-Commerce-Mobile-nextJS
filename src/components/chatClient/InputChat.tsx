@@ -1,12 +1,14 @@
 'use client';
 import UserChat from '@/components/admin/chats/userChat';
 import { typeMessage } from '@/components/chatClient/ChatClient';
+import { SmileIcon } from '@/components/icons';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Cross1Icon, PaperPlaneIcon } from '@radix-ui/react-icons';
+import EmojiPicker from 'emoji-picker-react';
 import Image from 'next/image';
 import Link from 'next/link';
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 
 const InputChat = ({
   handleActive,
@@ -25,6 +27,8 @@ const InputChat = ({
   showMessages: typeMessage[];
   _id: string;
 }) => {
+  const [activeEmojiPicker, setActiveEmojiPicker] = useState(false);
+
   //console.log('>>showMessages : ', showMessages);
 
   const messageEndRef = useRef<HTMLDivElement>(null);
@@ -32,6 +36,15 @@ const InputChat = ({
   useEffect(() => {
     messageEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [showMessages]);
+
+  const handleGetOnEmojiClick = (emojiData: any, event: any) => {
+    setMessage(message + emojiData.emoji);
+    console.log(emojiData.target);
+  };
+
+  const handleActiveEmojiPicker = () => {
+    setActiveEmojiPicker((prv) => !prv);
+  };
 
   return (
     <div
@@ -52,7 +65,7 @@ const InputChat = ({
       </div>
       <div className={`basis-6/12  message h-full  min-h-[300px] max-h-[500px] `}>
         <div className="message pl-4 mt-4 max-h-[300px]  overflow-y-auto">
-          {showMessages?.length > 0 && _id ? (
+          {showMessages && _id?.length ? (
             showMessages?.map((item: { message: string; sender: string }, index) => {
               const showAvatar =
                 index === showMessages?.length - 1 || showMessages[index].sender !== showMessages[index + 1].sender;
@@ -113,20 +126,37 @@ const InputChat = ({
         ${_id ? 'bg-white' : 'invisible'}
         `}
       >
-        <div className={`flex justify-start gap-2  `}>
-          <div className="w-10/12">
+        <div className={`flex justify-start gap-2 items-center `}>
+          <div className="w-11/12">
             <Input
               className="p-0 pl-4 border-0  rounded-none shadow-none focus:border-0 focus-visible:ring-0 focus-visible:border-0 group-hover:border-red-500"
               placeholder="Nhập nội dung ..."
               autoComplete="off"
               value={message}
               onChange={(e) => setMessage(e.target.value)}
+              onKeyDown={(e: any) => {
+                if (e.key === 'Enter') {
+                  sendMessage();
+                  e.target.value = '';
+                }
+              }}
             />
           </div>
-          <div className="w-2/12">
-            <Button type="submit" className=" bg-transparent shadow-none hover:bg-transparent" onClick={sendMessage}>
-              <PaperPlaneIcon color="black" height={25} width={25}></PaperPlaneIcon>
-            </Button>
+          <EmojiPicker
+            open={activeEmojiPicker}
+            onEmojiClick={handleGetOnEmojiClick}
+            skinTonesDisabled={false}
+            searchDisabled={false}
+            reactionsDefaultOpen={true}
+            style={{
+              position: 'absolute',
+              bottom: '50px',
+              right: '0px',
+              zIndex: '9999',
+            }}
+          />
+          <div className="w-1/12" onClick={handleActiveEmojiPicker}>
+            <SmileIcon></SmileIcon>
           </div>
         </div>
       </div>

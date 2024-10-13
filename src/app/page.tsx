@@ -97,11 +97,7 @@ const Banner = [
 
 export default function Home() {
   return (
-    <div className="min-h-[1000px] overflow-x-hidden  banner formatPage">
-      <div className="fixed bottom-5 right-4 z-[9999]">
-        <ChatClient />
-      </div>
-
+    <div className="min-h-[1000px] overflow-x-hidden  banner ">
       {/* Navigator */}
       <Navigation menu subBanner={subBanner} Banner={Banner}></Navigation>
       {/* banner */}

@@ -43,7 +43,7 @@ const Header = () => {
   return (
     <>
       {isLargeScreen ? (
-        <div className="flex justify-between items-center py-2 text-white text-xs fixed w-full bg-[#DD0000] px-8 font-medium mb-20 z-50">
+        <div className="flex justify-between items-center py-2 text-white  fixed w-full bg-[#DD0000] px-8 font-medium mb-20 z-50 text-xl">
           <Link href={'/'}>
             <div className="logo text-xl cursor-pointer">HTS Store</div>
           </Link>
@@ -72,17 +72,13 @@ const Header = () => {
             </div>
           </Link>
 
-          <div className="account flex justify-between items-center gap-2 hover:bg-white hover:bg-opacity-50 p-2 rounded-md cursor-pointer">
-            <UserIcon></UserIcon>
-            <div>
-              {name ?? (
-                <>
-                  <div className="">Tài Khoản</div>
-                  <div className="">Đơn Hàng</div>
-                </>
-              )}
+          <Link href={'/auth'}>
+            <div className="account flex justify-between items-center gap-2 hover:bg-white hover:bg-opacity-50 p-2 rounded-md cursor-pointer">
+              <UserIcon></UserIcon>
+
+              {name.length > 0 ? <>{name}</> : <>Login</>}
             </div>
-          </div>
+          </Link>
         </div>
       ) : (
         <div className="lg:hidden py-1 text-white text-xs fixed w-full bg-[#DD0000] px-2 font-medium mb-20 z-50">
@@ -93,26 +89,18 @@ const Header = () => {
             <div className="cart flex justify-between items-center gap-2 hover:bg-white hover:bg-opacity-50 p-2 rounded-md cursor-pointer text-xs">
               <CartIcon /> Giỏ Hàng
             </div>
-            <div className="account flex justify-between items-center gap-2 hover:bg-white hover:bg-opacity-50 p-2 rounded-md cursor-pointer">
-              <UserIcon></UserIcon>
-              {/*<div>
-                <div className="">Tài Khoản</div>
-                <div className="">Đơn Hàng</div>
-              </div>*/}
-              {name ?? (
-                <>
-                  <div className="">Tài Khoản</div>
-                  <div className="">Đơn Hàng</div>
-                </>
-              )}
-            </div>
+
+            <Link href={'/auth'}>
+              <div className="account flex justify-between items-center gap-2 hover:bg-white hover:bg-opacity-50 p-2 rounded-md cursor-pointer">
+                <UserIcon></UserIcon>
+
+                {name.length > 0 ? <>{name}</> : <>Login</>}
+              </div>
+            </Link>
           </div>
           <div className="flex gap-4 justify-center items-center">
             <div className="search relative w-full basis-5/6">
-              <Input
-                className="pr-10 w-full placeholder:text-white"
-                placeholder="Bạn tìm gì ..."
-              ></Input>
+              <Input className="pr-10 w-full placeholder:text-white" placeholder="Bạn tìm gì ..."></Input>
               <div className="absolute top-[50%] -translate-y-[50%] right-2 basis-1/6">
                 <IconSearch></IconSearch>
               </div>
