@@ -24,6 +24,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import { useAppSelector } from '@/lib/redux/hooks';
+import { sendRequest } from '@/utils/fetchApi';
 
 const listFieldSchema = [
   {
@@ -76,6 +78,7 @@ const defaultValues = {
 };
 
 export default function FormCreateUser() {
+  const { name, _id, accessToken, email } = useAppSelector((item) => item.account);
   const [fileImg, setFileImg] = useState<any>(undefined);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -98,7 +101,29 @@ export default function FormCreateUser() {
     console.log('Form submitted:', data);
 
     const formData = new FormData();
+    formData.append('name', data.name);
+    formData.append('email', data.email);
+    formData.append('phoneNumber', data.phone);
+    formData.append('role', data.roles);
     formData.append('file', fileImg);
+
+    // Use sendRequest to send data to the API
+    sendRequest({
+      url: 'localhost:3000/api/user',
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+      body: formData,
+    })
+      .then((response) => {
+        // Handle success (e.g., show success message, update the user list, etc.)
+        console.log('User added successfully:', response);
+      })
+      .catch((error) => {
+        // Handle error (e.g., show error message)
+        console.error('Error adding user:', error);
+      });
   }
 
   function onError(errors: any) {
