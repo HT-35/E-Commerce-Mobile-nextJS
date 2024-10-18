@@ -33,7 +33,7 @@ export function Login() {
 
   const dispatch = useAppDispatch();
 
-  const dataAccount = useAppSelector((state: any) => state.account);
+  //const dataAccount = useAppSelector((state: any) => state.account);
 
   // 1. Define your form.
   const form = useForm<z.infer<typeof formSchema>>({
@@ -55,23 +55,38 @@ export function Login() {
       url: 'localhost:3000/api/auth/login',
       body: { ...values },
     });
+    console.log(`res:`, res);
 
-    dispatch(setDataAccount(res.data.user));
+    if (res?.data?.user) {
+      dispatch(setDataAccount(res.data.user));
 
-    toast.success('Login Successfull!', {
-      position: 'top-right',
-      autoClose: 3000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-      theme: 'light',
-      transition: Bounce,
-    });
-    router.push('/');
+      toast.success('Login Successfull!', {
+        position: 'top-right',
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: 'light',
+        transition: Bounce,
+      });
+      router.push('/');
 
-    router.refresh();
+      router.refresh();
+    } else {
+      toast.error('Đăng Nhập Không Thành Công !', {
+        position: 'top-right',
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: 'light',
+        transition: Bounce,
+      });
+    }
   }
 
   return (

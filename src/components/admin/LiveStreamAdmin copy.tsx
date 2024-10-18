@@ -1,25 +1,51 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 'use client';
-
+import EmojiPicker from 'emoji-picker-react';
 import { useEffect, useRef, useState } from 'react';
 import Peer from 'peerjs';
 import { useAppSelector } from '@/lib/redux/hooks';
 import { useRouter } from 'next/navigation';
 import { io } from 'socket.io-client';
+import { Input } from '@/components/ui/input';
+import { SmileIcon } from '@/components/icons';
+import useScreen from '@/components/hooks/useScreen';
+import { Button } from '@/components/ui/button';
+
+export interface Imessage {
+  name: string;
+  massage: string;
+  role: string;
+}
 
 const LiveStream = () => {
+  const [chosenEmoji, setChosenEmoji] = useState(null);
+
+  const [countView, setCountView] = useState<number>(0);
+
+  const [listMessage, setListMessage] = useState<Imessage[]>([]);
+
   const router = useRouter();
 
-  const { _id } = useAppSelector((state) => state.account);
+  const [message, setMessage] = useState<string>('');
+
+  const messageEndRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (messageEndRef.current) {
+      messageEndRef.current.scrollIntoView({ behavior: 'smooth' });
+    }
+    //return () => {};
+  }, [listMessage]);
+
+  const isMounted = useScreen()?.isMounted ?? false;
+  const [activeEmojiPicker, setActiveEmojiPicker] = useState(false);
+
+  const { _id, name } = useAppSelector((state) => state.account);
 
   if (!_id) {
     router.push('/auth');
   }
 
-  const [peerId, setPeerId] = useState<string>('');
-  const [remotePeerId, setRemotePeerId] = useState<string>('');
-  const [stream, setStream] = useState<MediaStream | null>(null);
-  const remoteVideoRef = useRef<HTMLVideoElement>(null);
   const userVideoRef = useRef<HTMLVideoElement>(null);
   const peerInstance = useRef<Peer | null>(null);
 
@@ -27,53 +53,31 @@ const LiveStream = () => {
 
   useEffect(() => {
     socket.on('Admin-reciever-client', (viewerId) => {
-      console.log('');
-      console.log('');
-      console.log('');
-      console.log('viewerId', viewerId);
-      console.log('');
-      console.log('');
-      navigator.mediaDevices.getUserMedia({ video: true, audio: true }).then((stream) => {
-        setStream(stream);
+      // gọi tới client sau khi server gửi viewerId của client
+      navigator.mediaDevices.getUserMedia({ video: { width: 1280, height: 720 }, audio: true }).then((stream) => {
         const call = peerInstance.current?.call(viewerId.viewerId, stream);
-        call?.on('stream', (remoteStream) => {
-          if (remoteVideoRef.current) {
-            remoteVideoRef.current.srcObject = remoteStream;
-          }
-        });
-        if (userVideoRef.current) {
-          userVideoRef.current.srcObject = stream;
-        }
+        call?.on('stream', (remoteStream) => {});
       });
     });
 
-    return () => {
-      //socket.close();
-      //socket.off('Admin-reciever-client');
-    };
+    return () => {};
+  }, []);
+
+  useEffect(() => {
+    navigator.mediaDevices.getUserMedia({ video: { width: 1280, height: 720 }, audio: true }).then((stream) => {
+      if (userVideoRef.current) {
+        userVideoRef.current.srcObject = stream;
+      }
+    });
+
+    return () => {};
   }, []);
 
   useEffect(() => {
     const peer = new Peer(_id as string);
 
     peer.on('open', (id) => {
-      setPeerId(id);
       socket.emit('admin-Conect', { viewerId: id });
-    });
-
-    // nhận cuộc gọi và trả lời
-    peer.on('call', (call) => {
-      // Khi có cuộc gọi đến
-      navigator.mediaDevices.getUserMedia({ video: true, audio: true }).then((stream) => {
-        call.answer(stream); // Trả lời cuộc gọi bằng stream của mình
-        call.on('stream', (remoteStream) => {
-          if (remoteVideoRef.current) {
-            console.log('onstream');
-
-            remoteVideoRef.current.srcObject = remoteStream; // Gán remote stream vào video element
-          }
-        });
-      });
     });
 
     peerInstance.current = peer;
@@ -83,45 +87,87 @@ const LiveStream = () => {
     };
   }, [_id]);
 
-  // gọi đi và nhận lại câu trả lời
-  const callPeer = (remotePeerId: string) => {
-    navigator.mediaDevices.getUserMedia({ video: true, audio: true }).then((stream) => {
-      setStream(stream);
-      const call = peerInstance.current?.call(remotePeerId, stream);
-      call?.on('stream', (remoteStream) => {
-        if (remoteVideoRef.current) {
-          remoteVideoRef.current.srcObject = remoteStream;
-        }
-      });
-      if (userVideoRef.current) {
-        userVideoRef.current.srcObject = stream;
-      }
+  // get message by client
+  useEffect(() => {
+    socket.on('chat-all', (e) => {
+      //console.log(e);
+      const message: Imessage = {
+        name: e.name,
+        massage: e.message,
+        role: e.role,
+      };
+      setListMessage((prev) => [...prev, message]);
     });
+
+    socket.on('count-connect-stream', (e) => {
+      setCountView(e);
+    });
+
+    return () => {
+      socket.off('chat-all');
+      socket.off('count-connect-stream');
+    };
+  }, []);
+  //console.log(listMessage);
+
+  const handleActiveEmojiPicker = () => {
+    console.log('activeEmojiPicker :  ', activeEmojiPicker);
+
+    setActiveEmojiPicker((prv) => !prv);
+  };
+
+  const handleGetOnEmojiClick = (emojiData: any, event: any) => {
+    setMessage(message + emojiData.emoji);
+    console.log(emojiData.emoji);
+  };
+
+  const handleSendMessageLiveStream = async () => {
+    socket.emit('client-chat', { message, name, role: 'employee' });
+    console.log(message);
+    setMessage('');
   };
 
   return (
-    <div>
-      <h1>PeerJS Video Call</h1>
-      <div>
-        <video
-          className="border-2 border-red-500 w-[200px] h-[200px] p-6"
-          ref={userVideoRef}
-          autoPlay
-          playsInline
-        ></video>
-        <video ref={remoteVideoRef} autoPlay playsInline></video>
+    <>
+      <div className="title text-xs max-lg:text-sm flex items-center gap-4 my-2">
+        <p className=" text-xs max-lg:text-sm">Số Người Xem: {countView} người</p>
+        <Button className="h-6">Kết Thúc</Button>
       </div>
-      <input
-        type="text"
-        placeholder="Remote Peer ID"
-        value={remotePeerId}
-        onChange={(e) => setRemotePeerId(e.target.value)}
-      />
-      <button className="w-4 h-4 m-4" onClick={() => callPeer(remotePeerId)}>
-        Call
-      </button>
-      <p>Your ID: {peerId}</p>
-    </div>
+
+      <div className="flex xl:justify-between xl:items-center max-lg:flex-col gap-3 w-full  ">
+        {/* video */}
+        <div className="basis-8/12  ">
+          <video className=" w-full h-full " ref={userVideoRef} autoPlay playsInline></video>
+        </div>
+
+        {/* message */}
+        <div className="basis-4/12 h-full  rounded-md">
+          <div className="message h-[500px] max-h-[450px] max-lg:max-h-[300px] max-md:max-h-[450px] overflow-y-auto text-xs max-lg:text-sm">
+            {listMessage.map((item: Imessage, index) => {
+              return (
+                <div
+                  key={index}
+                  className={`flex justify-start items-center  gap-4 text-xs max-lg:text-sm mb-1
+                ${item.role === 'employee' ? 'text-green-400' : 'text-black'}
+                `}
+                >
+                  <div className="author">
+                    <p>
+                      {' '}
+                      {item.name} {item.role === 'employee' ? '(admin)' : ''}:{' '}
+                    </p>
+                  </div>
+                  <div className="massage">{item.massage}</div>
+                </div>
+              );
+            })}
+            <div className="" ref={messageEndRef}></div>
+          </div>
+
+          <div className="chat  h-1/6  flex justify-center items-center  gap-3 relative w-full py-2"></div>
+        </div>
+      </div>
+    </>
   );
 };
 

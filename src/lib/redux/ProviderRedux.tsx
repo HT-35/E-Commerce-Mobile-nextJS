@@ -19,6 +19,7 @@ export default function ProviderRedux({
   const pathname = usePathname(); // Lấy đường dẫn hiện tại
 
   const checkPageAdmin = pathname.startsWith('/admin') ? true : false;
+  const checkPageLivestream = pathname.startsWith('/livestream') ? true : false;
 
   const store = useMemo(() => {
     return createStore({
@@ -29,12 +30,15 @@ export default function ProviderRedux({
   return (
     <Provider store={store}>
       {!checkPageAdmin && <Header />}
-      {!checkPageAdmin && !pathname.startsWith('/auth') && (
+      {!checkPageAdmin && !pathname.startsWith('/auth') && !pathname.startsWith('/livestream') && (
         <div className="fixed bottom-0 right-4 z-[9999] ">
           <ChatClient />
         </div>
       )}
-      <div className={` ${checkPageAdmin === true ? '' : 'formatPage'}`}> {children}</div>
+      <div className={` ${checkPageAdmin === true || checkPageLivestream === true ? '' : 'formatPage'}`}>
+        {' '}
+        {children}
+      </div>
     </Provider>
   );
 }

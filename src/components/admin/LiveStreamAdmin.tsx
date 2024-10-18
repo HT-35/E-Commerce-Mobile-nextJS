@@ -1,24 +1,70 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 'use client';
-import EmojiPicker from 'emoji-picker-react';
 import { useEffect, useRef, useState } from 'react';
 import Peer from 'peerjs';
 import { useAppSelector } from '@/lib/redux/hooks';
 import { useRouter } from 'next/navigation';
 import { io } from 'socket.io-client';
-import { Input } from '@/components/ui/input';
-import { SmileIcon } from '@/components/icons';
-import useScreen from '@/components/hooks/useScreen';
+
+import { Button } from '@/components/ui/button';
+import { CreateLiveStreamForm, CreateLiveStreamFormSchema } from '@/components/admin/form/CreateLiveStream';
+import { z } from 'zod';
+import { sendRequest } from '@/utils/fetchApi';
+import { InputChatLiveStreamForm } from '@/components/admin/form/FormInputLiveStream';
+
+export interface Imessage {
+  name: string;
+  massage: string;
+  role: string;
+}
+
+const socket = io(`http://localhost:5001`);
 
 const LiveStream = () => {
-  const [chosenEmoji, setChosenEmoji] = useState(null);
+  const [countView, setCountView] = useState<number>(0);
+
+  const [listMessage, setListMessage] = useState<Imessage[]>([]);
+
+  const [_idLiveStream, set_idLiveStream] = useState<string>('');
 
   const router = useRouter();
 
-  const isMounted = useScreen()?.isMounted ?? false;
-  const [activeEmojiPicker, setActiveEmojiPicker] = useState(false);
+  //const [message, setMessage] = useState<string>('');
 
-  const { _id } = useAppSelector((state) => state.account);
+  const messageEndRef = useRef<HTMLDivElement>(null);
+
+  //useEffect(() => {
+  //  const handleEndLiveWhenUnLoad = () => {
+  //    socket.emit('employee-unload', 'unload');
+  //  };
+  //  window.addEventListener('beforeunload', handleEndLiveWhenUnLoad);
+  //  return () => {
+  //    window.removeEventListener('beforeunload', handleEndLiveWhenUnLoad);
+  //  };
+  //}, []);
+
+  useEffect(() => {
+    const handleEndLiveWhenUnLoad = () => {
+      const url = `http://localhost:4000/livestream/end/`;
+      const data = new Blob(['unload'], { type: 'text/plain' });
+      navigator.sendBeacon(url, data); // Gửi dữ liệu ngay cả khi trang bị đóng
+    };
+
+    window.addEventListener('beforeunload', handleEndLiveWhenUnLoad);
+
+    return () => {
+      window.removeEventListener('beforeunload', handleEndLiveWhenUnLoad);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (messageEndRef.current) {
+      messageEndRef.current.scrollIntoView({ behavior: 'smooth' });
+    }
+    //return () => {};
+  }, [listMessage]);
+
+  const { _id, name, accessToken } = useAppSelector((state) => state.account);
 
   if (!_id) {
     router.push('/auth');
@@ -26,8 +72,6 @@ const LiveStream = () => {
 
   const userVideoRef = useRef<HTMLVideoElement>(null);
   const peerInstance = useRef<Peer | null>(null);
-
-  const socket = io(`http://localhost:5001`);
 
   useEffect(() => {
     socket.on('Admin-reciever-client', (viewerId) => {
@@ -42,14 +86,16 @@ const LiveStream = () => {
   }, []);
 
   useEffect(() => {
-    navigator.mediaDevices.getUserMedia({ video: { width: 1280, height: 720 }, audio: true }).then((stream) => {
-      if (userVideoRef.current) {
-        userVideoRef.current.srcObject = stream;
-      }
-    });
+    if (_idLiveStream.length > 0) {
+      navigator.mediaDevices.getUserMedia({ video: { width: 1280, height: 720 }, audio: true }).then((stream) => {
+        if (userVideoRef.current) {
+          userVideoRef.current.srcObject = stream;
+        }
+      });
+    }
 
     return () => {};
-  }, []);
+  }, [_idLiveStream]);
 
   useEffect(() => {
     const peer = new Peer(_id as string);
@@ -65,65 +111,138 @@ const LiveStream = () => {
     };
   }, [_id]);
 
-  const handleActiveEmojiPicker = () => {
-    console.log('activeEmojiPicker :  ', activeEmojiPicker);
+  // get message by client
+  useEffect(() => {
+    socket.on('chat-all', (e) => {
+      //console.log(e);
+      const message: Imessage = {
+        name: e.name,
+        massage: e.message,
+        role: e.role,
+      };
+      setListMessage((prev) => [...prev, message]);
+    });
 
-    setActiveEmojiPicker((prv) => !prv);
+    socket.on('count-connect-stream', (e) => {
+      setCountView(e);
+    });
+
+    return () => {
+      socket.off('chat-all');
+      socket.off('count-connect-stream');
+    };
+  }, []);
+
+  const handleSendMessageLiveStream = async ({ message }: { message: string }) => {
+    const sendMessageChatLiveStream = await sendRequest({
+      url: `http://localhost:4000/livestream/message/${_idLiveStream}`,
+      method: 'POST',
+      body: {
+        senderId: _id,
+        sender: 'employee',
+        nameSender: name,
+        content: message,
+      },
+      headers: { Authorization: `Bearer ${accessToken}` },
+    });
+    console.log('sendMessageChatLiveStream : ', sendMessageChatLiveStream);
+
+    socket.emit('client-chat', { message, name, role: 'employee' });
+    console.log(message);
   };
 
-  const handleGetOnEmojiClick = (event: any, emojiObject: any) => {
-    setChosenEmoji(emojiObject);
-    console.log(emojiObject.target);
+  // create livestream
+  async function createLiveStream(title: z.infer<typeof CreateLiveStreamFormSchema>) {
+    const livestream = await sendRequest<IBackendRes<any>>({
+      url: 'http://localhost:4000/livestream',
+      method: 'POST',
+      headers: { Authorization: `Bearer ${accessToken}` },
+      body: {
+        employeeId: _id,
+        nameEmployee: name,
+        title: title.livestream,
+      },
+    });
+
+    if (livestream.statusCode === 201) {
+      set_idLiveStream(livestream.data._id);
+    }
+  }
+
+  const handleEndLiveStream = async () => {
+    const liveStream = await sendRequest<IBackendRes<any>>({
+      method: 'GET',
+      url: `http://localhost:4000/livestream/end/${_idLiveStream}`,
+      headers: { Authorization: `Bearer ${accessToken}` },
+    });
+    console.log(liveStream);
+
+    window.location.reload();
+  };
+
+  const handleSetMessage = ({ massage }: { massage: string }) => {
+    const newMessage: Imessage = {
+      name: name!,
+      massage,
+      role: 'customer',
+    };
+    setListMessage((prev: Imessage[]) => [...prev, newMessage]);
   };
 
   return (
-    <div className="flex xl:justify-between xl:items-center max-xl:flex-col gap-3 w-full h-full py-4">
-      <div className="basis-8/12  ">
-        <video className=" w-full h-full " ref={userVideoRef} autoPlay playsInline></video>
-      </div>
-
-      <div className="basis-4/12 h-full  rounded-md">
-        <div className="message max-h-[450px] overflow-y-auto">
-          <div className="flex justify-start items-center  gap-4">
-            <div className="author">Huy Tran : </div>
-            <div className="author">Hello, m có thấy t không</div>
+    <>
+      {_idLiveStream.length > 0 ? (
+        <div>
+          <div className="title text-xs max-lg:text-sm flex items-center gap-4 my-2">
+            <p className=" text-xs max-lg:text-sm">Số Người Xem: {countView} người</p>
+            <Button className="h-6" onClick={handleEndLiveStream}>
+              Kết Thúc
+            </Button>
           </div>
 
-          {Array(50)
-            .fill(null)
-            .map((item, index) => {
-              return (
-                <div key={index} className="flex justify-start items-center  gap-4">
-                  <div className="author">Huy Tran : </div>
-                  <div className="author">Hello, m có thấy t không</div>
-                </div>
-              );
-            })}
-        </div>
-        <div className="chat  h-1/6  flex justify-center items-center  gap-3 relative w-full">
-          <div className="w-full">
-            <Input placeholder="Nhập nội dung ..."></Input>
+          <div className="flex xl:justify-between xl:items-center max-lg:flex-col gap-3 w-full  ">
+            <div className="basis-8/12  ">
+              <video className=" w-full h-full " ref={userVideoRef} autoPlay playsInline></video>
+            </div>
+
+            <div className="basis-4/12 h-full  rounded-md">
+              <div className="message h-[500px] max-h-[450px] max-lg:max-h-[300px] max-md:max-h-[450px] overflow-y-auto text-xs max-lg:text-sm">
+                {listMessage.map((item: Imessage, index) => {
+                  return (
+                    <div
+                      key={index}
+                      className={`flex justify-start items-center  gap-4 text-xs max-lg:text-sm mb-1
+                ${item.role === 'employee' ? 'text-green-400' : 'text-black'}
+                `}
+                    >
+                      <div className="author">
+                        <p>
+                          {' '}
+                          {item.name} {item.role === 'employee' ? '(admin)' : ''}:{' '}
+                        </p>
+                      </div>
+                      <div className="massage">{item.massage}</div>
+                    </div>
+                  );
+                })}
+                <div className="" ref={messageEndRef}></div>
+              </div>
+
+              <div className="chat  h-1/6  flex justify-center items-center  gap-3 relative w-full py-2">
+                <InputChatLiveStreamForm
+                  handleSetMessage={handleSetMessage}
+                  handleSendMessageLiveStream={handleSendMessageLiveStream}
+                ></InputChatLiveStreamForm>
+              </div>
+            </div>
           </div>
-          <EmojiPicker
-            open={activeEmojiPicker}
-            onEmojiClick={handleGetOnEmojiClick}
-            skinTonesDisabled={false}
-            searchDisabled={false}
-            reactionsDefaultOpen={true}
-            style={{
-              position: 'absolute',
-              bottom: '60px',
-              right: '0px',
-              zIndex: '9999',
-            }}
-          />
-          <div className="icon relative w-[50px]" onClick={handleActiveEmojiPicker}>
-            <SmileIcon></SmileIcon>
-            {/*<div className="absolute">{activeEmojiPicker && <EmojiPicker />}</div>*/}
-          </div>
         </div>
-      </div>
-    </div>
+      ) : (
+        <div className="createLiveStream">
+          <CreateLiveStreamForm onSubmit={createLiveStream}></CreateLiveStreamForm>
+        </div>
+      )}
+    </>
   );
 };
 

@@ -10,7 +10,7 @@ const SmileIcon = () => {
       //viewBox="0 0 24 24"
       strokeWidth={1.5}
       stroke="black"
-      className="w-6 h-6"
+      className="w-7 h-7"
     >
       <path
         fill="#000000"

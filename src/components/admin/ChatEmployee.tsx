@@ -81,11 +81,13 @@ const ChatEmployee = () => {
   //nhận tin nhắn từ customer
   useEffect(() => {
     socket.on('AdminReceiveMessageByUser', async ({ userId, name, message }) => {
+      console.log(`message:`, message);
       const res = await sendRequest<IBackendRes<any>>({
         url: `localhost:${PORT_NEST}/chat/all`,
         method: 'GET',
         headers: { Authorization: `Bearer ${accessToken}` },
       });
+
       const listArrChat: typeListChatUser[] = await res.data.map((item: any, index: number) => {
         return {
           nameCustomer: item.nameCustomer,

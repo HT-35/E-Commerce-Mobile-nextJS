@@ -9,60 +9,50 @@ import Link from 'next/link';
 import { useAppSelector } from '@/lib/redux/hooks';
 
 const Header = () => {
-  const [isMounted, setIsMounted] = useState(false);
-  const [isLargeScreen, setIsLargeScreen] = useState<boolean>(false); // useState luôn được gọi
+  const [isLargeScreen, setIsLargeScreen] = useState<boolean>(false);
 
   const { name } = useAppSelector((state: any) => state.account);
-  //console.log(`userClient:`, userClient);
-
-  useEffect(() => {
-    setIsMounted(true); // Chỉ định rằng component đã mount
-  }, []);
 
   useEffect(() => {
     const mediaQuery = window.matchMedia('(min-width: 1024px)');
 
-    const handleResize = (event: MediaQueryListEvent) => {
-      setIsLargeScreen(event.matches);
+    const handleResize = () => {
+      setIsLargeScreen(mediaQuery.matches);
     };
 
     // Đặt giá trị ban đầu
     setIsLargeScreen(mediaQuery.matches);
 
     // Lắng nghe sự kiện thay đổi kích thước màn hình
-    mediaQuery.addEventListener('change', handleResize);
+    window.addEventListener('resize', handleResize);
 
-    // Hủy lắng nghe sự kiện khi component unmount
+    // Cleanup event listener khi component unmount
     return () => {
-      mediaQuery.removeEventListener('change', handleResize);
+      window.removeEventListener('resize', handleResize);
     };
-  }, []); // useEffect vẫn được gọi mà không phụ thuộc vào isMounted
-
-  if (!isMounted) return null; // Chỉ render sau khi component đã mount
+  }, []);
 
   return (
     <>
       {isLargeScreen ? (
-        <div className="flex justify-between items-center py-2 text-white  fixed w-full bg-[#DD0000] px-8 font-medium mb-20 z-50 text-xl">
+        <div className="flex justify-between items-center py-2 text-white fixed w-full bg-[#DD0000] px-8 font-medium mb-20 z-50 text-xl">
           <Link href={'/'}>
             <div className="logo text-xl cursor-pointer">HTS Store</div>
           </Link>
           <div className="search relative w-full max-2xl:max-w-[20%] 2xl:max-w-[350px]">
             <Input
-              className="pr-10  placeholder:text-white focus:placeholder:text-transparent  focus:outline-none focus:border-0 focus:ring-1 focus:ring-ring"
+              className="pr-10 placeholder:text-white focus:placeholder:text-transparent focus:outline-none focus:border-0 focus:ring-1 focus:ring-ring"
               placeholder="Bạn tìm gì ..."
             ></Input>
             <div className="absolute top-[50%] -translate-y-[50%] right-2">
-              <IconSearch></IconSearch>
+              <IconSearch />
             </div>
           </div>
 
           <Link href={'/product'}>
             <div className="guarantee flex justify-between items-center gap-2 hover:bg-white hover:bg-opacity-50 p-2 rounded-md cursor-pointer">
-              <ListBulletIcon className="w-7 h-7"></ListBulletIcon>
-              <div>
-                <div className="">Sản Phẩm</div>
-              </div>
+              <ListBulletIcon className="w-7 h-7" />
+              <div>Sản Phẩm</div>
             </div>
           </Link>
 
@@ -74,8 +64,7 @@ const Header = () => {
 
           <Link href={'/auth'}>
             <div className="account flex justify-between items-center gap-2 hover:bg-white hover:bg-opacity-50 p-2 rounded-md cursor-pointer">
-              <UserIcon></UserIcon>
-
+              <UserIcon />
               {name.length > 0 ? <>{name}</> : <>Login</>}
             </div>
           </Link>
@@ -92,21 +81,20 @@ const Header = () => {
 
             <Link href={'/auth'}>
               <div className="account flex justify-between items-center gap-2 hover:bg-white hover:bg-opacity-50 p-2 rounded-md cursor-pointer">
-                <UserIcon></UserIcon>
-
+                <UserIcon />
                 {name.length > 0 ? <>{name}</> : <>Login</>}
               </div>
             </Link>
           </div>
           <div className="flex gap-4 justify-center items-center">
             <div className="search relative w-full basis-5/6">
-              <Input className="pr-10 w-full placeholder:text-white" placeholder="Bạn tìm gì ..."></Input>
+              <Input className="pr-10 w-full placeholder:text-white" placeholder="Bạn tìm gì ..." />
               <div className="absolute top-[50%] -translate-y-[50%] right-2 basis-1/6">
-                <IconSearch></IconSearch>
+                <IconSearch />
               </div>
             </div>
             <div className="menu">
-              <ButtonMenu></ButtonMenu>
+              <ButtonMenu />
             </div>
           </div>
         </div>

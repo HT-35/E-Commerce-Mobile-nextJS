@@ -79,6 +79,7 @@ const ChatClient = () => {
 
     return () => {
       socket.off('UserReceiveMessageByAdmin');
+      //socket.disconnect();
     };
   }, []);
 
@@ -115,6 +116,19 @@ const ChatClient = () => {
       setMessage('');
     }
   };
+
+  useEffect(() => {
+    const cancelSocketIO = () => {
+      socket.disconnect();
+    };
+
+    window.addEventListener('beforeunload', cancelSocketIO);
+
+    // Cleanup function to remove event listener when component unmounts
+    return () => {
+      window.removeEventListener('beforeunload', cancelSocketIO);
+    };
+  }, []);
 
   return (
     <div className="relative transition-all duration-1000 z-[99]">
