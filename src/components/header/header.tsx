@@ -7,7 +7,6 @@ import { ListBulletIcon } from '@radix-ui/react-icons';
 import { useAppSelector, useAppDispatch } from '@/lib/redux/hooks';
 import ButtonMenu from '@/components/ui/ButtonMenu';
 import Link from 'next/link';
-import { useAppSelector } from '@/lib/redux/hooks';
 
 const Header = () => {
   const [isLargeScreen, setIsLargeScreen] = useState<boolean>(false);
