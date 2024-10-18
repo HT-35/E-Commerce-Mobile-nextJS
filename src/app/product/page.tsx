@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 /* eslint-disable react/prop-types */
 'use client';
 import { SelectForm } from '@/app/product/Filter';
@@ -23,7 +24,6 @@ import { Scrollbar } from 'swiper/modules';
 import { useEffect, useState } from 'react';
 import { sendRequest } from '@/utils/fetchApi';
 import { formatPrice } from '@/utils/index';
-
 
 // import {sendRequest} from '@/'
 const subBanner = [
@@ -201,7 +201,7 @@ const ProductPage = () => {
   // Hàm xử lý sắp xếp
   const handleSort = (order) => {
     setSortOrder(order);
-    const sortedProducts = [...productList].sort((a, b) => {
+    const sortedProducts = [...productList].sort((a: any, b: any) => {
       const priceA = parseFloat(a.option[0].price.replace(/\./g, ''));
       const priceB = parseFloat(b.option[0].price.replace(/\./g, ''));
       return order === 'asc' ? priceA - priceB : priceB - priceA;
@@ -210,15 +210,15 @@ const ProductPage = () => {
   };
   // console.log("🚀 ~ ProductPage ~ productList:", productList)
 
-    // Handle brand filter
-    const handleBrandFilter = async (brand) => {
-      setSelectedBrand(brand); // Update selected brand
-      const res = await sendRequest<IBackendRes<any>>({
-        url: `localhost:4000/product/brand/${brand.toLowerCase()}`,
-        method: 'GET',
-      });
-      setProductList(res.data);
-    };
+  // Handle brand filter
+  const handleBrandFilter = async (brand) => {
+    setSelectedBrand(brand); // Update selected brand
+    const res = await sendRequest<IBackendRes<any>>({
+      url: `localhost:4000/product/brand/${brand.toLowerCase()}`,
+      method: 'GET',
+    });
+    setProductList(res.data);
+  };
 
   return (
     <div className="min-h-[10000px] overflow-x-hidden select-none max-lg:banner lg:mt-4">
@@ -256,7 +256,10 @@ const ProductPage = () => {
           {ListBrand.map((item, index) => {
             return (
               <SwiperSlide key={index}>
-                <Button className=" bg-white hover:bg-slate-100 border-[1px] border-slate-400" onClick={() => handleBrandFilter(item.brand)}>
+                <Button
+                  className=" bg-white hover:bg-slate-100 border-[1px] border-slate-400"
+                  onClick={() => handleBrandFilter(item.brand)}
+                >
                   <img src={item.img} alt={item.brand} className="" />
                 </Button>
               </SwiperSlide>
@@ -297,58 +300,61 @@ const ProductPage = () => {
       {/* Product */}
 
       <div className="product grid grid-cols-4  w-full h-full gap-8 my-4   max-lg:grid-cols-2  max-lg:gap-2">
-        {productList.map((item, index) => {
-          console.log("🚀 ~ {productList.map ~ item:", item.option[0].img[0].link)
-          
+        {productList.map((item: any, index) => {
+          console.log(
+            '🚀 ~ {productList.map ~ item:',
+            item.option[0].img[0].link
+          );
+
           return (
             <div key={index} className="product rounded-lg bg-white pt-1">
-            <Link href={'/product/' + item.slug}>
-              <div className="img flex items-center justify-center ">
-                <Image
-                  src={item.option[0].img[0].link}
-                  alt="smart-phone"
-                  width="0"
-                  height="0"
-                  sizes="100vw"
-                  className="w-full h-auto rounded-lg"
-                  priority
-                ></Image>
-              </div>
-            </Link>
-            <div className="title px-4 py-2 text-xs">
               <Link href={'/product/' + item.slug}>
-                <div className="title font-semibold min-h-14 text-xs">
-                  {item.name}
+                <div className="img flex items-center justify-center ">
+                  <Image
+                    src={item.option[0].img[0].link}
+                    alt="smart-phone"
+                    width="0"
+                    height="0"
+                    sizes="100vw"
+                    className="w-full h-auto rounded-lg"
+                    priority
+                  ></Image>
                 </div>
               </Link>
-              <div className="price font-semibold text-red-600 min-h-8">
-                {formatPrice(item.option[0].price)}đ
-              </div>
-              <div className="text-[10px] p-2 border-2 rounded-lg bg-[#F3F4F6] ">
-                Giảm đến 500K khi trả góp thẻ tín dụng Sacombank qua cổng MPOS
-              </div>
-              <div className="like flex justify-between my-2 mt-3 text-xs">
-                <div className="start my-2 text-lg flex ">
-                  {Array(5)
-                    .fill(null)
-                    .map((_, index) => (
-                      <StarFilledIcon
-                        key={index}
-                        color="#F59E0B"
-                        className="w-[18px] h-[18px] max-lg:w-[10px]"
-                      ></StarFilledIcon>
-                    ))}
+              <div className="title px-4 py-2 text-xs">
+                <Link href={'/product/' + item.slug}>
+                  <div className="title font-semibold min-h-14 text-xs">
+                    {item.name}
+                  </div>
+                </Link>
+                <div className="price font-semibold text-red-600 min-h-8">
+                  {formatPrice(item.option[0].price)}đ
                 </div>
-                <div className="flex items-center gap-1 cursor-pointer">
-                  <span className="text-[12px]">Yêu Thích </span>
-                  <StarIcon
-                    color="#F59E0B"
-                    className="w-[18px] h-[18px] max-lg:w-[10px]"
-                  ></StarIcon>
+                <div className="text-[10px] p-2 border-2 rounded-lg bg-[#F3F4F6] ">
+                  Giảm đến 500K khi trả góp thẻ tín dụng Sacombank qua cổng MPOS
+                </div>
+                <div className="like flex justify-between my-2 mt-3 text-xs">
+                  <div className="start my-2 text-lg flex ">
+                    {Array(5)
+                      .fill(null)
+                      .map((_, index) => (
+                        <StarFilledIcon
+                          key={index}
+                          color="#F59E0B"
+                          className="w-[18px] h-[18px] max-lg:w-[10px]"
+                        ></StarFilledIcon>
+                      ))}
+                  </div>
+                  <div className="flex items-center gap-1 cursor-pointer">
+                    <span className="text-[12px]">Yêu Thích </span>
+                    <StarIcon
+                      color="#F59E0B"
+                      className="w-[18px] h-[18px] max-lg:w-[10px]"
+                    ></StarIcon>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
           );
         })}
       </div>
