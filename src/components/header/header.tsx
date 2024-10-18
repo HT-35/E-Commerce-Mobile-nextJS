@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { Input } from '@/components/ui/input';
 import { CartIcon, IconSearch, UserIcon } from '@/components/icons';
 import { ListBulletIcon } from '@radix-ui/react-icons';
+import { useAppSelector, useAppDispatch } from '@/lib/redux/hooks';
 import ButtonMenu from '@/components/ui/ButtonMenu';
 import Link from 'next/link';
 import { useAppSelector } from '@/lib/redux/hooks';
@@ -20,7 +21,6 @@ const Header = () => {
       setIsLargeScreen(mediaQuery.matches);
     };
 
-    // Đặt giá trị ban đầu
     setIsLargeScreen(mediaQuery.matches);
 
     // Lắng nghe sự kiện thay đổi kích thước màn hình

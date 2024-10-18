@@ -25,6 +25,8 @@ declare global {
     _id: string | undefined;
     accessToken: string | undefined;
     name: string | undefined;
+    phone: string | undefined;
+    address: string | undefined;
     roles: string | undefined;
     email?: string | undefined;
     cart?: any;
@@ -44,8 +46,18 @@ declare global {
     _id?: string;
     accessToken?: string;
     name?: string;
+    phone?: string;
+    address?: string;
     email?: string;
     cart?: any;
     roles?: string;
+  }
+
+  interface initialDataProduct {
+    _id?: string;
+    name?: string;
+    price?: string;
+    salePrice?: string;
+    image?: string;
   }
 }

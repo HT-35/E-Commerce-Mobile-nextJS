@@ -29,6 +29,8 @@ export default async function RootLayout({
     accessToken: '',
     name: '',
     email: '',
+    phone: '',
+    address: '',
     cart: '',
     roles: '',
   };
@@ -60,6 +62,9 @@ export default async function RootLayout({
     email: res?.data?.email ?? '',
     cart: res?.data?.cart ?? '',
     roles: res?.data?.roles ?? '',
+
+    phone: res.data?.phone,
+    address: res.data?.address,
   };
 
   return (
