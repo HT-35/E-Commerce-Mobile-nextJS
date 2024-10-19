@@ -1,13 +1,6 @@
 'use client';
-import React, {useState, useEffect} from 'react';
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/components/ui/table';
+import React, { useState, useEffect } from 'react';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 
 import { InputSearch } from '@/components/input/InputSearch';
 import { Button } from '@/components/ui/button';
@@ -53,26 +46,25 @@ import { Pencil1Icon, TrashIcon } from '@radix-ui/react-icons';
 // ];
 
 const MangegerProduct = () => {
+  const { name, _id, accessToken, email } = useAppSelector((item) => item.account);
 
-      const { name, _id, accessToken, email } = useAppSelector((item) => item.account);
+  const [productList, setProductList] = useState([]);
 
-      const [productList, setProductList] = useState([]);
+  useEffect(() => {
+    const res = async () => {
+      const res = await sendRequest<IBackendRes<any>>({
+        url: 'localhost:3000/api/product/',
+        method: 'GET',
+        headers: { Authorization: `Bearer ${accessToken}` },
+      });
+      setProductList(res.data.result);
+    };
+    res();
+  }, [accessToken]);
 
-      useEffect(() => {
-        const res = async () => {
-          const res = await sendRequest<IBackendRes<any>>({
-            url: 'localhost:3000/api/product/',
-            method: 'GET',
-            headers: { Authorization: `Bearer ${accessToken}` },
-          });
-          setProductList(res.data.result);
-        };
-        res();
-      }, [accessToken]);
+  console.log(productList);
 
-      console.log(productList);
-
-        const handleDeleteProduct = async (slug: string) => {
+  const handleDeleteProduct = async (slug: string) => {
     const confirmed = confirm('Bạn có chắc muốn xoá sản phẩm này?');
     if (confirmed) {
       try {
@@ -83,7 +75,7 @@ const MangegerProduct = () => {
         });
 
         // Update the UI by filtering out the deleted user
-        setProductList((prevList) => prevList.filter((product) => product.slug !== slug));
+        setProductList((prevList) => prevList.filter((product: any) => product.slug !== slug));
       } catch (error) {
         console.error('Error deleting user:', error);
       }
@@ -94,10 +86,7 @@ const MangegerProduct = () => {
     <div className="">
       <div className="menu flex justify-between items-center mb-4">
         <div className="search">
-          <InputSearch
-            placeholder="Nhập Tên Sản Phẩm..."
-            className="placeholder:text-black"
-          ></InputSearch>
+          <InputSearch placeholder="Nhập Tên Sản Phẩm..." className="placeholder:text-black"></InputSearch>
         </div>
 
         <Button className="brand">Lọc Sản Phẩm</Button>
@@ -121,7 +110,7 @@ const MangegerProduct = () => {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {productList.map((item, index) => {
+          {productList.map((item: any, index) => {
             return (
               <TableRow key={index + 1}>
                 <TableCell>{index + 1}</TableCell>
@@ -131,11 +120,11 @@ const MangegerProduct = () => {
                 <TableCell>{item.option[0].price}</TableCell>
                 <TableCell>{item.ram}</TableCell>
                 <TableCell>{item.rom}</TableCell>
-                                <TableCell>
-                  <Pencil1Icon/>
+                <TableCell>
+                  <Pencil1Icon />
                 </TableCell>
                 <TableCell>
-                <TrashIcon onClick={() => handleDeleteProduct(item.slug)} />
+                  <TrashIcon onClick={() => handleDeleteProduct(item.slug)} />
                 </TableCell>
               </TableRow>
             );

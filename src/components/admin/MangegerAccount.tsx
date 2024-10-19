@@ -5,13 +5,13 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { InputSearch } from '@/components/input/InputSearch';
 import { Button } from '@/components/ui/button';
 import ModalCreate from '@/components/admin/modal/ModalCreate';
-import ModalEdit from '@/components/admin/modal/ModalEdit';
 import FormCreateUser from '@/components/admin/form/CreateUser';
 import FormEditUser from '@/components/admin/form/EditUser';
 import { useAppSelector } from '@/lib/redux/hooks';
 import { sendRequest } from '@/utils/fetchApi';
 import Image from 'next/image';
 import { TrashIcon } from '@radix-ui/react-icons';
+import ModalEdit from '@/components/admin/modal/modalEdit';
 
 const ManagerAccount = () => {
   const { name, _id, accessToken, email } = useAppSelector((item) => item.account);
@@ -31,7 +31,7 @@ const ManagerAccount = () => {
     fetchUsers();
   }, [accessToken]);
 
-    // Fetch user
+  // Fetch user
   // useEffect(() => {
   //   const fetchUser = async (id: string) => {
   //     const res = await sendRequest<IBackendRes<any>>({
@@ -43,7 +43,6 @@ const ManagerAccount = () => {
   //   };
   //   fetchUser();
   // }, [accessToken]);
-  
 
   // Delete user function
   const handleDeleteUser = async (id: string) => {
@@ -57,7 +56,7 @@ const ManagerAccount = () => {
         });
 
         // Update the UI by filtering out the deleted user
-        setUserList((prevList) => prevList.filter((user) => user._id !== id));
+        setUserList((prevList) => prevList.filter((user: any) => user._id !== id));
       } catch (error) {
         console.error('Error deleting user:', error);
       }
@@ -91,7 +90,7 @@ const ManagerAccount = () => {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {userList.map((item, index) => (
+          {userList.map((item: any, index) => (
             <TableRow key={index + 1}>
               <TableCell>{index + 1}</TableCell>
               <TableCell>{item.name}</TableCell>
