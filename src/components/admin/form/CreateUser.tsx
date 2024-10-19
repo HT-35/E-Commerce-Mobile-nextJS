@@ -35,7 +35,7 @@ const listFieldSchema = [
   },
 
   //{
-  //  name: 'role',
+  //  name: 'roles',
   //  title: 'Quyền',
   //  message: 'Quyền phải là admin hoặc employee',
   //},
@@ -55,8 +55,8 @@ const FormSchema = z.object({
     .string({ message: 'Bắt buộc phải nhập email' })
     .email('Phải nhập đúng định dạng email')
     .min(5),
-  role: z.string({ required_error: 'Bắt buộc phải nhập email' }),
-  phoneNumber: z
+  roles: z.string({ required_error: 'Bắt buộc phải nhập email' }),
+  phone: z
     .string({ message: 'Bắt buộc phải nhập số điện thoại' })
     .refine((val) => /^\d{10}$/.test(val), {
       message: 'Số điện thoại phải là 10 chữ số',
@@ -72,8 +72,8 @@ const defaultValues = {
     },
     {} as Record<string, string>
   ),
-  role: '',
-  phoneNumber: '',
+  roles: '',
+  phone: '',
   image: (undefined as unknown as File) || '',
 };
 
@@ -103,8 +103,8 @@ export default function FormCreateUser() {
     const formData = new FormData();
     formData.append('name', data.name);
     formData.append('email', data.email);
-    formData.append('phoneNumber', data.phone);
-    formData.append('role', data.roles);
+    formData.append('phone', data.phone);
+    formData.append('roles', data.roles);
     formData.append('file', fileImg);
 
     // Use sendRequest to send data to the API
@@ -163,7 +163,7 @@ export default function FormCreateUser() {
 
           <FormField
             control={form.control}
-            name="role"
+            name="roles"
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Quyền</FormLabel>
@@ -206,7 +206,7 @@ export default function FormCreateUser() {
           />
           <FormField
             control={control}
-            name="phoneNumber"
+            name="phone"
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Số Điện Thoại</FormLabel>
