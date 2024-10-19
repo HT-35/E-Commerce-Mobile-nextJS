@@ -5,8 +5,9 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { InputSearch } from '@/components/input/InputSearch';
 import { Button } from '@/components/ui/button';
 import ModalCreate from '@/components/admin/modal/ModalCreate';
+import ModalEdit from '@/components/admin/modal/ModalEdit';
 import { FormCreateProduct } from '@/components/admin/form/CreateProduct';
-import FormCreateUser from '@/components/admin/form/CreateUser';
+import { FormEditProduct } from '@/components/admin/form/EditProduct';
 import { useAppSelector } from '@/lib/redux/hooks';
 import { sendRequest } from '@/utils/fetchApi';
 import { Pencil1Icon, TrashIcon } from '@radix-ui/react-icons';
@@ -121,7 +122,9 @@ const MangegerProduct = () => {
                 <TableCell>{item.ram}</TableCell>
                 <TableCell>{item.rom}</TableCell>
                 <TableCell>
-                  <Pencil1Icon />
+                  <ModalEdit title="Sửa Thông Tin Sản Phẩm">
+                    <FormEditProduct productId={item.slug} />
+                  </ModalEdit>
                 </TableCell>
                 <TableCell>
                   <TrashIcon onClick={() => handleDeleteProduct(item.slug)} />
