@@ -1,18 +1,12 @@
 import type { Metadata } from 'next';
 import './globals.css';
-import { ThemeProvider } from '@/components/theme-provider';
-
 import { Roboto } from 'next/font/google';
-import Header from '@/components/header/header';
-
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-
 import ProviderRedux from '@/lib/redux/ProviderRedux';
-import { sendRequest, sendRequestFile } from '@/utils/fetchApi';
+import { sendRequest } from '@/utils/fetchApi';
 import { cookies } from 'next/headers';
 import { InitialAccountRedux } from '@/lib/redux/slices/accountSlice';
-import { usePathname } from 'next/navigation';
 
 const roboto = Roboto({
   weight: '400',
@@ -38,7 +32,6 @@ export default async function RootLayout({
   // test Redux
   const dataCookie = cookies();
   const accessToken_cookie = dataCookie.get('access_token');
-  //console.log(`accessToken_cookie:`, accessToken_cookie);
   const id = dataCookie.get('id');
 
   let res: any;
@@ -62,9 +55,8 @@ export default async function RootLayout({
     email: res?.data?.email ?? '',
     cart: res?.data?.cart ?? '',
     roles: res?.data?.roles ?? '',
-
-    phone: res.data?.phone,
-    address: res.data?.address,
+    phone: res?.data?.phone ?? '',
+    address: res?.data?.address ?? '',
   };
 
   return (

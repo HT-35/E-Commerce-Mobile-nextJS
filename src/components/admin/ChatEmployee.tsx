@@ -208,46 +208,6 @@ const ChatEmployee = () => {
               >
                 {''}
               </UserChat>
-              <UserChat
-                className={` max-xl:text-sm  ${item.isWaitingForReply ? 'text-red-600' : 'text-black'}`}
-                name={item.nameCustomer}
-                userId={item.customerId}
-                active
-              >
-                {''}
-              </UserChat>
-              <UserChat
-                className={` max-xl:text-sm  ${item.isWaitingForReply ? 'text-red-600' : 'text-black'}`}
-                name={item.nameCustomer}
-                userId={item.customerId}
-                active
-              >
-                {''}
-              </UserChat>
-              <UserChat
-                className={` max-xl:text-sm  ${item.isWaitingForReply ? 'text-red-600' : 'text-black'}`}
-                name={item.nameCustomer}
-                userId={item.customerId}
-                active
-              >
-                {''}
-              </UserChat>
-              <UserChat
-                className={` max-xl:text-sm  ${item.isWaitingForReply ? 'text-red-600' : 'text-black'}`}
-                name={item.nameCustomer}
-                userId={item.customerId}
-                active
-              >
-                {''}
-              </UserChat>
-              <UserChat
-                className={` max-xl:text-sm  ${item.isWaitingForReply ? 'text-red-600' : 'text-black'}`}
-                name={item.nameCustomer}
-                userId={item.customerId}
-                active
-              >
-                {''}
-              </UserChat>
             </div>
           );
         })}

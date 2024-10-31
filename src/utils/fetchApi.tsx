@@ -4,23 +4,23 @@ import queryString from 'query-string';
 // Send data JSON
 export const sendRequest = async <T,>(props: IRequest) => {
   //type
-  let {
-    url,
-    method,
-    body,
-    queryParams = {},
-    useCredentials = false,
-    headers = {},
-    nextOption = {},
-  } = props;
+  let { url, method, body, queryParams = {}, useCredentials = false, headers = {}, nextOption = {} } = props;
+
+  // Lọc headers để đảm bảo không có giá trị null hoặc undefined
+  const validHeaders = Object.fromEntries(
+    Object.entries({
+      'content-type': 'application/json',
+      ...headers,
+    }).filter(([, value]) => typeof value === 'string')
+  );
 
   const options: any = {
     method: method,
-    // by default setting the content-type to be json type
-    headers: new Headers({ 'content-type': 'application/json', ...headers }),
+    headers: new Headers(validHeaders as Record<string, string>),
     body: body ? JSON.stringify(body) : null,
     ...nextOption,
   };
+
   if (useCredentials) options.credentials = 'include';
 
   if (url?.startsWith('localhost')) {
@@ -50,27 +50,24 @@ export const sendRequest = async <T,>(props: IRequest) => {
 // Send file : img, PDF,....
 export const sendRequestFile = async <T,>(props: IRequest) => {
   //type
-  let {
-    url,
-    method,
-    body,
-    queryParams = {},
-    useCredentials = false,
-    headers = {},
-    nextOption = {},
-  } = props;
+  let { url, method, body, queryParams = {}, useCredentials = false, headers = {}, nextOption = {} } = props;
 
   if (url.startsWith('localhost')) {
     url = `http://${url}`;
   }
 
+  // Lọc các giá trị null hoặc undefined khỏi headers
+  const validHeaders = Object.fromEntries(
+    Object.entries(headers).filter(([, value]) => value != null) // giữ lại các giá trị không null
+  ) as Record<string, string>;
+
   const options: any = {
     method: method,
-    // by default setting the content-type to be json type
-    headers: new Headers({ ...headers }),
-    body: body ? body : null,
+    headers: new Headers(validHeaders),
+    body: body ?? null,
     ...nextOption,
   };
+
   if (useCredentials) options.credentials = 'include';
 
   if (queryParams) {

@@ -4,26 +4,12 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useFieldArray, useForm } from 'react-hook-form';
 import { z } from 'zod';
 
-import {
-  Form,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from '@/components/ui/form';
+import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import Image from 'next/image';
 import { useRef, useState } from 'react';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 const listFieldSchema = [
   {
@@ -49,16 +35,11 @@ const FormSchema = z.object({
     },
     {} as Record<string, z.ZodString>
   ),
-  email: z
-    .string({ message: 'Bắt buộc phải nhập email' })
-    .email('Phải nhập đúng định dạng email')
-    .min(5),
+  email: z.string({ message: 'Bắt buộc phải nhập email' }).email('Phải nhập đúng định dạng email').min(5),
   role: z.string({ required_error: 'Bắt buộc phải nhập email' }),
-  phoneNumber: z
-    .string({ message: 'Bắt buộc phải nhập số điện thoại' })
-    .refine((val) => /^\d{10}$/.test(val), {
-      message: 'Số điện thoại phải là 10 chữ số',
-    }),
+  phoneNumber: z.string({ message: 'Bắt buộc phải nhập số điện thoại' }).refine((val) => /^\d{10}$/.test(val), {
+    message: 'Số điện thoại phải là 10 chữ số',
+  }),
   image: z.instanceof(File, { message: 'Vui lòng thêm hình ảnh' }),
 });
 
@@ -72,7 +53,7 @@ const defaultValues = {
   ),
   role: '',
   phoneNumber: '',
-  image: (undefined as unknown as File) || '',
+  image: '' as unknown as File, // Sử dụng một chuỗi trống thay vì (undefined as unknown as File)
 };
 
 export default function FormCreateUser() {
@@ -111,10 +92,7 @@ export default function FormCreateUser() {
         <div className="grid grid-cols-1 max-xl:grid-cols-1 max-lg:grid-cols-1 gap-5">
           {listFieldSchema.map((item, index) => {
             return (
-              <div
-                key={index}
-                className="group relative transition-all duration-500"
-              >
+              <div key={index} className="group relative transition-all duration-500">
                 <FormField
                   control={control}
                   name={item.name as any}
@@ -142,10 +120,7 @@ export default function FormCreateUser() {
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Quyền</FormLabel>
-                <Select
-                  onValueChange={field.onChange}
-                  defaultValue={field.value}
-                >
+                <Select onValueChange={field.onChange} defaultValue={field.value}>
                   <FormControl>
                     <SelectTrigger>
                       <SelectValue placeholder="Chọn Quyền" />
@@ -238,11 +213,7 @@ export default function FormCreateUser() {
                         style={{ width: '150px', height: 'auto' }}
                         alt="Picture of the author"
                       />
-                      <Button
-                        type="button"
-                        onClick={deleteImg}
-                        className="rounded-full top-0 left-0 absolute  "
-                      >
+                      <Button type="button" onClick={deleteImg} className="rounded-full top-0 left-0 absolute  ">
                         x
                       </Button>
                     </div>

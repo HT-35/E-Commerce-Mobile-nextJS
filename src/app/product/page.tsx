@@ -10,14 +10,13 @@ import { useAppSelector } from '@/lib/redux/hooks';
 import Image from 'next/image';
 import Link from 'next/link';
 
-///
 import { Swiper, SwiperSlide } from 'swiper/react';
 
 // Import Swiper styles
 import 'swiper/css';
 import 'swiper/css/pagination';
 
-import './styles.css';
+//import './styles.css';
 
 // import required modules
 import { Scrollbar } from 'swiper/modules';
@@ -68,54 +67,6 @@ const ListBrand = [
     brand: 'Oppo',
     img: 'https://cdnv2.tgdd.vn/mwg-static/common/Category/b6/26/b62674c18cc7ec4de1de3670812af13d.png',
   },
-  // {
-  //   brand: 'Samsung',
-  //   img: 'https://cdnv2.tgdd.vn/mwg-static/common/Category/31/ce/31ce9dafafac121361ee7cbd313ae76b.png',
-  // },
-  // {
-  //   brand: 'iPhone',
-  //   img: 'https://cdnv2.tgdd.vn/mwg-static/common/Category/92/e5/92e5003382a0bada9a770618b6c6099b.png',
-  // },
-  // {
-  //   brand: 'Xiaomi',
-  //   img: 'https://cdnv2.tgdd.vn/mwg-static/common/Category/e6/02/e602583e5e16acedfe54ab41b08b5d4f.png',
-  // },
-  // {
-  //   brand: 'Oppo',
-  //   img: 'https://cdnv2.tgdd.vn/mwg-static/common/Category/b6/26/b62674c18cc7ec4de1de3670812af13d.png',
-  // },
-  // {
-  //   brand: 'Samsung',
-  //   img: 'https://cdnv2.tgdd.vn/mwg-static/common/Category/31/ce/31ce9dafafac121361ee7cbd313ae76b.png',
-  // },
-  // {
-  //   brand: 'iPhone',
-  //   img: 'https://cdnv2.tgdd.vn/mwg-static/common/Category/92/e5/92e5003382a0bada9a770618b6c6099b.png',
-  // },
-  // {
-  //   brand: 'Xiaomi',
-  //   img: 'https://cdnv2.tgdd.vn/mwg-static/common/Category/e6/02/e602583e5e16acedfe54ab41b08b5d4f.png',
-  // },
-  // {
-  //   brand: 'Oppo',
-  //   img: 'https://cdnv2.tgdd.vn/mwg-static/common/Category/b6/26/b62674c18cc7ec4de1de3670812af13d.png',
-  // },
-  // {
-  //   brand: 'Samsung',
-  //   img: 'https://cdnv2.tgdd.vn/mwg-static/common/Category/31/ce/31ce9dafafac121361ee7cbd313ae76b.png',
-  // },
-  // {
-  //   brand: 'iPhone',
-  //   img: 'https://cdnv2.tgdd.vn/mwg-static/common/Category/92/e5/92e5003382a0bada9a770618b6c6099b.png',
-  // },
-  // {
-  //   brand: 'Xiaomi',
-  //   img: 'https://cdnv2.tgdd.vn/mwg-static/common/Category/e6/02/e602583e5e16acedfe54ab41b08b5d4f.png',
-  // },
-  // {
-  //   brand: 'Oppo',
-  //   img: 'https://cdnv2.tgdd.vn/mwg-static/common/Category/b6/26/b62674c18cc7ec4de1de3670812af13d.png',
-  // },
 ];
 
 const product = [
@@ -199,7 +150,7 @@ const ProductPage = () => {
   }, []);
 
   // Hàm xử lý sắp xếp
-  const handleSort = (order) => {
+  const handleSort = (order: any) => {
     setSortOrder(order);
     const sortedProducts = [...productList].sort((a: any, b: any) => {
       const priceA = parseFloat(a.option[0].price.replace(/\./g, ''));
@@ -208,10 +159,9 @@ const ProductPage = () => {
     });
     setProductList(sortedProducts);
   };
-  // console.log("🚀 ~ ProductPage ~ productList:", productList)
 
   // Handle brand filter
-  const handleBrandFilter = async (brand) => {
+  const handleBrandFilter = async (brand: any) => {
     setSelectedBrand(brand); // Update selected brand
     const res = await sendRequest<IBackendRes<any>>({
       url: `localhost:4000/product/brand/${brand.toLowerCase()}`,
@@ -253,7 +203,7 @@ const ProductPage = () => {
             return (
               <SwiperSlide key={index}>
                 <Button
-                  className=" bg-white hover:bg-slate-100 border-[1px] border-slate-400"
+                  className={`  hover:bg-slate-100 border-[1px] border-slate-400  ${selectedBrand === item.brand ? 'bg-slate-100' : 'bg-white'}`}
                   onClick={() => handleBrandFilter(item.brand)}
                 >
                   <img src={item.img} alt={item.brand} className="" />
@@ -279,13 +229,17 @@ const ProductPage = () => {
         </div>
         <div className="filter price flex justify-between items-center gap-4">
           <Button
-            className="px-4 py-1 border-[1px] border-slate-400 text-center rounded-lg bg-transparent text-black hover:bg-[#F3F4F6]"
+            className={`px-4 py-1 border-[1px] border-slate-400 text-center rounded-lg bg-white text-black hover:bg-[#F3F4F6] 
+              ${sortOrder === 'desc' ? 'bg-[#F3F4F6]' : 'bg-white'}
+              `}
             onClick={() => handleSort('desc')}
           >
             Giá Từ Cao Đến Thấp
           </Button>
           <Button
-            className="px-4 py-1 border-[1px] border-slate-400 text-center rounded-lg bg-transparent text-black hover:bg-[#F3F4F6]"
+            className={`px-4 py-1 border-[1px] border-slate-400 text-center rounded-lg bg-white text-black hover:bg-[#F3F4F6] 
+              ${sortOrder === 'asc' ? 'bg-[#F3F4F6]' : 'bg-white'}
+              `}
             onClick={() => handleSort('asc')}
           >
             Giá Từ Thấp Đến Cao
@@ -302,21 +256,21 @@ const ProductPage = () => {
           return (
             <div key={index} className="product rounded-lg bg-white pt-1">
               <Link href={'/product/' + item.slug}>
-                <div className="img flex items-center justify-center ">
+                <div className="img flex items-center justify-center  min-h-[200px]">
                   <Image
                     src={item.option[0].img[0].link}
                     alt="smart-phone"
                     width="0"
                     height="0"
                     sizes="100vw"
-                    className="w-full h-auto rounded-lg"
+                    className={`w-full h-auto rounded-lg max-w-[200px]`}
                     priority
                   ></Image>
                 </div>
               </Link>
               <div className="title px-4 py-2 text-xs">
                 <Link href={'/product/' + item.slug}>
-                  <div className="title font-semibold min-h-14 text-xs">{item.name}</div>
+                  <div className="title font-semibold min-h-10 text-xs">{item.name}</div>
                 </Link>
                 <div className="price font-semibold text-red-600 min-h-8">{formatPrice(item.option[0].price)}đ</div>
                 <div className="text-[10px] p-2 border-2 rounded-lg bg-[#F3F4F6] ">

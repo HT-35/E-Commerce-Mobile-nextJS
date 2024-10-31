@@ -1,7 +1,6 @@
-import { user } from "@/user";
-import FormProfile from "@/components/user/profile";
+import FormProfile from '@/components/user/profile';
 
-import React from "react";
+import React from 'react';
 
 const ProfilePage = async () => {
   // const session = await auth();
@@ -14,7 +13,5 @@ const ProfilePage = async () => {
     </>
   );
 };
-
-
 
 export default ProfilePage;

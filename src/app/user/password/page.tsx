@@ -1,7 +1,6 @@
-import { user } from "@/user";
-import FormPassword from "@/components/user/password";
+import FormPassword from '@/components/user/password';
 
-import React from "react";
+import React from 'react';
 
 const PasswordPage = async () => {
   // const session = await auth();
@@ -14,7 +13,5 @@ const PasswordPage = async () => {
     </>
   );
 };
-
-
 
 export default PasswordPage;

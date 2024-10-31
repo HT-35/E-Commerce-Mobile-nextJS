@@ -1,4 +1,3 @@
-import { user } from '@/user';
 import Purchase from '@/components/user/orders/purchase';
 
 import React from 'react';
@@ -8,7 +7,7 @@ const OrderPage = async () => {
 
   return (
     <>
-      <Purchase></Purchase>
+      <Purchase>{''}</Purchase>
     </>
   );
 };

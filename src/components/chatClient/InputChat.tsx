@@ -48,8 +48,8 @@ const InputChat = ({
 
   return (
     <div
-      className={`formChat relative z-[999]   max-w-[350px] rounded-xl flex flex-col shadow-2xl transition-all duration-1000 
-          ${active ? 'translate-y-0 opacity-100' : 'translate-y-[300%] opacity-0'}
+      className={`formChat relative z-[999]    rounded-xl flex flex-col shadow-2xl transition-all duration-1000 
+          ${active ? 'translate-y-0 opacity-100 max-w-[350px]' : 'translate-y-[300%] opacity-0 max-w-[50px]'}
           ${_id ? 'bg-white text-black' : 'bg-slate-300 text-red-600'}
           `}
     >

@@ -1,33 +1,19 @@
 'use client';
 import { Card } from '@/components/ui/card';
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
-} from '@/components/ui/carousel';
+import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
 import Autoplay from 'embla-carousel-autoplay';
 import Image from 'next/image';
-
-//const Banner = [
-//  { index: 1, url: 'https://clickbuy.com.vn/uploads/media/639-ySdKf.png' },
-//  { index: 2, url: 'https://clickbuy.com.vn/uploads/media/640-tBIDM.png' },
-//  { index: 3, url: 'https://clickbuy.com.vn/uploads/media/636-ugZNo.png' },
-//  { index: 4, url: 'https://clickbuy.com.vn/uploads/media/617-KpqUC.png' },
-//  { index: 5, url: 'https://clickbuy.com.vn/uploads/media/631-ECeac.png' },
-//];
 
 const Slider = ({
   menu = true,
   Banner,
-  witdh,
+  //witdh,
 }: {
   menu?: boolean;
   Banner: {
     index: number;
     url: string;
-    witdh?: string;
+    //witdh?: string;
   }[];
 }) => {
   return (

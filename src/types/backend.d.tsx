@@ -8,7 +8,10 @@ declare global {
     body?: { [key: string]: any };
     queryParams?: any;
     useCredentials?: boolean;
-    headers?: { Authorization: string | null };
+    headers?: {
+      Authorization?: string | null;
+      Token?: string | null;
+    };
     nextOption?: any;
   }
 

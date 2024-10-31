@@ -14,12 +14,12 @@
   align-items: center;
 }
 
-.swiper-slide img {
+/*.swiper-slide img {
   display: block;
   width: 100%;
   height: 100%;
   object-fit: cover;
-}
+}*/
 
 .swiper {
   width: 100%;
@@ -54,21 +54,16 @@
   opacity: 1;
 }
 
-.swiper-slide img {
-  display: block;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
 .swiper-button-prev::after,
 .swiper-button-next::after {
   color: #000000;
   padding: 4px;
-  background-color: rgba(
-    216,
-    219,
-    226,
-    0.3
-  ); /* Sử dụng rgba để điều chỉnh độ mờ */
+  background-color: rgba(216, 219, 226, 0.3); /* Sử dụng rgba để điều chỉnh độ mờ */
+}
+
+.swiper-slide img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
 }

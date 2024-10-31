@@ -1,4 +1,3 @@
-import { user } from '@/user';
 import Purchase from '@/components/user/orders/purchase';
 import Pending from '@/components/user/orders/pending/pending';
 
@@ -9,7 +8,7 @@ const OrderPage = async () => {
 
   return (
     <>
-      <Purchase></Purchase>
+      <Purchase>{''}</Purchase>
       <Pending></Pending>
     </>
   );

@@ -1,8 +1,9 @@
+/* eslint-disable jsx-a11y/alt-text */
+/* eslint-disable @next/next/no-img-element */
 'use client';
 import React from 'react';
 
 const All = () => {
-
   return (
     <>
       <div className="myorder-content">
@@ -31,8 +32,8 @@ const All = () => {
               </div>
             </div>
             <div className="all-myorder-item-totalprice text-right py-2">
-              <span className='text-base'>Tổng số tiền : </span>
-              <strong className='text-[20px] text-[#d70018] font-bold'>22.000.000 đ</strong>
+              <span className="text-base">Tổng số tiền : </span>
+              <strong className="text-[20px] text-[#d70018] font-bold">22.000.000 đ</strong>
             </div>
           </div>
         </div>

@@ -48,6 +48,13 @@ export const POST = async (request: NextRequest) => {
       headers: { Authorization: bearerToken },
       body: { ...dataJson },
     });
+    console.log('');
+    console.log('');
+    console.log('');
+    console.log(`res:`, res);
+    console.log('');
+    console.log('');
+    console.log('');
 
     return Response.json(res, { status: res.statusCode });
   } catch (error: any) {

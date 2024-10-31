@@ -1,6 +1,5 @@
 'use client';
 
-
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -12,40 +11,113 @@ import { Button } from '@/components/ui/button';
 import { ArrowLeftIcon } from '@radix-ui/react-icons';
 import Image from 'next/image';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { sendRequest } from '@/utils/fetchApi';
+import { useAppSelector } from '@/lib/redux/hooks';
+import { ICart } from '@/components/cart/cart';
+import { formatCurrency } from '@/utils/price';
 
 // Định nghĩa schema của form
-export const formSchema = z.object({
-  Email: z.string().min(2, {
-    message: 'Email must be at least 2 characters.',
-  }),
-  PhoneNumber: z
-    .string()
-    .regex(/^0\d{9}$/, 'số điện thoại gồm 10 chữ số và bắt đầu bằng số 0'),
-  address: z.string().nonempty('Vui lòng chọn địa chỉ nhận hàng '),
+const formSchema = z.object({
+  Email: z.string().min(2, { message: 'Email must be at least 2 characters.' }),
+  PhoneNumber: z.string().regex(/^0\d{9}$/, 'Số điện thoại gồm 10 chữ số và bắt đầu bằng số 0'),
+  address: z.string().nonempty('Vui lòng chọn địa chỉ nhận hàng'),
 });
 
 const Payment = () => {
+  const router = useRouter();
   const [infoActive, setInfoActive] = useState(false);
 
+  const { accessToken, email, ...data } = useAppSelector((state: any) => state.account);
+  //console.log(`data:`, data);
+
+  const [itemPayment, setItemPayment] = useState<ICart[]>([]);
+  const searchParams = useSearchParams();
+
+  //const [items, setItems] = useState<{ slug: string; color: string }[]>([]);
+  const [products, setProducts] = useState<{ slug: string; color: string }[]>([]);
+
   const [infoReceive, setInfoReceive] = useState({
-    Email: 'huyfa352002@gmail.com',
-    PhoneNumber: '0343128733',
-    address: 'huyfa352002@gmail.com, huyfa352002@gmail.com',
+    Email: '',
+    PhoneNumber: '',
+    address: '',
   });
 
   enum payType {
     COD = 'COD',
     VNPAY = 'VNPAY',
   }
+
   const [pay, setPay] = useState<payType>(payType.VNPAY);
+
+  if (!accessToken) {
+    router.push('/auth');
+  }
+  useEffect(() => {
+    const slugParams = searchParams.getAll('slug');
+    const colorParams = searchParams.getAll('color');
+
+    const parsedItems = slugParams.map((slug, index) => ({
+      slug,
+      color: colorParams[index],
+    }));
+    setProducts(parsedItems);
+  }, [searchParams]);
+
+  useEffect(() => {
+    const getCart = async () => {
+      const cart = await sendRequest<IBackendRes<any[]>>({
+        url: `http://localhost:4000/user/cart`,
+        method: `GET`,
+        headers: { Authorization: `Bearer ${accessToken}` },
+      });
+
+      if (cart.data) {
+        //console.log('Cart data:', cart.data);
+
+        const newCart = cart.data
+          .map((itemCart) => {
+            // Tìm item tương ứng trong items dựa trên slug và color
+            const matchedItem = products.find((item) => item.slug === itemCart?.slug?.slug && item.color === itemCart?.color);
+
+            if (matchedItem) {
+              const optionIndex = itemCart?.slug?.option?.findIndex((itemOption: any) => itemOption.color === matchedItem.color);
+
+              // Kiểm tra optionIndex hợp lệ trước khi truy cập các giá trị bên trong
+              const option = optionIndex !== -1 ? itemCart.slug.option[optionIndex] : {};
+
+              //console.log(`itemCart:`, itemCart);
+              return {
+                color: itemCart?.color,
+                slug: itemCart?.slug?.slug,
+                name: itemCart?.slug?.name,
+                price: option?.price || 0,
+                img: option?.img || '',
+                quantity: itemCart?.quantity,
+              };
+            }
+            return null; // Nếu không tìm thấy item khớp
+          })
+          .filter(Boolean); // Lọc các phần tử null ra khỏi mảng
+
+        setItemPayment(newCart as any);
+        //console.log('New Cart:', newCart);
+
+        // setCart(newCart); // Bỏ comment để set giá trị vào state
+      }
+    };
+    getCart();
+  }, [accessToken, products]);
+
+  //console.log(itemPayment);
 
   // Sử dụng useForm tại đây
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      Email: 'huytran.itvn@gmail.com',
+      Email: `${email}`,
       PhoneNumber: '0343128733',
       address: '',
     },
@@ -58,7 +130,16 @@ const Payment = () => {
   };
 
   const handleActivePayment = () => {
-    form.handleSubmit(onSubmit)(); // Gọi submit form
+    if (!infoActive) {
+      form.handleSubmit(onSubmit)(); // Gọi submit form
+      console.log('ifno');
+    } else {
+      console.log('Kiểu thanh toán !!');
+
+      console.log('infoReceive : ', infoReceive);
+
+      console.log('pay : ', pay);
+    }
   };
 
   return (
@@ -83,9 +164,7 @@ const Payment = () => {
             >
               1.THÔNG TIN
             </Button>
-            <div
-              className={`line w-full h-[3px] ${infoActive ? ' bg-slate-400' : ' bg-red-500'}`}
-            ></div>
+            <div className={`line w-full h-[3px] ${infoActive ? ' bg-slate-400' : ' bg-red-500'}`}></div>
           </div>
           <div className="payment text-center text-slate-400 text-base basis-1/2">
             <Button
@@ -93,9 +172,7 @@ const Payment = () => {
             >
               2.Thanh Toán
             </Button>
-            <div
-              className={`line w-full h-[3px] ${infoActive ? 'bg-red-500' : ' bg-slate-400 '}`}
-            ></div>
+            <div className={`line w-full h-[3px] ${infoActive ? 'bg-red-500' : ' bg-slate-400 '}`}></div>
           </div>
         </div>
 
@@ -103,28 +180,38 @@ const Payment = () => {
           {!infoActive ? (
             <div className="InfoUser ">
               <div className="mb-4 ">
-                <div className="product flex justify-start gap-10 bg-white px-4 py-2 rounded-lg max-lg:text-sm">
-                  <div className="img max-w-24 max-lg:max-w-14">
-                    <Image
-                      src={
-                        'https://cdn2.cellphones.com.vn/100x100,webp,q100/media/catalog/product/s/s/ss-tab-s9-ultra_4.png'
-                      }
-                      quality={50}
-                      width={500}
-                      height={500}
-                      alt=""
-                    ></Image>
-                  </div>
-                  <div className="title">
-                    <div className="nameproduct min-h-11 max-lg:text-sm">
-                      Samsung Galaxy Tab S9 Ultra 12GB 512GB-Xám
-                    </div>
-                    <div className="price flex justify-between items-center">
-                      <div className="price">26.890.000đ</div>
-                      <div className="quanlity">Số lương : 1</div>
-                    </div>
-                  </div>
-                </div>
+                {itemPayment.length > 0 &&
+                  itemPayment.map((item: ICart, index: any) => {
+                    return (
+                      <div
+                        key={index}
+                        className="product flex justify-start gap-10 bg-white px-4 py-2 rounded-lg max-lg:text-sm min-h-[140px]  mt-5"
+                      >
+                        <div className="img max-w-24 max-lg:max-w-14">
+                          <Image
+                            src={item.img[0].link}
+                            quality={50}
+                            width={500}
+                            height={500}
+                            alt=""
+                            className="max-w-[100px] max-h-[120px] rounded-xl"
+                          ></Image>
+                        </div>
+                        <div className="title basis-4/6">
+                          <div className="nameproduct min-h-11 max-lg:text-sm">{item.name}</div>
+                          <div className="price flex justify-between items-center">
+                            <div className="price">
+                              {formatCurrency(item.price as any)} {''} đ
+                            </div>
+                            <div className="quanlity">
+                              Số lương : {''}
+                              {item.quantity}
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  })}
               </div>
 
               <Title className="font-thin mb-2">Thông tin khách hàng</Title>
@@ -146,9 +233,7 @@ const Payment = () => {
                   <p className="">{infoReceive.Email}</p>
                 </div>
                 <div className="flex justify-between items-start py-2">
-                  <p className="text-slate-500 max-lg:min-w-28">
-                    Nhận hàng tại
-                  </p>
+                  <p className="text-slate-500 max-lg:min-w-28">Nhận hàng tại</p>
                   <p className="">{infoReceive.address}</p>
                 </div>
 
@@ -167,8 +252,7 @@ const Payment = () => {
                 </div>
                 <div className="flex justify-between items-center py-2">
                   <p className="">
-                    Tổng tiền{' '}
-                    <span className="text-slate-500"> (đã gồm VAT)</span>
+                    Tổng tiền <span className="text-slate-500"> (đã gồm VAT)</span>
                   </p>
                   <p className="">26.890.000đ</p>
                 </div>
@@ -230,10 +314,7 @@ const Payment = () => {
             </div>
           </div>
 
-          <Button
-            className="bg-[#d1041d] w-full text-xl"
-            onClick={handleActivePayment}
-          >
+          <Button className="bg-[#d1041d] w-full text-xl" onClick={handleActivePayment}>
             {infoActive ? 'Thanh Toán' : 'Tiếp tục'}
           </Button>
         </div>

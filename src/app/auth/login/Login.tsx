@@ -4,7 +4,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
-import { usePathname, useRouter } from 'next/navigation';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 
 import { EyeOpenIcon, EyeNoneIcon } from '@radix-ui/react-icons';
 
@@ -26,10 +26,10 @@ import ModalForgetPassword from '@/app/auth/login/modalForgetPassword';
 import { sendRequest } from '@/utils/fetchApi';
 import { useAppDispatch, useAppSelector } from '@/lib/redux/hooks';
 import { InitialAccountRedux, setDataAccount } from '@/lib/redux/slices/accountSlice';
-import { useRouter } from 'next/navigation';
 
 export function Login() {
-  const router = useRouter();
+  const searchParams = useSearchParams();
+  const searchCallBack = searchParams.get('callback') ?? '';
 
   const [openPassword, setOpenPassword] = useState<boolean>(false);
 
@@ -74,7 +74,12 @@ export function Login() {
         theme: 'light',
         transition: Bounce,
       });
-      router.push('/');
+
+      if (searchCallBack !== '') {
+        router.push(searchCallBack);
+      } else {
+        router.push('/');
+      }
 
       router.refresh();
     } else {
@@ -145,7 +150,7 @@ export function Login() {
                   <FormControl className="relative z-10 ">
                     <Input
                       type={openPassword ? 'text' : 'password'}
-                      className="relative  p-0 placeholder:text-black   bg-white z-10 border-0 border-b-2 rounded-none shadow-none
+                      className="relative  p-0  placeholder:text-black   bg-white z-10 border-0 border-b-2 rounded-none shadow-none
                     focus:border-0
                     focus-visible:ring-0 focus-visible:border-b-2 focus-visible:border-red-500
                      group-hover:border-red-500
@@ -159,7 +164,7 @@ export function Login() {
                     />
                   </FormControl>
 
-                  <div className="absolute top-0 right-1 z-20">
+                  <div className="absolute top-1/2 right-3 z-20 -translate-y-[50%] cursor-pointer">
                     {getValues('password')?.length > 0 &&
                       (openPassword ? (
                         <EyeNoneIcon width={25} height={25} onClick={() => setOpenPassword((prev) => !prev)} />
@@ -172,12 +177,12 @@ export function Login() {
               )}
             />
           </div>
-          <div className="forgetPassword text-xs my-2  text-slate-400 cursor-pointer">
+          <div className="forgetPassword text-xs my-2  text-slate-400 cursor-pointer select-none">
             <ModalForgetPassword> Quên mật khẩu ?</ModalForgetPassword>
           </div>{' '}
         </div>
 
-        <Button type="submit" className="w-full bg-red-500">
+        <Button type="submit" className="w-full bg-red-500 select-none">
           Đăng Nhập
         </Button>
       </form>

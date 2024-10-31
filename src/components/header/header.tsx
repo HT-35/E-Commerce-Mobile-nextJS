@@ -12,6 +12,8 @@ const Header = () => {
   const [isLargeScreen, setIsLargeScreen] = useState<boolean>(false);
 
   const { name } = useAppSelector((state: any) => state.account);
+  const data = useAppSelector((state: any) => state.account);
+  //console.log(`data:`, data);
 
   useEffect(() => {
     const mediaQuery = window.matchMedia('(min-width: 1024px)');
@@ -74,9 +76,12 @@ const Header = () => {
             <Link href={'/'}>
               <div className="logo text-sm cursor-pointer">HTS Store</div>
             </Link>
-            <div className="cart flex justify-between items-center gap-2 hover:bg-white hover:bg-opacity-50 p-2 rounded-md cursor-pointer text-xs">
-              <CartIcon /> Giỏ Hàng
-            </div>
+
+            <Link href={'/cart'}>
+              <div className="cart flex justify-between items-center gap-2 hover:bg-white hover:bg-opacity-50 p-2 rounded-md cursor-pointer text-xs">
+                <CartIcon /> Giỏ Hàng
+              </div>
+            </Link>
 
             <Link href={'/auth'}>
               <div className="account flex justify-between items-center gap-2 hover:bg-white hover:bg-opacity-50 p-2 rounded-md cursor-pointer">

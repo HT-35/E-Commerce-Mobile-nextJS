@@ -1,5 +1,4 @@
 'use client';
-
 import GalaryImg from '@/app/product/[slug]/Galary/Gallery';
 import Title from '@/components/title/Title';
 import { Button } from '@/components/ui/button';
@@ -13,80 +12,67 @@ import { Bounce, toast } from 'react-toastify';
 
 import { useEffect, useState } from 'react';
 import { sendRequest } from '@/utils/fetchApi';
-import { useAppDispatch } from '@/lib/redux/hooks';
-import { addToCart } from '@/lib/redux/slices/accountSlice';
+import { useAppDispatch, useAppSelector } from '@/lib/redux/hooks';
+import { Option, typeProduct } from '@/types/typeProduct.type';
+import { useRouter } from 'next/navigation';
+import LoadingSkeleton from '@/components/loading/LoadingSkeleton';
+import { formatCurrency } from '@/utils/price';
 
-const page = ({ params }: { params: { slug: string } }) => {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+export interface IimgArr {
+  link: string;
+  cloudinary_id: string;
+}
+
+const ProductDetail = ({ params }: { params: { slug: string } }) => {
   const { slug } = params;
-  const dispatch = useAppDispatch();
+  //console.log(`slug:`, slug);
 
-  const imgArr = [
-    {
-      index: 1,
-      url: 'https://cdn.tgdd.vn/Products/Images/42/200533/Slider/iphone-11-pro-max-160820-1111380-800x444.jpg',
-    },
-    {
-      index: 2,
-      url: 'https://cdn.tgdd.vn/Products/Images/42/200533/Slider/vi-vn-iphone-11-pro-max-tinhnang.jpg',
-    },
-    {
-      index: 3,
-      url: 'https://cdn.tgdd.vn/Products/Images/42/200533/Slider/-iphone-11-pro-max-thietke.jpg',
-    },
-    {
-      index: 4,
-      url: 'https://cdn.tgdd.vn/Products/Images/42/200533/Slider/vi-vn-iphone-11-pro-max-tongquan.jpg',
-    },
-    {
-      index: 5,
-      url: 'https://cdn.tgdd.vn/Products/Images/42/200533/Slider/vi-vn-iphone-11-pro-max-mausac.jpg',
-    },
-    {
-      index: 6,
-      url: 'https://cdn.tgdd.vn/Products/Images/42/200533/Slider/vi-vn-iphone-11-pro-max-chupanh.jpg',
-    },
-  ];
+  const router = useRouter();
 
-  const specification = [
-    {
-      accessory: 'Màn hình:',
-      specification: 'OLED6.5"Super Retina XDR',
-    },
-    {
-      accessory: 'Chip:',
-      specification: 'Apple A13 Bionic',
-    },
-    {
-      accessory: 'RAM:',
-      specification: '4 GB',
-    },
-    {
-      accessory: 'Dung lượng lưu trữ:',
-      specification: '64 GB',
-    },
-    {
-      accessory: 'SIM:',
-      specification: '1 Nano SIM & 1 eSIMHỗ trợ 4G',
-    },
-    {
-      accessory: 'Pin, Sạc:',
-      specification: '3969 mAh18 W',
-    },
-  ];
+  const data = useAppSelector((item) => item.account);
+  //console.log(`data:`, data?.accessToken);
 
-  const [productList, setProductList] = useState<any>({}); // Store single product info
+  const [color, setColor] = useState<string | undefined>('');
+  const [price, setPrice] = useState<string>('');
+  const [imgArr, setImgArr] = useState<IimgArr[]>([]);
+  const [productList, setProductList] = useState<typeProduct>(); // Store single product info
+
+  const [loadding, SetLoading] = useState<boolean>(true);
 
   useEffect(() => {
+    SetLoading(true);
     const res = async () => {
       const res = await sendRequest<IBackendRes<any>>({
         url: `localhost:3000/api/product/${slug}`,
         method: 'GET',
       });
-      setProductList(res.data);
+      //console.log(res.data);
+
+      if (res.data) {
+        setProductList(res.data);
+        setImgArr(res?.data?.option[0]?.img!);
+        setColor(res?.data?.option[0]?.color);
+        setPrice(formatCurrency(res?.data?.option[0]?.price));
+      }
     };
     res();
+    SetLoading(false);
   }, [slug]);
+  //console.log(productList);
+
+  useEffect(() => {
+    SetLoading(true);
+    console.log(color);
+    productList?.option?.forEach((item, index) => {
+      //console.log(item.color);
+
+      if (item.color === color) {
+        setImgArr(item?.img!);
+        setPrice(formatCurrency(item?.price!));
+      }
+    });
+    SetLoading(false);
+  }, [color, productList?.option]);
 
   const success = () => {
     toast.success('Thêm vào giỏ hàng thành công', {
@@ -102,65 +88,102 @@ const page = ({ params }: { params: { slug: string } }) => {
     });
   };
 
-  const handleAddToCart = () => {
-    const productToAdd = {
-      _id: productList._id,
-      slug: productList.slug,
-      price: productList.price,
-      quatity: 1, // Default quantity is 1
-    };
-    dispatch(addToCart(productToAdd)); // Dispatch action to add to cart
-    success();
+  const handleAddToCart = async () => {
+    if (data.accessToken === '') {
+      router.push(`/auth?callback=/product/${slug}`);
+    } else {
+      const addProduct = await sendRequest<IBackendRes<any>>({
+        method: 'POST',
+        url: 'http://localhost:3000/api/cart',
+        body: {
+          slug,
+          quantity: 1,
+          color: color,
+        },
+        headers: { Authorization: `Bearer ${data.accessToken}` },
+      });
+      console.log(addProduct);
+
+      if ((await addProduct.statusCode) === 201) {
+        success();
+      }
+    }
   };
 
   return (
     <div className="flex gap-4 lg:mt-2 max-xl:flex-col max-xl:text-black max-xl:text-xs">
-      <div className="">
-        {/*<Slider Banner={Banner}></Slider>*/}
-        <GalaryImg imgArr={imgArr}></GalaryImg>
+      <div className="xl:w-[730px]  max-xl:h-[400px] mb-2">
+        {loadding ? (
+          <>
+            <LoadingSkeleton className=" xl:max-w-[830px] xl:h-[490px] max-xl:h-[320px]  mb-5 "></LoadingSkeleton>
+            <div className=" flex  gap-4 xl:max-w-[830px] xl:h-[50px] max-xl:h-[40px] ">
+              {Array(6)
+                .fill(null)
+                .map((_, index) => {
+                  return <LoadingSkeleton key={index} className=" w-[150px] h-[60px]"></LoadingSkeleton>;
+                })}
+            </div>
+          </>
+        ) : (
+          <GalaryImg imgArr={imgArr}></GalaryImg>
+        )}
       </div>
-      <div className="basis-3/6 text-black">
-        <Title className="text-black font-semibold py-0 max-xl:text-black">
-          {productList.name}
-        </Title>
-        <div className="color flex gap-4 px-[10px] py-2 text-black ">
-          <Button className="py-1 px-4 bg-[#F3F4F6] text-black border-[1px]   hover:bg-[#F3F4F6] hover:text-black  max-xl:text-black ">
-            Bạc
-          </Button>
-          <Button className="py-1 px-4 border-[1px] bg-transparent text-black hover:bg-[#F3F4F6] hover:text-black   max-xl:text-black ">
-            Xanh Lá
-          </Button>
-          <Button className="py-1 px-4 border-[1px] bg-transparent hover:bg-[#F3F4F6] hover:text-black   max-xl:text-black ">
-            Vàng Đồng
-          </Button>
-        </div>
 
-        <div className="Specificaitons lg:my-4 ml-[10px] bg-[#F3F4F6] text-black">
-          {/* <Table>
-            <TableBody>
-              {specification.map((item, index) => {
-                const backgroundWhite = index % 2 ? 'bg-white' : '';
+      <div className="xl:min-w-[600px]  text-black">
+        {loadding ? (
+          <>
+            <LoadingSkeleton className="px-[10px] xl:w-[500px]   h-[30px] mb-2"></LoadingSkeleton>
+          </>
+        ) : (
+          <Title className="text-black font-semibold py-0 max-xl:text-black ">{productList?.name!}</Title>
+        )}
 
-
+        {loadding ? (
+          <div className="flex gap-2 my-2 px-[10px]">
+            {/*<LoadingSkeleton className="px-[10px] xl:w-[500px]  h-[30px] mb-2"></LoadingSkeleton>*/}
+            {Array(3)
+              .fill(null)
+              .map((_, index) => {
+                return <LoadingSkeleton key={index} className="w-[120px] h-[40px]"></LoadingSkeleton>;
+              })}
+          </div>
+        ) : (
+          <div className="color flex gap-4 px-[10px] py-2 text-black  max-xl:flex-wrap h-auto">
+            {productList?.option?.length! > 0 &&
+              productList?.option?.map((item: Option, index) => {
                 return (
-                  <TableRow key={index} className={`${backgroundWhite}`}>
-                    <TableCell className="font-medium">
-                      {item.accessory}
-                    </TableCell>
-                    <TableCell className="text-left">
-                      {item.specification}
-                    </TableCell>
-                  </TableRow>
+                  <Button
+                    key={index}
+                    className={`py-1 px-4 bg-[#F3F4F6] text-black border-[1px] 
+                      hover:bg-white hover:text-black  max-xl:text-black
+                      ${color === item.color ? 'bg-white' : ' bg-[#F3F4F6]'}
+                      `}
+                    onClick={() => {
+                      setColor(item.color);
+                    }}
+                  >
+                    {item.color}
+                  </Button>
                 );
               })}
-            </TableBody>
-          </Table> */}
+          </div>
+        )}
+
+        {loadding ? (
+          <div className=" my-3 px-[10px] flex gap-2 items-center">
+            <div className="">Giá Tiền:</div>
+            <LoadingSkeleton className="px-[10px] xl:w-[100px]  h-[30px] mb-2"></LoadingSkeleton>
+          </div>
+        ) : (
+          <div className="my-4  px-[10px]">Giá Tiền: {price} đ</div>
+        )}
+        <div className="Specificaitons lg:my-4 ml-[10px] bg-[#F3F4F6] text-black border-2 border-slate-400 rounded-lg">
           <Table>
             <TableBody>
               {/* Màn hình */}
               <TableRow>
-                <TableCell className="font-medium">Màn hình:</TableCell>
-                <TableCell className="text-left">{productList.screen}</TableCell>
+                <TableCell className="font-medium rounded-lg">Màn hình:</TableCell>
+                <TableCell className="text-left rounded-lg">{productList?.screen}</TableCell>
               </TableRow>
               {/* Chip */}
               <TableRow className="bg-white">
@@ -170,44 +193,39 @@ const page = ({ params }: { params: { slug: string } }) => {
               {/* RAM */}
               <TableRow>
                 <TableCell className="font-medium">RAM:</TableCell>
-                <TableCell className="text-left">{productList.ram}</TableCell>
+                <TableCell className="text-left">{productList?.ram}</TableCell>
               </TableRow>
               {/* Dung lượng lưu trữ */}
               <TableRow className="bg-white">
                 <TableCell className="font-medium">Dung lượng lưu trữ:</TableCell>
-                <TableCell className="text-left">{productList.rom}</TableCell>
+                <TableCell className="text-left">{productList?.rom}</TableCell>
               </TableRow>
               {/* SIM */}
               <TableRow>
                 <TableCell className="font-medium">SIM:</TableCell>
-                <TableCell className="text-left">1 Nano SIM & 1 eSIMHỗ trợ 4G'</TableCell>
+                <TableCell className="text-left">1 Nano SIM & 1 eSIMHỗ trợ 4G&apos;</TableCell>
               </TableRow>
               {/* Pin, Sạc */}
-              <TableRow className="bg-white">
-                <TableCell className="font-medium">Pin, Sạc:</TableCell>
-                <TableCell className="text-left">{productList.battery}</TableCell>
+              <TableRow className="bg-white ">
+                <TableCell className="font-medium rounded-lg ">Pin, Sạc:</TableCell>
+                <TableCell className="text-left rounded-lg ">{productList?.battery}</TableCell>
               </TableRow>
             </TableBody>
           </Table>
         </div>
-        <Button className="ml-[10px] bg-white text-black border-[1px] border-blue-600  hover:bg-[#F3F4F6] hover:text-blue-600">
+        <Button className="text-center ml-[10px] bg-white text-black border-[1px] border-blue-600  hover:bg-[#F3F4F6] hover:text-blue-600">
           Xem Thêm Cấu Hình Chi Tiết <TriangleRightIcon />
         </Button>
 
         <div className=" flex gap-2 items-center  mx-2 my-2 text-white">
-          <div
-            className=" bg-blue-600 px-4 py-2 rounded-lg w-full cursor-pointer"
-            onClick={handleAddToCart}
-          >
-            Thêm vào giỏ hàng
+          <div className="text-center bg-blue-600 px-4 py-2 rounded-lg w-full cursor-pointer" onClick={handleAddToCart}>
+            Thêm Sẩn Phẩm
           </div>
-          <div className="bg-[#FB6E2E]  px-4 py-2 rounded-lg w-full cursor-pointer">
-            Thanh Toán
-          </div>
+          <div className="bg-[#FB6E2E]  px-4 py-2 rounded-lg w-full cursor-pointer text-center">Thanh Toán</div>
         </div>
       </div>
     </div>
   );
 };
 
-export default page;
+export default ProductDetail;

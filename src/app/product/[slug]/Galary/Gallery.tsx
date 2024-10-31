@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 'use client';
 import React, { useState } from 'react';
 // Import Swiper React components
@@ -15,19 +16,13 @@ import type { Swiper as SwiperType } from 'swiper';
 
 // import required modules
 import { FreeMode, Navigation, Thumbs } from 'swiper/modules';
+import { IimgArr } from '@/app/product/[slug]/page';
 
-export default function GalaryImg({
-  imgArr,
-}: {
-  imgArr: {
-    index: number;
-    url: string;
-  }[];
-}) {
+export default function GalaryImg({ imgArr, className }: { imgArr: IimgArr[]; className?: string }) {
   const [thumbsSwiper, setThumbsSwiper] = useState<SwiperType | null>(null);
 
   return (
-    <div className=" xl:max-w-[730px]  select-none">
+    <div className={` xl:max-w-[830px] xl:h-[590px] max-xl:h-[400px]  select-none ${className}`}>
       <Swiper
         style={
           {
@@ -43,19 +38,20 @@ export default function GalaryImg({
       >
         {imgArr.map((item, index) => {
           return (
-            <SwiperSlide key={index}>
-              <img src={item.url} />
+            <SwiperSlide key={index} className=" rounded-lg">
+              <SwiperSlide key={index}>
+                <img src={item.link} alt="phone" />
+              </SwiperSlide>
             </SwiperSlide>
           );
         })}
-        {}
       </Swiper>
 
       <Swiper
         onSwiper={setThumbsSwiper}
         loop={true}
         spaceBetween={10}
-        slidesPerView={4}
+        slidesPerView={6}
         freeMode={true}
         watchSlidesProgress={true}
         modules={[FreeMode, Navigation, Thumbs]}
@@ -63,8 +59,8 @@ export default function GalaryImg({
       >
         {imgArr.map((item, index) => {
           return (
-            <SwiperSlide key={index}>
-              <img src={item.url} />
+            <SwiperSlide key={index} className="w-10 h-20">
+              <img src={item.link} alt="phone" />
             </SwiperSlide>
           );
         })}
