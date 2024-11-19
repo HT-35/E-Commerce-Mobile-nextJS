@@ -69,9 +69,9 @@ const Header = () => {
             </div>
           </Link>
 
-          <div className="account flex justify-between items-center gap-2 hover:bg-white hover:bg-opacity-50 p-2 rounded-md cursor-pointer">
-            <UserIcon></UserIcon>
-            <Link href={isLoggedIn ? '/user/profile' : '/auth'}>
+          <Link href={isLoggedIn ? '/user/profile' : '/auth'}>
+            <div className="account flex justify-between items-center gap-2 hover:bg-white hover:bg-opacity-50 p-2 rounded-md cursor-pointer">
+              <UserIcon></UserIcon>
               <div>
                 {isLoggedIn ? (
                   <div className="">{info.name}</div>
@@ -82,8 +82,8 @@ const Header = () => {
                   </>
                 )}
               </div>
-            </Link>
-          </div>
+            </div>
+          </Link>
         </div>
       ) : (
         <div className="lg:hidden py-1 text-white text-xs fixed w-full bg-[#DD0000] px-2 font-medium mb-20 z-50">
@@ -94,9 +94,9 @@ const Header = () => {
             <div className="cart flex justify-between items-center gap-2 hover:bg-white hover:bg-opacity-50 p-2 rounded-md cursor-pointer text-xs">
               <CartIcon /> Giỏ Hàng
             </div>
-            <div className="account flex justify-between items-center gap-2 hover:bg-white hover:bg-opacity-50 p-2 rounded-md cursor-pointer">
-              <UserIcon></UserIcon>
-              <Link href={isLoggedIn ? '/user/profile' : '/auth'}>
+            <Link href={isLoggedIn ? '/user/profile' : '/auth'}>
+              <div className="account flex justify-between items-center gap-2 hover:bg-white hover:bg-opacity-50 p-2 rounded-md cursor-pointer">
+                <UserIcon></UserIcon>
                 <div>
                   {isLoggedIn ? (
                     <div className="">{info.name}</div>
@@ -107,8 +107,8 @@ const Header = () => {
                     </>
                   )}
                 </div>
-              </Link>
-            </div>
+              </div>
+            </Link>
           </div>
           <div className="flex gap-4 justify-center items-center">
             <div className="search relative w-full basis-5/6">
