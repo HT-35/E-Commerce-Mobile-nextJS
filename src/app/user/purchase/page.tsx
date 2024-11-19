@@ -1,7 +1,7 @@
-import { user } from "@/user";
-import Purchase from "@/components/user/purchase";
+import { user } from '@/user';
+import Purchase from '@/components/user/orders/purchase';
 
-import React from "react";
+import React from 'react';
 
 const OrderPage = async () => {
   // const session = await auth();
@@ -12,7 +12,5 @@ const OrderPage = async () => {
     </>
   );
 };
-
-
 
 export default OrderPage;

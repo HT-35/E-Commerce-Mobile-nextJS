@@ -4,6 +4,7 @@ import { LocationIcon } from './LocationIcon';
 import { ContactIcon } from './ContactIcon';
 import { GuaranteeIcon } from '@/components/icons/Guarantee';
 import { UserIcon } from '@/components/icons/UserIcon';
+import { PhoneIcon } from '@/components/icons/PhoneIcon';
 
 export {
   IconSearch,
@@ -12,4 +13,5 @@ export {
   GuaranteeIcon,
   ContactIcon,
   UserIcon,
+  PhoneIcon,
 };

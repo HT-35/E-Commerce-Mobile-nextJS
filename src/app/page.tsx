@@ -1,3 +1,5 @@
+'use client';
+
 import Image from 'next/image';
 
 import { StarFilledIcon, StarIcon } from '@radix-ui/react-icons';
@@ -6,6 +8,10 @@ import Navigation from '@/components/navigation/Navigation';
 import ResponsiveBanner from '@/components/banner/BannerHome';
 import Title from '@/components/title/Title';
 import Link from 'next/link';
+
+import { useEffect, useState } from 'react';
+import { sendRequest } from '@/utils/fetchApi';
+import { formatPrice } from '@/utils/index';
 
 const brandArr = [
   { brand: 'Apple', href: '/Apple' },
@@ -95,6 +101,20 @@ const Banner = [
 ];
 
 export default function Home() {
+
+  const [productList, setProductList] = useState([]);
+
+  useEffect(() => {
+    const res = async () => {
+      const res = await sendRequest<IBackendRes<any>>({
+        url: 'localhost:3000/api/product?current=1&pageSize=10',
+        method: 'GET',
+      });
+      setProductList(res.data.result);
+    };
+    res();
+  }, []);
+
   return (
     <div className="min-h-[10000px] overflow-x-hidden select-none banner">
       {/* Navigator */}
@@ -134,12 +154,15 @@ export default function Home() {
         </div>
 
         <div className="product grid grid-cols-4  w-full h-full gap-8 my-4   max-lg:grid-cols-2  max-lg:gap-2">
-          {product.map((item, index) => {
+          {productList.map((item, index) => {
             return (
-              <div key={index} className="product shadow-lg rounded-lg ">
+              <div
+                key={index}
+                className="product shadow-lg rounded-lg bg-white pt-1"
+              >
                 <div className="img    flex items-center justify-center ">
                   <Image
-                    src={item.img}
+                    src={item.option[0].img[0].link}
                     alt="smart-phone"
                     width="0"
                     height="0"
@@ -148,12 +171,13 @@ export default function Home() {
                     priority
                   ></Image>
                 </div>
+
                 <div className="title px-4 py-2  text-xs">
                   <div className="title font-semibold min-h-14  text-xs">
-                    {item.title}
+                    {item.name}
                   </div>
                   <div className="price font-semibold text-red-600  min-h-8">
-                    {item.price} đ
+                  {formatPrice(item.option[0].price)}đ
                   </div>
                   <div className="text-[10px] p-2 border-2 rounded-lg bg-[#F3F4F6] ">
                     Giảm đến 500K khi trả góp thẻ tín dụng Sacombank qua cổng

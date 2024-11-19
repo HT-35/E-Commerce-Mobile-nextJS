@@ -4,12 +4,16 @@ import React, { useState, useEffect } from 'react';
 import { Input } from '@/components/ui/input';
 import { CartIcon, IconSearch, UserIcon } from '@/components/icons';
 import { ListBulletIcon } from '@radix-ui/react-icons';
+import { useAppSelector, useAppDispatch } from '@/lib/redux/hooks';
 import ButtonMenu from '@/components/ui/ButtonMenu';
 import Link from 'next/link';
 
 const Header = () => {
   const [isMounted, setIsMounted] = useState(false);
-  const [isLargeScreen, setIsLargeScreen] = useState<boolean>(false); // useState luôn được gọi
+  const [isLargeScreen, setIsLargeScreen] = useState<boolean>(false);
+
+  const info = useAppSelector((state: any) => state.account);
+  const isLoggedIn = info?.name; // Kiểm tra xem người dùng đã đăng nhập hay chưa
 
   useEffect(() => {
     setIsMounted(true); // Chỉ định rằng component đã mount
@@ -22,17 +26,14 @@ const Header = () => {
       setIsLargeScreen(event.matches);
     };
 
-    // Đặt giá trị ban đầu
     setIsLargeScreen(mediaQuery.matches);
 
-    // Lắng nghe sự kiện thay đổi kích thước màn hình
     mediaQuery.addEventListener('change', handleResize);
 
-    // Hủy lắng nghe sự kiện khi component unmount
     return () => {
       mediaQuery.removeEventListener('change', handleResize);
     };
-  }, []); // useEffect vẫn được gọi mà không phụ thuộc vào isMounted
+  }, []);
 
   if (!isMounted) return null; // Chỉ render sau khi component đã mount
 
@@ -45,7 +46,7 @@ const Header = () => {
           </Link>
           <div className="search relative w-full max-2xl:max-w-[20%] 2xl:max-w-[350px]">
             <Input
-              className="pr-10  placeholder:text-white"
+              className="pr-10  placeholder:text-white focus:placeholder:text-transparent  focus:outline-none focus:border-0 focus:ring-1 focus:ring-ring"
               placeholder="Bạn tìm gì ..."
             ></Input>
             <div className="absolute top-[50%] -translate-y-[50%] right-2">
@@ -62,16 +63,26 @@ const Header = () => {
             </div>
           </Link>
 
-          <div className="cart flex justify-between items-center gap-2 hover:bg-white hover:bg-opacity-50 p-2 rounded-md cursor-pointer">
-            <CartIcon /> Giỏ Hàng
-          </div>
+          <Link href={'/cart'}>
+            <div className="cart flex justify-between items-center gap-2 hover:bg-white hover:bg-opacity-50 p-2 rounded-md cursor-pointer">
+              <CartIcon /> Giỏ Hàng
+            </div>
+          </Link>
 
           <div className="account flex justify-between items-center gap-2 hover:bg-white hover:bg-opacity-50 p-2 rounded-md cursor-pointer">
             <UserIcon></UserIcon>
-            <div>
-              <div className="">Tài Khoản</div>
-              <div className="">Đơn Hàng</div>
-            </div>
+            <Link href={isLoggedIn ? '/user/profile' : '/auth'}>
+              <div>
+                {isLoggedIn ? (
+                  <div className="">{info.name}</div>
+                ) : (
+                  <>
+                    <div className="">Tài Khoản</div>
+                    <div className="">Đơn Hàng</div>
+                  </>
+                )}
+              </div>
+            </Link>
           </div>
         </div>
       ) : (
@@ -85,10 +96,18 @@ const Header = () => {
             </div>
             <div className="account flex justify-between items-center gap-2 hover:bg-white hover:bg-opacity-50 p-2 rounded-md cursor-pointer">
               <UserIcon></UserIcon>
-              <div>
-                <div className="">Tài Khoản</div>
-                <div className="">Đơn Hàng</div>
-              </div>
+              <Link href={isLoggedIn ? '/user/profile' : '/auth'}>
+                <div>
+                  {isLoggedIn ? (
+                    <div className="">{info.name}</div>
+                  ) : (
+                    <>
+                      <div className="">Tài Khoản</div>
+                      <div className="">Đơn Hàng</div>
+                    </>
+                  )}
+                </div>
+              </Link>
             </div>
           </div>
           <div className="flex gap-4 justify-center items-center">
