@@ -11,6 +11,9 @@ import Link from 'next/link';
 const Header = () => {
   const [isLargeScreen, setIsLargeScreen] = useState<boolean>(false);
 
+  const info = useAppSelector((state: any) => state.account);
+  const isLoggedIn = info?.name; // Kiểm tra xem người dùng đã đăng nhập hay chưa
+
   const { name } = useAppSelector((state: any) => state.account);
   const data = useAppSelector((state: any) => state.account);
   //console.log(`data:`, data);
@@ -63,10 +66,19 @@ const Header = () => {
             </div>
           </Link>
 
-          <Link href={'/auth'}>
+          <Link href={isLoggedIn ? '/user/profile' : '/auth'}>
             <div className="account flex justify-between items-center gap-2 hover:bg-white hover:bg-opacity-50 p-2 rounded-md cursor-pointer">
-              <UserIcon />
-              {name.length > 0 ? <>{name}</> : <>Login</>}
+              <UserIcon></UserIcon>
+              <div>
+                {isLoggedIn ? (
+                  <div className="">{info.name}</div>
+                ) : (
+                  <>
+                    <div className="">Tài Khoản</div>
+                    <div className="">Đơn Hàng</div>
+                  </>
+                )}
+              </div>
             </div>
           </Link>
         </div>
@@ -76,17 +88,22 @@ const Header = () => {
             <Link href={'/'}>
               <div className="logo text-sm cursor-pointer">HTS Store</div>
             </Link>
-
-            <Link href={'/cart'}>
-              <div className="cart flex justify-between items-center gap-2 hover:bg-white hover:bg-opacity-50 p-2 rounded-md cursor-pointer text-xs">
-                <CartIcon /> Giỏ Hàng
-              </div>
-            </Link>
-
-            <Link href={'/auth'}>
+            <div className="cart flex justify-between items-center gap-2 hover:bg-white hover:bg-opacity-50 p-2 rounded-md cursor-pointer text-xs">
+              <CartIcon /> Giỏ Hàng
+            </div>
+            <Link href={isLoggedIn ? '/user/profile' : '/auth'}>
               <div className="account flex justify-between items-center gap-2 hover:bg-white hover:bg-opacity-50 p-2 rounded-md cursor-pointer">
-                <UserIcon />
-                {name.length > 0 ? <>{name}</> : <>Login</>}
+                <UserIcon></UserIcon>
+                <div>
+                  {isLoggedIn ? (
+                    <div className="">{info.name}</div>
+                  ) : (
+                    <>
+                      <div className="">Tài Khoản</div>
+                      <div className="">Đơn Hàng</div>
+                    </>
+                  )}
+                </div>
               </div>
             </Link>
           </div>

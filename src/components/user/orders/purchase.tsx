@@ -8,12 +8,12 @@ const Purchase = ({ children }: { children: React.ReactNode }) => {
   const pathname = usePathname();
 
   const statuses = [
-    { path: '/user/purchase/all', label: 'Tất cả'},
-    { path: '/user/purchase/pending', label: 'Chờ xác nhận'},
-    { path: '/user/purchase/', label: 'Đã xác nhận'},
-    { path: '/user/purchase/', label: 'Đã giao hàng'},
-    { path: '/user/purchase/', label: 'Chờ xác nhận'},
-    { path: '/user/purchase/', label: 'Đã huỷ'},
+    { path: '/user/purchase/all', label: 'Tất cả' },
+    { path: '/user/purchase/pending', label: 'Chờ xác nhận' },
+    { path: '/user/purchase/confirmed', label: 'Đã xác nhận' },
+    { path: '/user/purchase/shipping', label: 'Đang vận chuyển' },
+    { path: '/user/purchase/delivered', label: 'Đã giao hàng' },
+    { path: '/user/purchase/canceled', label: 'Đã huỷ' },
   ];
 
   return (
