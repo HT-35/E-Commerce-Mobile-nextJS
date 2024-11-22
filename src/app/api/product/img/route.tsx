@@ -8,6 +8,7 @@ const PORT = await env.NEXT_PUBLIC_PORT_NEST_SERVER();
 export const POST = async (request: Request) => {
   try {
     const data = await request.formData();
+    console.log(`data:`, data);
 
     const bearerToken = headers().get('authorization');
     const res: any = await sendRequestFile({
