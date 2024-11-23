@@ -7,8 +7,9 @@ import Navigation from '@/components/navigation/Navigation';
 
 import ResponsiveBanner from '@/components/banner/BannerHome';
 import Title from '@/components/title/Title';
-import Link from 'next/link';
+import Footer from '@/components/footer/footer';
 import ChatClient from '@/components/chatClient/ChatClient';
+import Link from 'next/link';
 
 import { useEffect, useState } from 'react';
 import { sendRequest } from '@/utils/fetchApi';
@@ -203,6 +204,7 @@ export default function Home() {
           })}
         </div>
       </div>
+      <Footer />
     </div>
   );
 }

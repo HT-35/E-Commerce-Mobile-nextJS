@@ -5,6 +5,7 @@ import { SelectForm } from '@/app/product/Filter';
 import Navigation from '@/components/navigation/Navigation';
 import Title from '@/components/title/Title';
 import { Button } from '@/components/ui/button';
+import Footer from '@/components/footer/footer';
 import { StarFilledIcon, StarIcon } from '@radix-ui/react-icons';
 import { useAppSelector } from '@/lib/redux/hooks';
 import Image from 'next/image';
@@ -281,11 +282,7 @@ const ProductPage = () => {
                     {Array(5)
                       .fill(null)
                       .map((_, index) => (
-                        <StarFilledIcon
-                          key={index}
-                          color="#F59E0B"
-                          className="w-[18px] h-[18px] max-lg:w-[10px]"
-                        ></StarFilledIcon>
+                        <StarFilledIcon key={index} color="#F59E0B" className="w-[18px] h-[18px] max-lg:w-[10px]"></StarFilledIcon>
                       ))}
                   </div>
                   <div className="flex items-center gap-1 cursor-pointer">
@@ -298,6 +295,7 @@ const ProductPage = () => {
           );
         })}
       </div>
+      <Footer />
     </div>
   );
 };

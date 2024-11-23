@@ -175,7 +175,7 @@ const ProductDetail = ({ params }: { params: { slug: string } }) => {
             <LoadingSkeleton className="px-[10px] xl:w-[100px]  h-[30px] mb-2"></LoadingSkeleton>
           </div>
         ) : (
-          <div className="my-4  px-[10px]">Giá Tiền: {price} đ</div>
+          <div className="my-4 px-[10px] text-red">Giá Tiền: <span className="text-[#d70018] font-bold">{price}đ</span></div>
         )}
         <div className="Specificaitons lg:my-4 ml-[10px] bg-[#F3F4F6] text-black border-2 border-slate-400 rounded-lg">
           <Table>
@@ -219,9 +219,9 @@ const ProductDetail = ({ params }: { params: { slug: string } }) => {
 
         <div className=" flex gap-2 items-center  mx-2 my-2 text-white">
           <div className="text-center bg-blue-600 px-4 py-2 rounded-lg w-full cursor-pointer" onClick={handleAddToCart}>
-            Thêm Sẩn Phẩm
+            Thêm Vào Giỏ
           </div>
-          <div className="bg-[#FB6E2E]  px-4 py-2 rounded-lg w-full cursor-pointer text-center">Thanh Toán</div>
+          <div className="bg-[#FB6E2E]  px-4 py-2 rounded-lg w-full cursor-pointer text-center">Mua Ngay</div>
         </div>
       </div>
     </div>
