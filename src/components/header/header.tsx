@@ -69,7 +69,7 @@ const Header = () => {
           <Link href={isLoggedIn ? '/user/profile' : '/auth'}>
             <div className="account flex justify-between items-center gap-2 hover:bg-white hover:bg-opacity-50 p-2 rounded-md cursor-pointer">
               <UserIcon />
-              {name.length > 0 ? <>{name}</> : <>Login</>}
+              {name.length > 0 ? <>{name}</> : <>Đăng Nhập</>}
             </div>
           </Link>
         </div>
@@ -89,7 +89,7 @@ const Header = () => {
             <Link href={isLoggedIn ? '/user/profile' : '/auth'}>
               <div className="account flex justify-between items-center gap-2 hover:bg-white hover:bg-opacity-50 p-2 rounded-md cursor-pointer">
                 <UserIcon />
-                {name.length > 0 ? <>{name}</> : <>Login</>}
+                {name.length > 0 ? <>{name}</> : <>Đăng Nhập</>}
               </div>
             </Link>
           </div>

@@ -190,7 +190,7 @@ export function Register() {
                       style={{
                         paddingRight: '50px',
                       }}
-                      placeholder="  Mật Khẩu"
+                      placeholder="Mật Khẩu"
                       onChange={(e) => {
                         SetDisableBtn(false);
                         onChange(e);
@@ -202,21 +202,9 @@ export function Register() {
                   <div className="absolute top-0 right-1 z-20">
                     {getValues('password')?.length > 0 &&
                       (openPassword ? (
-                        <EyeNoneIcon
-                          width={25}
-                          height={25}
-                          onClick={() =>
-                            setOpenPassword((prev: boolean) => !prev)
-                          }
-                        />
+                        <EyeNoneIcon width={25} height={25} onClick={() => setOpenPassword((prev: boolean) => !prev)} />
                       ) : (
-                        <EyeOpenIcon
-                          width={25}
-                          height={25}
-                          onClick={() =>
-                            setOpenPassword((prev: boolean) => !prev)
-                          }
-                        />
+                        <EyeOpenIcon width={25} height={25} onClick={() => setOpenPassword((prev: boolean) => !prev)} />
                       ))}
                   </div>
                   <FormMessage />
@@ -265,21 +253,9 @@ export function Register() {
                   <div className="absolute top-0 right-1 z-20">
                     {getValues('reEnterPassword')?.length > 0 &&
                       (openPassword ? (
-                        <EyeNoneIcon
-                          width={25}
-                          height={25}
-                          onClick={() =>
-                            setOpenPassword((prev: boolean) => !prev)
-                          }
-                        />
+                        <EyeNoneIcon width={25} height={25} onClick={() => setOpenPassword((prev: boolean) => !prev)} />
                       ) : (
-                        <EyeOpenIcon
-                          width={25}
-                          height={25}
-                          onClick={() =>
-                            setOpenPassword((prev: boolean) => !prev)
-                          }
-                        />
+                        <EyeOpenIcon width={25} height={25} onClick={() => setOpenPassword((prev: boolean) => !prev)} />
                       ))}
                   </div>
                   <FormMessage />
@@ -289,12 +265,8 @@ export function Register() {
           />
         </div>
 
-        <Button
-          type="submit"
-          disabled={disableBtn}
-          className="w-full bg-red-500"
-        >
-          Đăng Kí
+        <Button type="submit" disabled={disableBtn} className="w-full bg-red-500">
+          Đăng Ký
         </Button>
       </form>
       <ModalActiveAccount open={activeAccount} setOpen={setActiveAccount} />
