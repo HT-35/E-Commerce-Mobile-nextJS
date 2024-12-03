@@ -5,6 +5,7 @@ import { SelectForm } from '@/app/product/Filter';
 import Navigation from '@/components/navigation/Navigation';
 import Title from '@/components/title/Title';
 import { Button } from '@/components/ui/button';
+import Footer from '@/components/footer/footer';
 import { StarFilledIcon, StarIcon } from '@radix-ui/react-icons';
 import { useAppSelector } from '@/lib/redux/hooks';
 import Image from 'next/image';
@@ -310,6 +311,7 @@ const ProductPage = () => {
           );
         })}
       </div>
+      <Footer />
     </div>
   );
 };
