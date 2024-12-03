@@ -1,5 +1,5 @@
 'use client';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Table,
   TableBody,
@@ -14,44 +14,91 @@ import { Button } from '@/components/ui/button';
 import ModalCreate from '@/components/admin/modal/ModalCreate';
 import { FormCreateProduct } from '@/components/admin/form/CreateProduct';
 import FormCreateUser from '@/components/admin/form/CreateUser';
-
-const listProduct: {
-  img: string;
-  name: string;
-  price: string;
-  brand: string;
-  ram: string;
-  rom: string;
-}[] = [
-  {
-    img: 'https://cdn2.cellphones.com.vn/insecure/rs:fill:0:358/q:90/plain/https://cellphones.com.vn/media/catalog/product/s/a/samsung_galaxy_s24_ultra_256gb_-_1.png',
-    name: 'Samsung Galaxy S24 Ultra 12GB 256GB',
-    price: '29.990.000',
-    brand: 'SamSung',
-    ram: '16',
-    rom: '128',
-  },
-  {
-    img: 'https://cdn2.cellphones.com.vn/insecure/rs:fill:0:358/q:90/plain/https://cellphones.com.vn/media/catalog/product/s/a/samsung_galaxy_s24_ultra_256gb_-_1.png',
-    name: 'Samsung Galaxy S24 Ultra 12GB 256GB',
-    price: '29.990.000',
-    brand: 'SamSung',
-    ram: '16',
-    rom: '128',
-  },
-  {
-    img: 'https://cdn2.cellphones.com.vn/insecure/rs:fill:0:358/q:90/plain/https://cellphones.com.vn/media/catalog/product/s/a/samsung_galaxy_s24_ultra_256gb_-_1.png',
-    name: 'Samsung Galaxy S24 Ultra 12GB 256GB',
-    price: '29.990.000',
-    brand: 'SamSung',
-    ram: '16',
-    rom: '128',
-  },
-];
+import { sendRequest } from '@/utils/fetchApi';
+import { listApi } from '@/utils/listApi';
+import { useAppSelector } from '@/lib/redux/hooks';
+import { useRouter } from 'next/navigation';
+import { Bounce, toast } from 'react-toastify';
+import { AcceptDeleteProduct } from '@/components/admin/form/DeleteProduct';
+import { FormUpdateProduct } from '@/components/admin/form/FormUpdateProduct';
+import ModalUpdate from '@/components/admin/modal/ModalUpdate';
+import { Scrollbar } from 'swiper/modules';
+import { ListBrand } from '@/app/product/page';
+import { Swiper, SwiperSlide } from 'swiper/react';
 
 const MangegerProduct = () => {
+  const [selectedBrand, setSelectedBrand] = useState('');
+
+  const [product, setProduct] = useState<any>([]);
+
+  const [acceptDelete, setAcceptDelete] = useState<boolean>(false);
+  const [dataDeleteProdcut, setDataDeleteProduct] = useState<{
+    slug: string;
+    name: string;
+  }>({ slug: '', name: '' });
+
+  const [activeFormCreate, setActiveFormCreate] = useState<boolean>(false);
+
+  const [activeFormUpdate, setActiveFormUpdate] = useState<boolean>(false);
+  const [dataUpdateProdcut, setDataUpdateProduct] = useState<{
+    slug: string;
+    name: string;
+  }>({ slug: '', name: '' });
+
+  const router = useRouter();
+  const { accessToken } = useAppSelector((item) => item.account);
+
+  if (!accessToken) {
+    router.push('/auth?callback=/admin');
+  }
+
+  const [screenHeight, setScreenHeight] = useState<number>(0);
+  useEffect(() => {
+    setScreenHeight(Number(window.innerHeight - 160));
+  }, [screenHeight]);
+  useEffect(() => {
+    const getProduct = async () => {
+      const product = await sendRequest<IBackendRes<any>>({
+        method: 'GET',
+        url: listApi.getAllProduct(),
+      });
+
+      setProduct(product.data.result);
+    };
+    getProduct();
+  }, []);
+
+  // Handle brand filter
+  const handleBrandFilter = async (brand: any) => {
+    setSelectedBrand(brand); // Update selected brand
+    const res = await sendRequest<IBackendRes<any>>({
+      url: `localhost:4000/product/brand/${brand.toLowerCase()}`,
+      method: 'GET',
+    });
+
+    setProduct(res?.data);
+  };
+
   return (
-    <div className="">
+    <div className="relative">
+      <AcceptDeleteProduct
+        setProduct={setProduct}
+        accessToken={accessToken!}
+        acceptDelete={acceptDelete}
+        setAcceptDelete={setAcceptDelete}
+        dataDeleteProdcut={dataDeleteProdcut}
+      ></AcceptDeleteProduct>
+
+      <ModalUpdate
+        activeFormUpdate={activeFormUpdate}
+        setActiveFormUpdate={setActiveFormUpdate}
+      >
+        <FormUpdateProduct
+          data={dataUpdateProdcut}
+          setActiveFormUpdate={setActiveFormUpdate}
+        />
+      </ModalUpdate>
+
       <div className="menu flex justify-between items-center mb-4">
         <div className="search">
           <InputSearch
@@ -60,42 +107,118 @@ const MangegerProduct = () => {
           ></InputSearch>
         </div>
 
-        <Button className="brand">Lọc Sản Phẩm</Button>
+        <div className=" w-[800px]">
+          <Swiper
+            slidesPerView={4}
+            spaceBetween={5}
+            breakpoints={{
+              1024: {
+                slidesPerView: 4,
+              },
+              768: {
+                slidesPerView: 4,
+                spaceBetween: 10,
+              },
+              0: {
+                slidesPerView: 4,
+                spaceBetween: 5,
+              },
+            }}
+            scrollbar={{
+              hide: true,
+            }}
+            modules={[Scrollbar]}
+            className="mySwiper bg-transparent"
+          >
+            {ListBrand.map((item, index) => {
+              return (
+                <SwiperSlide key={index}>
+                  <Button
+                    className={`  hover:bg-slate-100 border-[1px] border-slate-400  
+                      ${selectedBrand === item.brand || (item.brand === 'Tất Cả' && selectedBrand === '') ? 'bg-slate-100 text-black' : 'bg-white text-black'}`}
+                    onClick={() => handleBrandFilter(item.brand)}
+                  >
+                    {item.brand}
+                  </Button>
+                </SwiperSlide>
+              );
+            })}
+          </Swiper>
+        </div>
 
-        <ModalCreate title="Thêm Sản Phẩm">
+        <Button className="" onClick={() => setActiveFormCreate(true)}>
+          Thêm Sản Phẩm
+        </Button>
+
+        <ModalCreate
+          activeForm={activeFormCreate}
+          setActiveForm={setActiveFormCreate}
+        >
           <FormCreateProduct />
         </ModalCreate>
       </div>
 
-      <div className="line h-[1px] w-full bg-slate-600 my-2"></div>
-      <Table>
-        <TableHeader>
-          <TableRow>
-            <TableHead>STT</TableHead>
-            <TableHead>Tên Sản Phẩm</TableHead>
+      <div className="line h-[1px] w-full bg-slate-600 my-2 "></div>
+      <div
+        className="overflow-hidden overflow-y-auto "
+        style={{ height: `${screenHeight - 30}px` }}
+      >
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead>STT</TableHead>
+              <TableHead>Tên Sản Phẩm</TableHead>
+              <TableHead>Hãng</TableHead>
+              <TableHead>Giá</TableHead>
+              <TableHead>Ram</TableHead>
+              <TableHead>Rom</TableHead>
+              <TableHead className="w-32 text-center ">Chức Năng</TableHead>
+              <TableHead className="w-32 text-center ">Chức Năng</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody className="">
+            {product.map((item: any, index: number) => {
+              //console.log(`item:`, item);
+              return (
+                <TableRow key={index + 1}>
+                  <TableCell>{index + 1}</TableCell>
+                  <TableCell>{item.name}</TableCell>
+                  <TableCell>{item.brand}</TableCell>
+                  <TableCell>{item.option[0].price}</TableCell>
+                  <TableCell>{item.ram}</TableCell>
+                  <TableCell>{item.rom}</TableCell>
+                  <TableCell className="w-32 cursor-pointer">
+                    <div
+                      className="w-32 bg-yellow-400 text-center rounded-md py-2 hover:bg-red-600"
+                      onClick={() => {
+                        setDataUpdateProduct(item);
+                        setActiveFormUpdate(true);
+                      }}
+                    >
+                      Sửa
+                    </div>
+                  </TableCell>
 
-            <TableHead>Hãng</TableHead>
-            <TableHead>Giá</TableHead>
-            <TableHead>Ram</TableHead>
-            <TableHead>Rom</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {listProduct.map((item, index) => {
-            return (
-              <TableRow key={index + 1}>
-                <TableCell>{index + 1}</TableCell>
-                <TableCell>{item.name}</TableCell>
-
-                <TableCell>{item.brand}</TableCell>
-                <TableCell>{item.price}</TableCell>
-                <TableCell>{item.ram}</TableCell>
-                <TableCell>{item.rom}</TableCell>
-              </TableRow>
-            );
-          })}
-        </TableBody>
-      </Table>
+                  <TableCell className="w-32 cursor-pointer  ">
+                    <div
+                      className="w-32 bg-red-400 text-center rounded-md py-2 hover:bg-red-600"
+                      onClick={() => {
+                        setDataDeleteProduct({
+                          name: item.name,
+                          slug: item.slug,
+                        });
+                        setAcceptDelete(true);
+                      }}
+                    >
+                      Xóa
+                    </div>
+                  </TableCell>
+                </TableRow>
+              );
+            })}
+          </TableBody>
+        </Table>
+      </div>
     </div>
   );
 };

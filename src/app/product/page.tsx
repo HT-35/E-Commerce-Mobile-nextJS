@@ -50,86 +50,25 @@ const Banner = [
   },
 ];
 
-const ListBrand = [
+export const ListBrand = [
+  {
+    brand: 'Tất Cả',
+  },
   {
     brand: 'iPhone',
-    img: 'https://cdnv2.tgdd.vn/mwg-static/common/Category/92/e5/92e5003382a0bada9a770618b6c6099b.png',
+    //img: 'https://cdnv2.tgdd.vn/mwg-static/common/Category/92/e5/92e5003382a0bada9a770618b6c6099b.png',
   },
   {
     brand: 'Samsung',
-    img: 'https://cdnv2.tgdd.vn/mwg-static/common/Category/31/ce/31ce9dafafac121361ee7cbd313ae76b.png',
+    //img: 'https://cdnv2.tgdd.vn/mwg-static/common/Category/31/ce/31ce9dafafac121361ee7cbd313ae76b.png',
   },
   {
     brand: 'Xiaomi',
-    img: 'https://cdnv2.tgdd.vn/mwg-static/common/Category/e6/02/e602583e5e16acedfe54ab41b08b5d4f.png',
+    //img: 'https://cdnv2.tgdd.vn/mwg-static/common/Category/e6/02/e602583e5e16acedfe54ab41b08b5d4f.png',
   },
   {
     brand: 'Oppo',
-    img: 'https://cdnv2.tgdd.vn/mwg-static/common/Category/b6/26/b62674c18cc7ec4de1de3670812af13d.png',
-  },
-];
-
-const product = [
-  {
-    img: 'https://clickbuy.com.vn/uploads/pro/thumbs/galaxy-z-flip-6_207748.png?v=webp',
-    title: 'Samsung Galaxy Z Flip6 (5G) 12GB 256GB Chính Hãng',
-    price: '21.990.000',
-  },
-  {
-    img: 'https://clickbuy.com.vn/uploads/images/2023/09/iphone-15-pro-max-titan-1.png?v=webp',
-    title: 'iPhone 15 Pro Max 256GB VN/A ',
-    price: '28.490.000 ',
-  },
-  {
-    img: 'https://clickbuy.com.vn/uploads/pro/thumbs/xiaomi-14-ultra-chinh-hang_197730.jpeg?v=webp',
-    title: 'Xiaomi 14 Ultra 16GB 512GB Chính Hãng',
-    price: '26.990.000',
-  },
-
-  {
-    img: 'https://clickbuy.com.vn/uploads/images/2022/03/ipad-5-4.jpg?v=webp',
-    title: 'iPad Air 5 (2022) Wifi 64GB',
-    price: '14.390.000',
-  },
-  {
-    img: 'https://clickbuy.com.vn/uploads/pro/thumbs/galaxy-z-flip-6_207748.png?v=webp',
-    title: 'Samsung Galaxy Z Flip6 (5G) 12GB 256GB Chính Hãng',
-    price: '21.990.000',
-  },
-  {
-    img: 'https://clickbuy.com.vn/uploads/images/2023/09/iphone-15-pro-max-titan-1.png?v=webp',
-    title: 'iPhone 15 Pro Max 256GB VN/A ',
-    price: '28.490.000 ',
-  },
-  {
-    img: 'https://clickbuy.com.vn/uploads/pro/thumbs/xiaomi-14-ultra-chinh-hang_197730.jpeg?v=webp',
-    title: 'Xiaomi 14 Ultra 16GB 512GB Chính Hãng',
-    price: '26.990.000',
-  },
-  {
-    img: 'https://clickbuy.com.vn/uploads/images/2022/03/ipad-5-4.jpg?v=webp',
-    title: 'iPad Air 5 (2022) Wifi 64GB',
-    price: '14.390.000',
-  },
-  {
-    img: 'https://clickbuy.com.vn/uploads/pro/thumbs/galaxy-z-flip-6_207748.png?v=webp',
-    title: 'Samsung Galaxy Z Flip6 (5G) 12GB 256GB Chính Hãng',
-    price: '21.990.000',
-  },
-  {
-    img: 'https://clickbuy.com.vn/uploads/images/2023/09/iphone-15-pro-max-titan-1.png?v=webp',
-    title: 'iPhone 15 Pro Max 256GB VN/A ',
-    price: '28.490.000 ',
-  },
-  {
-    img: 'https://clickbuy.com.vn/uploads/pro/thumbs/xiaomi-14-ultra-chinh-hang_197730.jpeg?v=webp',
-    title: 'Xiaomi 14 Ultra 16GB 512GB Chính Hãng',
-    price: '26.990.000',
-  },
-  {
-    img: 'https://clickbuy.com.vn/uploads/images/2022/03/ipad-5-4.jpg?v=webp',
-    title: 'iPad Air 5 (2022) Wifi 64GB',
-    price: '14.390.000',
+    //img: 'https://cdnv2.tgdd.vn/mwg-static/common/Category/b6/26/b62674c18cc7ec4de1de3670812af13d.png',
   },
 ];
 
@@ -144,7 +83,7 @@ const ProductPage = () => {
         url: 'localhost:3000/api/product?current=1&pageSize=10',
         method: 'GET',
       });
-      setProductList(res.data.result);
+      setProductList(res?.data?.result);
     };
     res();
   }, []);
@@ -162,30 +101,41 @@ const ProductPage = () => {
 
   // Handle brand filter
   const handleBrandFilter = async (brand: any) => {
+    console.log(brand);
+
     setSelectedBrand(brand); // Update selected brand
     const res = await sendRequest<IBackendRes<any>>({
       url: `localhost:4000/product/brand/${brand.toLowerCase()}`,
       method: 'GET',
     });
     setProductList(res.data);
+    console.log('');
+    console.log('');
+    console.log('res.data  :  ', res.data);
+    console.log('');
+    console.log('');
+    console.log('');
   };
 
   return (
     <div className="min-h-[10000px] overflow-x-hidden  max-lg:banner  ">
-      <Navigation menu={false} Banner={Banner} subBanner={subBanner}></Navigation>
-
+      <Navigation
+        menu={false}
+        Banner={Banner}
+        subBanner={subBanner}
+      ></Navigation>
       <Title className="mt-5  ">Hãng Điện Thoại</Title>
 
-      <div className=" min-h-[60px] max-lg:min-h-[100px]">
+      <div className=" min-h-[30px] max-lg:min-h-[20px]">
         <Swiper
-          slidesPerView={8}
-          spaceBetween={20}
+          slidesPerView={4}
+          spaceBetween={5}
           breakpoints={{
             1024: {
-              slidesPerView: 8,
+              slidesPerView: 6,
             },
             768: {
-              slidesPerView: 6,
+              slidesPerView: 5,
               spaceBetween: 20,
             },
             0: {
@@ -203,10 +153,12 @@ const ProductPage = () => {
             return (
               <SwiperSlide key={index}>
                 <Button
-                  className={`  hover:bg-slate-100 border-[1px] border-slate-400  ${selectedBrand === item.brand ? 'bg-slate-100' : 'bg-white'}`}
-                  onClick={() => handleBrandFilter(item.brand)}
+                  className={`  hover:bg-slate-100 border-[1px] border-slate-400  ${selectedBrand === item?.brand ? 'bg-slate-100 text-black' : 'bg-white text-black'}`}
+                  onClick={() => handleBrandFilter(item?.brand)}
                 >
-                  <img src={item.img} alt={item.brand} className="" />
+                  {/*{item?.img ? <img src={item?.img} alt={item?.brand} className="" /> : <p className="text-black">{item?.brand}</p>}*/}
+                  {/*<p className="text-black">{item?.brand}</p>*/}
+                  {item?.brand}
                 </Button>
               </SwiperSlide>
             );
@@ -249,16 +201,14 @@ const ProductPage = () => {
 
       {/* Product */}
 
-      <div className="product grid grid-cols-4  w-full h-full gap-8 my-4   max-lg:grid-cols-2  max-lg:gap-2">
+      {/*<div className="product grid grid-cols-4  w-full h-full gap-8 my-4   max-lg:grid-cols-2  max-lg:gap-2">
         {productList.map((item: any, index) => {
-          console.log('🚀 ~ {productList.map ~ item:', item.option[0].img[0].link);
-
           return (
             <div key={index} className="product rounded-lg bg-white pt-1">
-              <Link href={'/product/' + item.slug}>
+              <Link href={'/product/' + item?.slug}>
                 <div className="img flex items-center justify-center  min-h-[200px]">
                   <Image
-                    src={item.option[0].img[0].link}
+                    src={item?.option[0]?.img[0]?.link}
                     alt="smart-phone"
                     width="0"
                     height="0"
@@ -269,10 +219,10 @@ const ProductPage = () => {
                 </div>
               </Link>
               <div className="title px-4 py-2 text-xs">
-                <Link href={'/product/' + item.slug}>
-                  <div className="title font-semibold min-h-10 text-xs">{item.name}</div>
+                <Link href={'/product/' + item?.slug}>
+                  <div className="title font-semibold min-h-10 text-xs">{item?.name}</div>
                 </Link>
-                <div className="price font-semibold text-red-600 min-h-8">{formatPrice(item.option[0].price)}đ</div>
+                <div className="price font-semibold text-red-600 min-h-8">{formatPrice(item?.option[0].price)}đ</div>
                 <div className="text-[10px] p-2 border-2 rounded-lg bg-[#F3F4F6] ">
                   Giảm đến 500K khi trả góp thẻ tín dụng Sacombank qua cổng MPOS
                 </div>
@@ -281,16 +231,78 @@ const ProductPage = () => {
                     {Array(5)
                       .fill(null)
                       .map((_, index) => (
-                        <StarFilledIcon
-                          key={index}
-                          color="#F59E0B"
-                          className="w-[18px] h-[18px] max-lg:w-[10px]"
-                        ></StarFilledIcon>
+                        <StarFilledIcon key={index} color="#F59E0B" className="w-[18px] h-[18px] max-lg:w-[10px]"></StarFilledIcon>
                       ))}
                   </div>
                   <div className="flex items-center gap-1 cursor-pointer">
                     <span className="text-[12px]">Yêu Thích </span>
                     <StarIcon color="#F59E0B" className="w-[18px] h-[18px] max-lg:w-[10px]"></StarIcon>
+                  </div>
+                </div>
+              </div>
+            </div>
+          );
+        })}
+      </div>*/}
+
+      <div className="product grid grid-cols-4 w-full h-full gap-8 my-4 max-lg:grid-cols-2 max-lg:gap-2">
+        {productList.map((item: any, index) => {
+          const productImage =
+            item?.option?.[0]?.img?.[0]?.link ?? '/placeholder-image.jpg'; // Ảnh fallback
+          const productPrice = item?.option?.[0]?.price ?? 0;
+          const productSlug = item?.slug ?? '';
+          const productName = item?.name ?? 'Sản phẩm không có tên';
+
+          return (
+            <div key={index} className="product rounded-lg bg-white pt-1">
+              {/* Link tới trang sản phẩm */}
+              <Link href={`/product/${productSlug}`}>
+                <div className="img flex items-center justify-center min-h-[200px]">
+                  <Image
+                    src={productImage}
+                    alt="smart-phone"
+                    width="0"
+                    height="0"
+                    sizes="100vw"
+                    className="w-full h-auto rounded-lg max-w-[200px]"
+                    priority
+                  />
+                </div>
+              </Link>
+
+              {/* Chi tiết sản phẩm */}
+              <div className="title px-4 py-2 text-xs">
+                <Link href={`/product/${productSlug}`}>
+                  <div className="title font-semibold min-h-10 text-xs">
+                    {productName}
+                  </div>
+                </Link>
+                <div className="price font-semibold text-red-600 min-h-8">
+                  {formatPrice(productPrice)}đ
+                </div>
+                <div className="text-[10px] p-2 border-2 rounded-lg bg-[#F3F4F6]">
+                  Giảm đến 500K khi trả góp thẻ tín dụng Sacombank qua cổng MPOS
+                </div>
+
+                {/* Đánh giá và yêu thích */}
+                <div className="like flex justify-between my-2 mt-3 text-xs">
+                  <div className="start my-2 text-lg flex">
+                    {Array(5)
+                      .fill(null)
+                      .map((_, index) => (
+                        <StarFilledIcon
+                          key={index}
+                          color="#F59E0B"
+                          className="w-[18px] h-[18px] max-lg:w-[10px]"
+                        />
+                      ))}
+                  </div>
+                  <div className="flex items-center gap-1 cursor-pointer">
+                    <span className="text-[12px]">Yêu Thích</span>
+                    <StarIcon
+                      color="#F59E0B"
+                      className="w-[18px] h-[18px] max-lg:w-[10px]"
+                    />
                   </div>
                 </div>
               </div>

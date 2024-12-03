@@ -193,10 +193,7 @@ const ChatEmployee = () => {
   return (
     <div className={`flex   overflow-hidden `} style={{ height: `${screenHeight}px` }}>
       {/* List User Chat */}
-      <div
-        className={`user basis-3/12     overflow-y-auto flex flex-col gap-6 pr-1 border-r-2`}
-        style={{ height: `${screenHeight}px` }}
-      >
+      <div className={`user basis-3/12     overflow-y-auto flex flex-col gap-6 pr-1 border-r-2`} style={{ height: `${screenHeight}px` }}>
         {userList?.map((item: typeListChatUser, index: any) => {
           return (
             <div key={index} onClick={() => joinRoom(item.nameCustomer, item.customerId)}>
@@ -228,8 +225,7 @@ const ChatEmployee = () => {
             <div className={`message pl-4 mt-4  overflow-y-auto `} style={{ height: `${screenHeight - 120}px` }}>
               {messages.length > 0 &&
                 messages.map((item: { message: string; sender: string }, index) => {
-                  const showAvatar =
-                    index === messages.length - 1 || messages[index].sender !== messages[index + 1].sender;
+                  const showAvatar = index === messages.length - 1 || messages[index].sender !== messages[index + 1].sender;
                   return (
                     <div key={index} className="">
                       <div

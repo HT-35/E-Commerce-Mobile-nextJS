@@ -28,11 +28,12 @@ import { listApi } from '@/utils/listApi';
 import { useAppSelector } from '@/lib/redux/hooks';
 
 import { Bounce, toast } from 'react-toastify';
+import { useRouter } from 'next/navigation';
 
 const listFieldSchema = [
   {
     name: 'name',
-    title: 'Tên Người Dùng',
+    title: 'Họ và Tên',
     message: 'Tên người dùng phải từ 3 kí tự trở lên',
   },
 ];
@@ -60,41 +61,41 @@ const FormSchema = z.object({
   //image: z.instanceof(File, { message: 'Vui lòng thêm hình ảnh' }),
 });
 
-const defaultValues = {
-  ...listFieldSchema.reduce(
-    (acc, item) => {
-      acc[item.name] = '';
-      return acc;
-    },
-    {} as Record<string, string>
-  ),
-  role: '',
-  numberPhone: '',
-  //image: '' as unknown as File, // Sử dụng một chuỗi trống thay vì (undefined as unknown as File)
-};
-
-export default function FormCreateUser({
-  setActiveForm,
+export default function UpdateUser({
+  setActiveFormUpdate,
+  data,
 }: {
-  setActiveForm: any;
+  setActiveFormUpdate: any;
+  data: any;
 }) {
+  const router = useRouter();
+
+  const { _id, name, role, email, numberPhone } = data;
+  console.log(`_id:`, _id);
   const { accessToken } = useAppSelector((item) => item.account);
 
   const [loading, setLoading] = useState<boolean>(false);
+
+  const defaultValues = {
+    name: data?.name || '',
+    email: data?.email || '',
+    role: data?.role || '',
+    numberPhone: data?.numberPhone || '',
+  };
 
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues,
   });
 
-  const { control, handleSubmit, register } = form;
+  const { control, handleSubmit } = form;
 
   async function onSubmit(data: z.infer<typeof FormSchema>) {
     setLoading(true);
 
     const createAccount = await sendRequest<IBackendRes<any>>({
-      method: `POST`,
-      url: listApi.createAccount(),
+      method: `PATCH`,
+      url: listApi.updateUser(_id),
       headers: { Authorization: `Bearer ${accessToken}` },
       body: { ...data },
     });
@@ -106,10 +107,10 @@ export default function FormCreateUser({
     console.log('');
     console.log('');
 
-    if (createAccount.statusCode === 201) {
+    if (createAccount.statusCode === 200) {
       setLoading(false);
-      setActiveForm(false);
-      toast.success('Tạo tài khoản thành công!', {
+      setActiveFormUpdate(false);
+      toast.success('Cập nhật tài khoản thành công!', {
         position: 'top-right',
         autoClose: 3000,
         hideProgressBar: false,
@@ -120,9 +121,12 @@ export default function FormCreateUser({
         theme: 'light',
         transition: Bounce,
       });
+      //window.location.reload();
+
+      router.refresh();
     } else {
       setLoading(false);
-      //setActiveForm(false);
+      //setActiveFormUpdate(false);
       toast.error(`${createAccount.message}`, {
         position: 'top-right',
         autoClose: 3000,
@@ -143,7 +147,7 @@ export default function FormCreateUser({
 
   return (
     <Form {...form}>
-      <h1 className="text-center text-2xl">Tạo Tài Khoản Nhân Viên</h1>
+      <h1 className="text-center text-2xl">Sửa Khoản Nhân Viên</h1>
       <form onSubmit={handleSubmit(onSubmit, onError)} className="w-full ">
         <div className="grid grid-cols-1 max-xl:grid-cols-1 max-lg:grid-cols-1 gap-5">
           {listFieldSchema.map((item, index) => {
@@ -181,7 +185,7 @@ export default function FormCreateUser({
                 <FormLabel>Quyền</FormLabel>
                 <Select
                   onValueChange={field.onChange}
-                  defaultValue={field.value}
+                  defaultValue={`${field.value}`}
                 >
                   <FormControl>
                     <SelectTrigger>

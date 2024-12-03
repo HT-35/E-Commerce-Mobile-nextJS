@@ -18,11 +18,14 @@ import { sendRequest } from '@/utils/fetchApi';
 import { useAppSelector } from '@/lib/redux/hooks';
 import { ICart } from '@/components/cart/cart';
 import { formatCurrency } from '@/utils/price';
+import { listApi } from '@/utils/listApi';
 
 // Định nghĩa schema của form
 const formSchema = z.object({
   Email: z.string().min(2, { message: 'Email must be at least 2 characters.' }),
-  PhoneNumber: z.string().regex(/^0\d{9}$/, 'Số điện thoại gồm 10 chữ số và bắt đầu bằng số 0'),
+  PhoneNumber: z
+    .string()
+    .regex(/^0\d{9}$/, 'Số điện thoại gồm 10 chữ số và bắt đầu bằng số 0'),
   address: z.string().nonempty('Vui lòng chọn địa chỉ nhận hàng'),
 });
 
@@ -30,14 +33,17 @@ const Payment = () => {
   const router = useRouter();
   const [infoActive, setInfoActive] = useState(false);
 
-  const { accessToken, email, ...data } = useAppSelector((state: any) => state.account);
+  const { accessToken, email, phone, ...data } = useAppSelector(
+    (state: any) => state.account
+  );
   //console.log(`data:`, data);
 
   const [itemPayment, setItemPayment] = useState<ICart[]>([]);
   const searchParams = useSearchParams();
 
-  //const [items, setItems] = useState<{ slug: string; color: string }[]>([]);
-  const [products, setProducts] = useState<{ slug: string; color: string }[]>([]);
+  const [products, setProducts] = useState<{ slug: string; color: string }[]>(
+    []
+  );
 
   const [infoReceive, setInfoReceive] = useState({
     Email: '',
@@ -69,7 +75,7 @@ const Payment = () => {
   useEffect(() => {
     const getCart = async () => {
       const cart = await sendRequest<IBackendRes<any[]>>({
-        url: `http://localhost:4000/user/cart`,
+        url: listApi.cart(),
         method: `GET`,
         headers: { Authorization: `Bearer ${accessToken}` },
       });
@@ -80,13 +86,20 @@ const Payment = () => {
         const newCart = cart.data
           .map((itemCart) => {
             // Tìm item tương ứng trong items dựa trên slug và color
-            const matchedItem = products.find((item) => item.slug === itemCart?.slug?.slug && item.color === itemCart?.color);
+            const matchedItem = products.find(
+              (item) =>
+                item.slug === itemCart?.slug?.slug &&
+                item.color === itemCart?.color
+            );
 
             if (matchedItem) {
-              const optionIndex = itemCart?.slug?.option?.findIndex((itemOption: any) => itemOption.color === matchedItem.color);
+              const optionIndex = itemCart?.slug?.option?.findIndex(
+                (itemOption: any) => itemOption.color === matchedItem.color
+              );
 
               // Kiểm tra optionIndex hợp lệ trước khi truy cập các giá trị bên trong
-              const option = optionIndex !== -1 ? itemCart.slug.option[optionIndex] : {};
+              const option =
+                optionIndex !== -1 ? itemCart.slug.option[optionIndex] : {};
 
               //console.log(`itemCart:`, itemCart);
               return {
@@ -103,21 +116,17 @@ const Payment = () => {
           .filter(Boolean); // Lọc các phần tử null ra khỏi mảng
 
         setItemPayment(newCart as any);
-        //console.log('New Cart:', newCart);
-
-        // setCart(newCart); // Bỏ comment để set giá trị vào state
       }
     };
     getCart();
   }, [accessToken, products]);
-
-  //console.log(itemPayment);
 
   // Sử dụng useForm tại đây
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       Email: `${email}`,
+      //PhoneNumber: phone ?? '0343128733',
       PhoneNumber: '0343128733',
       address: '',
     },
@@ -129,18 +138,56 @@ const Payment = () => {
     setInfoReceive(values); // lưu thông tin nhận hàng vào state
   };
 
-  const handleActivePayment = () => {
+  const handleActivePayment = async () => {
     if (!infoActive) {
       form.handleSubmit(onSubmit)(); // Gọi submit form
-      console.log('ifno');
+      //console.log('ifno');
     } else {
-      console.log('Kiểu thanh toán !!');
+      const product = itemPayment.map((item) => {
+        return { slug: item.slug, color: item.color };
+      });
 
-      console.log('infoReceive : ', infoReceive);
+      const payload = {
+        product,
+      };
 
-      console.log('pay : ', pay);
+      const crateOrder = await sendRequest<IBackendRes<any>>({
+        method: 'POST',
+        url: listApi.createPayment(),
+        body: { product },
+        headers: { Authorization: `Bearer ${accessToken}` },
+      });
+      console.log('');
+      console.log('');
+      console.log('crateOrder  :  ', crateOrder);
+      console.log('');
+      console.log('');
+      console.log('');
+
+      if (crateOrder.statusCode === 201) {
+        console.log('');
+        console.log('');
+        console.log(' crateOrder.data.vnpUrl :  ', crateOrder.data.vnpUrl);
+        console.log('');
+        console.log('');
+        console.log('');
+        window.location.href = crateOrder.data.vnpUrl;
+      } else {
+        console.log('');
+        console.log('');
+        console.log(' crateOrder.data.vnpUrl Error:  ', crateOrder.data.vnpUrl);
+        console.log('');
+        console.log('');
+        console.log('');
+      }
     }
   };
+
+  const total =
+    itemPayment.length > 0 &&
+    itemPayment.reduce((total: any, item: any) => {
+      return total + Number(item.price) * Number(item.quantity);
+    }, 0);
 
   return (
     <div>
@@ -164,7 +211,9 @@ const Payment = () => {
             >
               1.THÔNG TIN
             </Button>
-            <div className={`line w-full h-[3px] ${infoActive ? ' bg-slate-400' : ' bg-red-500'}`}></div>
+            <div
+              className={`line w-full h-[3px] ${infoActive ? ' bg-slate-400' : ' bg-red-500'}`}
+            ></div>
           </div>
           <div className="payment text-center text-slate-400 text-base basis-1/2">
             <Button
@@ -172,7 +221,9 @@ const Payment = () => {
             >
               2.Thanh Toán
             </Button>
-            <div className={`line w-full h-[3px] ${infoActive ? 'bg-red-500' : ' bg-slate-400 '}`}></div>
+            <div
+              className={`line w-full h-[3px] ${infoActive ? 'bg-red-500' : ' bg-slate-400 '}`}
+            ></div>
           </div>
         </div>
 
@@ -198,8 +249,13 @@ const Payment = () => {
                           ></Image>
                         </div>
                         <div className="title basis-4/6">
-                          <div className="nameproduct min-h-11 max-lg:text-sm">{item.name}</div>
+                          <div className="nameproduct min-h-11 max-lg:text-sm">
+                            {item.name}
+                          </div>
                           <div className="price flex justify-between items-center">
+                            <div className="color">
+                              Màu:{''} {item.color}
+                            </div>
                             <div className="price">
                               {formatCurrency(item.price as any)} {''} đ
                             </div>
@@ -233,18 +289,15 @@ const Payment = () => {
                   <p className="">{infoReceive.Email}</p>
                 </div>
                 <div className="flex justify-between items-start py-2">
-                  <p className="text-slate-500 max-lg:min-w-28">Nhận hàng tại</p>
+                  <p className="text-slate-500 max-lg:min-w-28">
+                    Nhận hàng tại
+                  </p>
                   <p className="">{infoReceive.address}</p>
                 </div>
 
                 <div className="flex justify-between items-center py-2">
-                  <p className="text-slate-500">Số Lượng Sản Phẩm</p>
-                  <p className="">01</p>
-                </div>
-
-                <div className="flex justify-between items-center py-2">
                   <p className="text-slate-500">Tiền hàng (tạm tính)</p>
-                  <p className="">26.890.000đ</p>
+                  <p className=""> {formatCurrency(total as any)}đ</p>
                 </div>
                 <div className="flex justify-between items-center py-2">
                   <p className="text-slate-500">Phí vận chuyển</p>
@@ -252,9 +305,10 @@ const Payment = () => {
                 </div>
                 <div className="flex justify-between items-center py-2">
                   <p className="">
-                    Tổng tiền <span className="text-slate-500"> (đã gồm VAT)</span>
+                    Tổng tiền{' '}
+                    <span className="text-slate-500"> (đã gồm VAT)</span>
                   </p>
-                  <p className="">26.890.000đ</p>
+                  <p className=""> {formatCurrency(total as any)}đ</p>
                 </div>
               </div>
 
@@ -310,11 +364,16 @@ const Payment = () => {
           <div className="price-temp">
             <div className="font-semibold w-full flex justify-between items-center text-xl">
               <div className="">Tổng tiền tạm tính:</div>
-              <div className="text-red-600/100">26.890.000đ</div>
+              <div className="text-red-600/100">
+                {formatCurrency(total as any)}đ
+              </div>
             </div>
           </div>
 
-          <Button className="bg-[#d1041d] w-full text-xl" onClick={handleActivePayment}>
+          <Button
+            className="bg-[#d1041d] w-full text-xl"
+            onClick={handleActivePayment}
+          >
             {infoActive ? 'Thanh Toán' : 'Tiếp tục'}
           </Button>
         </div>

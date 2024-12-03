@@ -37,6 +37,12 @@ export default function GalaryImg({ imgArr, className }: { imgArr: IimgArr[]; cl
         className="mySwiper2"
       >
         {imgArr.map((item, index) => {
+          console.log('');
+          console.log('');
+          console.log('imgArr gallery :   ', item);
+          console.log('');
+          console.log('');
+          console.log('');
           return (
             <SwiperSlide key={index} className=" rounded-lg">
               <SwiperSlide key={index}>

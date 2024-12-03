@@ -59,6 +59,13 @@ export const POST = async (request: NextRequest) => {
       );
     }
 
+    console.log('');
+    console.log('');
+    console.log('dataJson   :   ', dataJson);
+    console.log('');
+    console.log('');
+    console.log('');
+
     const res: any = await sendRequest({
       method: 'POST',
       url: `localhost:${PORT}/product`,
@@ -70,6 +77,12 @@ export const POST = async (request: NextRequest) => {
       status: res.statusCode,
     });
   } catch (error: any) {
+    console.log('');
+    console.log('');
+    console.log('error  :  ', error);
+    console.log('');
+    console.log('');
+    console.log('');
     return Response.json(
       {
         Error: error.message,
@@ -112,14 +125,9 @@ export const PATCH = async (request: NextRequest) => {
     });
 
     //console.log('res:', res);
-    return Response.json(
-      {
-        res,
-      },
-      {
-        status: res.statusCode,
-      }
-    );
+    return Response.json(res, {
+      status: res.statusCode,
+    });
   } catch (error: any) {
     return Response.json(
       {
@@ -156,14 +164,9 @@ export const DELETE = async (request: NextRequest) => {
     });
 
     //console.log('res:', res);
-    return Response.json(
-      {
-        res,
-      },
-      {
-        status: res.statusCode,
-      }
-    );
+    return Response.json(res, {
+      status: res.statusCode,
+    });
   } catch (error: any) {
     return Response.json(
       {

@@ -29,7 +29,49 @@ enum Role {
   admin = 'admin',
 }
 
-const MangegerAccount = () => {
+const ListOrder: {
+  _id: string;
+  orderDay: string;
+  userName: string;
+  product: string;
+  total: string;
+  paymentMethod: string;
+  payment: string;
+  orderStatus: string;
+}[] = [
+  {
+    _id: '#1232132131',
+    orderDay: '1/12/2024',
+    userName: 'Huy Trần - 0343128733 - biên hòa, đồng nai',
+    product: 'iphone 12',
+    total: '12.000.000',
+    paymentMethod: 'VNPAY',
+    payment: 'Đã Thanh Toán',
+    orderStatus: 'Đang Giao Hàng',
+  },
+  {
+    _id: '#1232132131',
+    orderDay: '11/12/2024',
+    userName: 'Huy Trần - 0343128733 - biên hòa, đồng nai',
+    product: 'iphone 12',
+    total: '12.000.000',
+    paymentMethod: 'VNPAY',
+    payment: 'Đã Thanh Toán',
+    orderStatus: 'Đang Giao Hàng',
+  },
+  {
+    _id: '#1232132131',
+    orderDay: '19/12/2024',
+    userName: 'Huy Trần - 0343128733 - biên hòa, đồng nai',
+    product: 'iphone 12',
+    total: '12.000.000',
+    paymentMethod: 'VNPAY',
+    payment: 'Đã Thanh Toán',
+    orderStatus: 'Đang Giao Hàng',
+  },
+];
+
+const MangegerOrder = () => {
   const router = useRouter();
   const [activeForm, setActiveForm] = useState<boolean>(false);
   const { accessToken } = useAppSelector((item) => item.account);
@@ -218,13 +260,15 @@ const MangegerAccount = () => {
           <TableHeader>
             <TableRow>
               <TableHead>STT</TableHead>
-              <TableHead>Tên Người Dùng</TableHead>
+              <TableHead>Đơn Hàng</TableHead>
 
-              <TableHead>Quyền</TableHead>
-              <TableHead>Email</TableHead>
-              <TableHead>Số Điện Thoại</TableHead>
-              <TableHead className="w-32 text-center ">Chức Năng</TableHead>
-              <TableHead className="w-32 text-center ">Chức Năng</TableHead>
+              <TableHead>Ngày Đặt</TableHead>
+              <TableHead>Khách Hàng</TableHead>
+              <TableHead>Sản Phẩm</TableHead>
+              <TableHead>Tổng tiền</TableHead>
+              <TableHead>Thanh Toán</TableHead>
+              <TableHead>Trạng Thái Thanh Toán</TableHead>
+              <TableHead>Trạng Thái Đơn Hàng</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -268,40 +312,18 @@ const MangegerAccount = () => {
               })}
 
             {listUserSearch.length === 0 &&
-              listUser.map((item, index) => {
+              ListOrder.map((item, index) => {
                 return (
                   <TableRow key={index + 1}>
                     <TableCell>{index + 1}</TableCell>
-                    <TableCell>{item.name}</TableCell>
-                    <TableCell>{item.role}</TableCell>
-                    <TableCell>{item.email}</TableCell>
-                    <TableCell>{item.numberPhone}</TableCell>
-                    <TableCell className="w-32 cursor-pointer">
-                      <div
-                        className="w-32 bg-yellow-400 text-center rounded-md py-2 hover:bg-red-600"
-                        onClick={() => {
-                          setDataUpdateUser(item);
-                          setActiveFormUpdateUser(true);
-                        }}
-                      >
-                        Sửa
-                      </div>
-                    </TableCell>
-
-                    <TableCell className="w-32 cursor-pointer  ">
-                      <div
-                        className="w-32 bg-red-400 text-center rounded-md py-2 hover:bg-red-600"
-                        onClick={() => {
-                          setDataDeleteUser({
-                            name: item.name,
-                            _id: item._id,
-                          });
-                          setActiveDelete(true);
-                        }}
-                      >
-                        Xóa
-                      </div>
-                    </TableCell>
+                    <TableCell>{item._id}</TableCell>
+                    <TableCell>{item.orderDay}</TableCell>
+                    <TableCell className="max-w-28">{item.userName}</TableCell>
+                    <TableCell>{item.product}</TableCell>
+                    <TableCell>{item.total}</TableCell>
+                    <TableCell>{item.paymentMethod}</TableCell>
+                    <TableCell>{item.payment}</TableCell>
+                    <TableCell>{item.orderStatus}</TableCell>
                   </TableRow>
                 );
               })}
@@ -312,4 +334,4 @@ const MangegerAccount = () => {
   );
 };
 
-export default MangegerAccount;
+export default MangegerOrder;

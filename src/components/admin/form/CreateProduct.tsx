@@ -7,7 +7,7 @@ import { z } from 'zod';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { sendRequestFile } from '@/utils/fetchApi';
+import { sendRequest, sendRequestFile } from '@/utils/fetchApi';
 import { useAppSelector } from '@/lib/redux/hooks';
 import { useState } from 'react';
 
@@ -24,7 +24,6 @@ const listProduct = [
     title: 'Màn Hình',
     message: 'Màn Hình phải từ 6 kí tự trở lên',
   },
-  { name: 'type', testData: 'realme', message: 'Hãng phải từ 2 kí tự trở lên', title: 'Hãng' },
   {
     name: 'amount',
     testData: '100',
@@ -37,14 +36,26 @@ const listProduct = [
     message: 'Hệ Điều Hành phải từ 3 kí tự trở lên',
     title: 'Hệ Điều Hành',
   },
-  { name: 'ram', testData: '8', message: 'RAM phải từ 1 kí tự trở lên', title: 'RAM' },
-  { name: 'rom', testData: '128', message: 'ROM phải từ 6 kí tự trở lên', title: 'ROM' },
-  { name: 'battery', testData: '5000', message: 'Pin phải từ 3 kí tự trở lên', title: 'Pin' },
   {
-    name: 'camera',
-    testData: 'Chính 108 MP & Phụ 2 MP',
+    name: 'brand',
+    testData: 'SamSung',
+    message: 'Hãng điện thoại phải từ 3 kí tự trở lên',
+    title: 'Hãng điện thoại',
+  },
+  { name: 'ram', testData: '8GB', message: 'RAM phải từ 1 kí tự trở lên', title: 'RAM' },
+  { name: 'rom', testData: '128GB', message: 'ROM phải từ 6 kí tự trở lên', title: 'ROM' },
+  { name: 'battery', testData: '5000mAh', message: 'Pin phải từ 3 kí tự trở lên', title: 'Pin' },
+  {
+    name: 'cameraBefore',
+    testData: '12 MP',
     message: 'Camera phải từ 2 kí tự trở lên',
-    title: 'Camera',
+    title: 'Camera Trước',
+  },
+  {
+    name: 'cameraAfter',
+    testData: 'Chính 108 MP',
+    message: 'Camera phải từ 2 kí tự trở lên',
+    title: 'Camera Sau',
   },
   {
     name: 'special',
@@ -60,7 +71,7 @@ const listProduct = [
   },
 ];
 
-const FormSchema = z.object({
+const FormSchema: any = z.object({
   ...listProduct.reduce(
     (acc, item) => {
       acc[item.name] = z.string().min(1, {
@@ -119,33 +130,57 @@ export function FormCreateProduct() {
     name: 'option',
   });
 
-  async function onSubmit(data: z.infer<typeof FormSchema>) {
-    console.log('Form submitted:', data);
+  async function onSubmit(newData: z.infer<typeof FormSchema>) {
+    //console.log('Form submitted:', data);
 
-    const img = data.option[0].img[0].imgItem; // Lấy ảnh từ dữ liệu form
-    console.log('Image object:', img); // Kiểm tra xem img có phải là một đối tượng FileList không
+    const data = {
+      ...newData,
+      amount: Number(newData.amount),
+    };
 
-    const fileArray: File[] = Array.from(img);
-
-    console.log('File array:', fileArray);
-    const formData = new FormData();
-
-    // Thêm các tệp vào FormData
-    fileArray.forEach((file: File, index: number) => {
-      formData.append('files', file);
-    });
-
-    // Xử lý gửi formData, ví dụ sử dụng sendRequestFile
     try {
-      const sendImg = await sendRequestFile({
+      // Xử lý tuần tự upload ảnh
+      for (const [index, item] of data.option.entries()) {
+        const img = item.img[0].imgItem;
+        const fileArray: File[] = Array.from(img);
+        const formData = new FormData();
+
+        // Thêm các tệp vào FormData
+        fileArray.forEach((file: File) => {
+          formData.append('files', file);
+        });
+
+        // Chờ upload ảnh
+        const sendImg = await sendRequestFile<IBackendRes<any>>({
+          method: 'POST',
+          url: `localhost:3000/api/product/img`,
+          body: formData,
+          headers: { Authorization: `Bearer ${accessToken}` },
+        });
+
+        console.log('Image uploaded:', sendImg);
+
+        const arrImg = await sendImg.data.map((item: any) =>
+          Object.create(null, {
+            link: { value: item.link, enumerable: true },
+            cloudinary_id: { value: item.cloudinary_id, enumerable: true },
+          })
+        );
+
+        data.option[index].img = arrImg; // Cập nhật dữ liệu ảnh trong form
+      }
+
+      // Gửi yêu cầu tạo sản phẩm sau khi xử lý xong ảnh
+      const createProduct = await sendRequest<IBackendRes<any>>({
         method: 'POST',
-        url: `localhost:3000/api/product/img`,
-        body: formData,
+        url: `localhost:3000/api/product`,
+        body: { ...data },
         headers: { Authorization: `Bearer ${accessToken}` },
       });
-      console.log('Image uploaded:', sendImg);
+
+      console.log('Product created:', createProduct);
     } catch (error) {
-      console.error('Error uploading images:', error);
+      console.error('Error uploading images or creating product:', error);
     }
   }
 
@@ -158,7 +193,8 @@ export function FormCreateProduct() {
       <form onSubmit={handleSubmit(onSubmit, onError)} className="w-full">
         <div className="grid grid-cols-3 max-xl:grid-cols-2 max-lg:grid-cols-1 gap-5">
           {listProduct.map((item, index) => {
-            const typeNumber = ['price', 'amount', 'ram', 'rom', 'battery'];
+            //const typeNumber = ['price', 'amount', 'ram', 'rom', 'battery'];
+            const typeNumber = ['price'];
             const typeInput = typeNumber.includes(item.name) ? 'number' : 'text';
             return (
               <div key={index} className="group relative transition-all duration-500">
@@ -228,7 +264,6 @@ export function FormCreateProduct() {
                       <Input
                         type="file"
                         multiple
-                        name="files"
                         {...register(`option.${index}.img.0.imgItem` as const)}
                         onChange={(e) => {
                           const files = e.target.files; // Lấy file từ e.target.files

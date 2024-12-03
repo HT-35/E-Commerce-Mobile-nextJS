@@ -19,18 +19,39 @@ import { z } from 'zod';
 
 import { toast } from '@/components/hooks/use-toast';
 
-import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import { useEffect, useState } from 'react';
 import { sendRequest } from '@/utils/fetchApi';
 import { env } from '@/utils/listENV';
 import { useAppSelector } from '@/lib/redux/hooks';
+import { listApi } from '@/utils/listApi';
 
 const NEXT_PUBLIC_KEY_GHN_DEV = env.NEXT_PUBLIC_KEY_GHN_DEV();
 
-export function ModalAddress({ open, setOpen }: { open?: boolean; setOpen?: any }) {
+export function ModalAddress({
+  open,
+  setOpen,
+}: {
+  open?: boolean;
+  setOpen?: any;
+}) {
   return (
     <AlertDialog open={open}>
       <AlertDialogContent>
@@ -40,7 +61,9 @@ export function ModalAddress({ open, setOpen }: { open?: boolean; setOpen?: any 
         <AddressForm></AddressForm>
 
         <AlertDialogFooter className="w-full">
-          <AlertDialogAction onClick={() => setOpen(false)}>Thêm địa chỉ</AlertDialogAction>
+          <AlertDialogAction onClick={() => setOpen(false)}>
+            Thêm địa chỉ
+          </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>
@@ -188,16 +211,13 @@ export function AddressForm() {
   }, [watchDistrict]);
 
   async function onSubmit(data: z.infer<typeof FormSchema>) {
-    console.log(`data:`, data);
-
     const createAddress = await sendRequest({
-      url: `http://localhost:3000/api/address`,
+      url: listApi.createAddress(),
       method: 'POST',
       body: { ...data },
       headers: { Authorization: `Bearer ${accessToken}` },
     });
-    console.log('');
-    console.log('');
+
     console.log('');
     console.log('');
     console.log(`createAddress:`, createAddress);
@@ -214,7 +234,10 @@ export function AddressForm() {
           render={({ field }) => (
             <FormItem>
               <FormLabel>Chọn tỉnh bạn muốn giao hàng tới</FormLabel>
-              <Select onValueChange={field.onChange} defaultValue={field.value.toString()}>
+              <Select
+                onValueChange={field.onChange}
+                defaultValue={field.value.toString()}
+              >
                 <FormControl>
                   <SelectTrigger>
                     <SelectValue placeholder="Chọn tỉnh bạn muốn giao hàng " />
@@ -223,7 +246,10 @@ export function AddressForm() {
                 <SelectContent>
                   {province.map((item, index) => {
                     return (
-                      <SelectItem key={index} value={item.ProvinceID.toString()}>
+                      <SelectItem
+                        key={index}
+                        value={item.ProvinceID.toString()}
+                      >
                         {item.ProvinceName}
                       </SelectItem>
                     );
@@ -240,8 +266,13 @@ export function AddressForm() {
           name="district_id"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Chọn thành phố hoặc huyện bạn muốn giao hàng tới</FormLabel>
-              <Select onValueChange={field.onChange} defaultValue={field.value.toString()}>
+              <FormLabel>
+                Chọn thành phố hoặc huyện bạn muốn giao hàng tới
+              </FormLabel>
+              <Select
+                onValueChange={field.onChange}
+                defaultValue={field.value.toString()}
+              >
                 <FormControl>
                   <SelectTrigger>
                     <SelectValue placeholder="Chọn tỉnh bạn muốn giao hàng " />
@@ -250,7 +281,10 @@ export function AddressForm() {
                 <SelectContent>
                   {district.map((item, index) => {
                     return (
-                      <SelectItem key={index} value={item.DistrictID.toString()}>
+                      <SelectItem
+                        key={index}
+                        value={item.DistrictID.toString()}
+                      >
                         {item.DistrictName}
                       </SelectItem>
                     );
@@ -267,8 +301,13 @@ export function AddressForm() {
           name="ward_code"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Chọn chọn phường hoặc huyện bạn muốn giao hàng tới</FormLabel>
-              <Select onValueChange={field.onChange} defaultValue={field.value.toString()}>
+              <FormLabel>
+                Chọn chọn phường hoặc huyện bạn muốn giao hàng tới
+              </FormLabel>
+              <Select
+                onValueChange={field.onChange}
+                defaultValue={field.value.toString()}
+              >
                 <FormControl>
                   <SelectTrigger>
                     <SelectValue placeholder="Chọn tỉnh bạn muốn giao hàng " />

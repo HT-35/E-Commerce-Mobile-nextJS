@@ -110,7 +110,7 @@ export default function Home() {
         url: 'localhost:3000/api/product?current=1&pageSize=10',
         method: 'GET',
       });
-      setProductList(res.data.result);
+      setProductList(res?.data?.result);
     };
     res();
   }, []);
@@ -145,7 +145,10 @@ export default function Home() {
             })}
           </div>
 
-          <Link href={'/product'} className="max-lg:text-xs text-blue-500 underline lg:hidden">
+          <Link
+            href={'/product'}
+            className="max-lg:text-xs text-blue-500 underline lg:hidden"
+          >
             Xem Tất Cả
           </Link>
         </div>
@@ -168,12 +171,15 @@ export default function Home() {
                   </div>
 
                   <div className="title px-4 py-2  text-xs">
-                    <div className="title font-semibold min-h-14  text-xs">{item.name}</div>
+                    <div className="title font-semibold min-h-14  text-xs">
+                      {item.name}
+                    </div>
                     <div className="price font-semibold text-red-600  min-h-8">
                       {formatPrice(item.option[0].price)}đ
                     </div>
                     <div className="text-[10px] p-2 border-2 rounded-lg bg-[#F3F4F6] ">
-                      Giảm đến 500K khi trả góp thẻ tín dụng Sacombank qua cổng MPOS
+                      Giảm đến 500K khi trả góp thẻ tín dụng Sacombank qua cổng
+                      MPOS
                     </div>
 
                     <div className="like flex justify-between  my-2 mt-3  text-xs">
@@ -193,7 +199,10 @@ export default function Home() {
 
                       <div className=" flex items-center gap-1 cursor-pointer">
                         <span className="text-[12px]">Yêu Thích </span>
-                        <StarIcon color="#F59E0B" className=" w-[18px] h-[18px] max-lg:w-[10px] "></StarIcon>
+                        <StarIcon
+                          color="#F59E0B"
+                          className=" w-[18px] h-[18px] max-lg:w-[10px] "
+                        ></StarIcon>
                       </div>
                     </div>
                   </div>

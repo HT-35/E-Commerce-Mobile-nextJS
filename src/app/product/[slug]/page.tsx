@@ -46,7 +46,7 @@ const ProductDetail = ({ params }: { params: { slug: string } }) => {
         url: `localhost:3000/api/product/${slug}`,
         method: 'GET',
       });
-      //console.log(res.data);
+      console.log(res.data);
 
       if (res.data) {
         setProductList(res.data);
