@@ -63,7 +63,7 @@ export function Login() {
     if (res?.data?.user) {
       dispatch(setDataAccount(res.data.user));
 
-      toast.success('Login Successfull!', {
+      toast.success('Đăng nhập thành công', {
         position: 'top-right',
         autoClose: 3000,
         hideProgressBar: false,
@@ -121,7 +121,7 @@ export function Login() {
                      group-hover:border-red-500
                      group-hover:placeholder-transparent 
                     "
-                    placeholder=" Email"
+                    placeholder="Email"
                     {...field}
                   />
                 </FormControl>
@@ -159,7 +159,7 @@ export function Login() {
                       style={{
                         paddingRight: '50px',
                       }}
-                      placeholder="  Mật Khẩu"
+                      placeholder="Mật Khẩu"
                       {...field}
                     />
                   </FormControl>

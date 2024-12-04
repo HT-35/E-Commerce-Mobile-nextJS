@@ -190,7 +190,7 @@ export function Register() {
                       style={{
                         paddingRight: '50px',
                       }}
-                      placeholder="  Mật Khẩu"
+                      placeholder="Mật Khẩu"
                       onChange={(e) => {
                         SetDisableBtn(false);
                         onChange(e);
@@ -294,7 +294,7 @@ export function Register() {
           disabled={disableBtn}
           className="w-full bg-red-500"
         >
-          Đăng Kí
+          Đăng Ký
         </Button>
       </form>
       <ModalActiveAccount open={activeAccount} setOpen={setActiveAccount} />

@@ -69,7 +69,7 @@ const Header = () => {
           <Link href={isLoggedIn ? '/user/profile' : '/auth'}>
             <div className="account flex justify-between items-center gap-2 hover:bg-white hover:bg-opacity-50 p-2 rounded-md cursor-pointer">
               <UserIcon />
-              {name.length > 0 ? <>{name}</> : <>Login</>}
+              {name.length > 0 ? <>{name}</> : <>Đăng Nhập</>}
             </div>
           </Link>
         </div>
@@ -95,7 +95,10 @@ const Header = () => {
           </div>
           <div className="flex gap-4 justify-center items-center">
             <div className="search relative w-full basis-5/6">
-              <Input className="pr-10 w-full placeholder:text-white" placeholder="Bạn tìm gì ..." />
+              <Input
+                className="pr-10 w-full placeholder:text-white"
+                placeholder="Bạn tìm gì ..."
+              />
               <div className="absolute top-[50%] -translate-y-[50%] right-2 basis-1/6">
                 <IconSearch />
               </div>

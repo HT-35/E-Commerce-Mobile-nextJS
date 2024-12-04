@@ -46,17 +46,17 @@ const MenuAdmin: {
     component: <DashboardAdmin />,
   },
   {
+    value: 'managerAccount',
+    icon: <PersonIcon className="w-6 h-6" />,
+    title: 'Quản Lý Tài Khoản',
+    component: <MangegerAccount />,
+  },
+  {
     value: 'managerProduct',
     icon: <PhoneIcon />,
     title: 'Quản Lý Sản Phẩm',
     component: <MangegerProduct />,
     //component: <ProductForm />,
-  },
-  {
-    value: 'managerAccount',
-    icon: <PersonIcon className="w-6 h-6" />,
-    title: 'Quản Lý Tài Khoản',
-    component: <MangegerAccount />,
   },
   {
     value: 'managerOrder',

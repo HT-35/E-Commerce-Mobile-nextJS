@@ -9,16 +9,16 @@ function TabsDemo() {
     <Tabs defaultValue="Login" className="w-full  snap-none ">
       <TabsList className="grid w-full grid-cols-2 shadow-xl h-[50px] bg-slate-200 mb-10 ">
         <TabsTrigger value="Login" className="h-[40px]">
-          Đăng Nhặp
+          Đăng Nhập
         </TabsTrigger>
         <TabsTrigger value="Register" className="h-[40px]">
-          Đăng Kí
+          Đăng Ký
         </TabsTrigger>
       </TabsList>
       <TabsContent value="Login">
         <Card>
           <CardHeader>
-            <CardTitle className="text-center text-xl max-lg:text-base">Đăng Nhặp</CardTitle>
+            <CardTitle className="text-center text-xl max-lg:text-base">Đăng Nhập</CardTitle>
           </CardHeader>
           <CardContent className="space-y-5">
             <Login></Login>
@@ -29,7 +29,7 @@ function TabsDemo() {
       <TabsContent value="Register">
         <Card>
           <CardHeader>
-            <CardTitle className="text-center text-xl max-lg:text-base">Đăng Kí</CardTitle>
+            <CardTitle className="text-center text-xl max-lg:text-base">Đăng Ký</CardTitle>
           </CardHeader>
           <CardContent className="space-y-5">
             <Register></Register>
