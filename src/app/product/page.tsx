@@ -119,7 +119,7 @@ const ProductPage = () => {
   };
 
   return (
-    <div className="min-h-[10000px] overflow-x-hidden  max-lg:banner  ">
+    <div className="overflow-x-hidden  max-lg:banner  ">
       <Navigation
         menu={false}
         Banner={Banner}

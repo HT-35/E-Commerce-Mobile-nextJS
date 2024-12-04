@@ -58,11 +58,11 @@ export function ModalAddress({
         <AlertDialogHeader>
           <AlertDialogTitle>Thêm địa chỉ giao hàng</AlertDialogTitle>
         </AlertDialogHeader>
-        <AddressForm></AddressForm>
+        <AddressForm setOpen={setOpen} />
 
         <AlertDialogFooter className="w-full">
           <AlertDialogAction onClick={() => setOpen(false)}>
-            Thêm địa chỉ
+            Đóng
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
@@ -85,7 +85,7 @@ const FormSchema = z.object({
   }),
 });
 
-export function AddressForm() {
+export function AddressForm({ setOpen }: { setOpen: (open: boolean) => void }) {
   const { accessToken } = useAppSelector((item) => item.account);
 
   const [province, setProvince] = useState<
@@ -223,6 +223,11 @@ export function AddressForm() {
     console.log(`createAddress:`, createAddress);
     console.log('');
     console.log('');
+
+    if (createAddress) {
+      setOpen(false); // Đóng modal
+      window.location.reload(); // Reload lại trang
+    }
   }
 
   return (
@@ -344,7 +349,7 @@ export function AddressForm() {
           )}
         />
 
-        <Button type="submit">Submit</Button>
+        <Button type="submit">Thêm địa chỉ</Button>
       </form>
     </Form>
   );
