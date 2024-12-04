@@ -144,25 +144,22 @@ const Payment = () => {
       //console.log('ifno');
     } else {
       const product = itemPayment.map((item) => {
-        return { slug: item.slug, color: item.color };
+        return { slug: item.slug, color: item.color, quantity: item.quantity };
       });
 
       const payload = {
-        product,
+        item: [...product],
+        email: infoReceive.Email,
+        numberPhone: infoReceive.PhoneNumber,
+        addressShiping: infoReceive.address,
       };
 
       const crateOrder = await sendRequest<IBackendRes<any>>({
         method: 'POST',
         url: listApi.createPayment(),
-        body: { product },
+        body: payload,
         headers: { Authorization: `Bearer ${accessToken}` },
       });
-      console.log('');
-      console.log('');
-      console.log('crateOrder  :  ', crateOrder);
-      console.log('');
-      console.log('');
-      console.log('');
 
       if (crateOrder.statusCode === 201) {
         console.log('');

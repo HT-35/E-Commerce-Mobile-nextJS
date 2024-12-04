@@ -1,5 +1,5 @@
 'use client';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Table,
   TableBody,
@@ -9,80 +9,51 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { useSearchParams } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { sendRequest } from '@/utils/fetchApi';
 import { useAppSelector } from '@/lib/redux/hooks';
 import { listApi } from '@/utils/listApi';
-
-const parseOrderInfo = (orderInfo: string) => {
-  return orderInfo
-    .split(/-slug:/) // Tách mỗi sản phẩm dựa trên `-slug:`
-    .filter(Boolean) // Loại bỏ các phần tử rỗng
-    .map((product) => {
-      const result: {
-        map(arg0: (item: any) => any): unknown;
-        slug?: string;
-        color?: string;
-        quantity?: number;
-      } = {};
-
-      // Thêm `slug:` vào đầu chuỗi để đảm bảo định dạng nhất quán
-      const fields = `slug:${product}`.split('+');
-
-      fields.forEach((field) => {
-        const [key, ...valueParts] = field.split(':');
-        const value = valueParts.join(':').trim();
-
-        if (key && value) {
-          if (key.trim() === 'slug') {
-            result.slug = value;
-          } else if (key.trim() === 'color') {
-            result.color = value;
-          } else if (key.trim() === 'quantity') {
-            result.quantity = parseInt(value, 10);
-          }
-        }
-      });
-
-      return result; // Trả về object sản phẩm
-    });
-};
+import { formatCurrency } from '@/utils/price';
 
 const Bill = () => {
   const searchParams = useSearchParams();
   const search = searchParams.get('vnp_OrderInfo');
   // Decode giá trị để đọc được thông tin
-  const decodedOrderInfo = decodeURIComponent(search!);
-  console.log(`decodedOrderInfo:`, decodedOrderInfo);
-  const arrProduct = parseOrderInfo(decodedOrderInfo);
+  const idOrder = decodeURIComponent(search!);
 
-  let orderDetails = arrProduct?.map((item: any) => {
-    // Kiểm tra nếu slug bắt đầu với 'slug:'
-    if (item.slug.startsWith('slug:')) {
-      // Loại bỏ phần 'slug:' khỏi slug
-      item.slug = item.slug.replace('slug:', '').trim();
-    }
-    return item;
+  const [bill, setBill] = useState<{
+    _id: string;
+    total: number;
+    numberPhone: string;
+    email: string;
+    addressShiping: string;
+    CodeShipGHN: string;
+    itemArr: any[];
+  }>({
+    _id: '',
+    total: 0,
+    numberPhone: '',
+    email: '',
+    addressShiping: '',
+    CodeShipGHN: '',
+    itemArr: [],
   });
 
-  const { accessToken } = useAppSelector((item) => item.account);
+  const router = useRouter();
 
-  console.log(orderDetails);
+  const { accessToken, name } = useAppSelector((item) => item.account);
+
+  console.log(idOrder);
+
+  if (!accessToken) {
+    router.refresh();
+  }
 
   useEffect(() => {
     const createBill = async () => {
-      const payload = {
-        item: orderDetails,
-        email: 'huyfa352002@gmail.com',
-        numberPhone: '0343128733',
-        addressShiping:
-          'ngã 3 clb xanh, tổ 38 khu phố vườn dừa, phước tân, biên hòa đồng nai',
-      };
-
       const bill = await sendRequest<IBackendRes<any>>({
-        method: 'POST',
-        url: listApi.createBill(),
-        body: payload,
+        method: 'PATCH',
+        url: listApi.updateSuccessBill(idOrder),
         headers: { Authorization: `Bearer ${accessToken}` },
       });
       console.log('');
@@ -91,9 +62,20 @@ const Bill = () => {
       console.log('');
       console.log('');
       console.log('');
+      if (bill.statusCode === 200) {
+        setBill({
+          _id: bill.data._id,
+          total: bill.data.total,
+          numberPhone: bill.data.numberPhone,
+          email: bill.data.email,
+          addressShiping: bill.data.addressShiping,
+          CodeShipGHN: bill.data.CodeShipGHN,
+          itemArr: bill.data.itemArr,
+        });
+      }
     };
     createBill();
-  }, [accessToken, orderDetails]);
+  }, [accessToken, idOrder]);
 
   return (
     <div className="max-w-[800px] mx-auto bg-white px-10 pt-4 pb-14 mb-10">
@@ -104,18 +86,34 @@ const Bill = () => {
         Cảm ơn bạn đã mua hàng tại HTS Store.
       </div>
       <div className="bg-slate-200 px-5 py-2">
-        <div className=""> Đơn Hàng #22211232</div>
+        <div className=""> Đơn Hàng # {bill._id}</div>
         <div className="receiver  flex gap-4">
-          <span className="font-semibold  min-w-36"> - Người nhận hàng :</span>{' '}
-          Trần Quang Huy
+          <span className="font-semibold  min-w-36"> - Người đặt hàng:</span>{' '}
+          {name}
         </div>
         <div className="addressShiping flex gap-4">
           <span className="font-semibold  min-w-36">- Địa chỉ nhận hàng :</span>{' '}
-          Ngã 3 clb xanh, tổ 38 khu phố vườn dừa, phước tân, biên hòa đồng nai
+          {bill.addressShiping ?? ''}
         </div>
         <div className=" flex gap-4">
           <span className="font-semibold  min-w-36"> - Tổng Tiền: </span>
-          <span className="text-red-600 font-semibold"> 8.699.000 đ</span>
+          <span className="text-red-600 font-semibold">
+            {' '}
+            {formatCurrency(bill.total as any)}đ
+          </span>
+        </div>
+
+        <div className="receiver  flex gap-4">
+          <span className="font-semibold  min-w-36">
+            {' '}
+            - Đơn vị vận chuyển :
+          </span>{' '}
+          Giao Hàng Nhanh (GHN)
+        </div>
+
+        <div className="receiver  flex gap-4">
+          <span className="font-semibold  min-w-36"> - Mã giao hàng :</span>{' '}
+          {bill.CodeShipGHN ?? ''}
         </div>
       </div>
       <div className="my-2">Thông Tin về Sản Phẩm</div>
@@ -127,29 +125,30 @@ const Bill = () => {
 
             <TableHead className="text-center">Số Lượng</TableHead>
             <TableHead className="text-center">Giá Tiền</TableHead>
-            <TableHead className="text-center">Tổng Tiền</TableHead>
+            {/*<TableHead className="text-center">Tổng Tiền</TableHead>*/}
           </TableRow>
         </TableHeader>
         <TableBody>
-          <TableRow>
-            <TableCell className="text-center">1</TableCell>
-            <TableCell className="text-center">
-              Samsung Galaxy A06 4GB 128GB
-            </TableCell>
-            <TableCell className="text-center">2</TableCell>
-            <TableCell className="text-center">3.490.000 đ</TableCell>
-            <TableCell className="text-center">6.490.000 đ</TableCell>
-          </TableRow>
-          <TableRow>
-            <TableCell className="text-center">1</TableCell>
-            <TableCell className="text-center">
-              Samsung Galaxy A06 4GB 128GB
-            </TableCell>
-            <TableCell className="text-center">2</TableCell>
-            <TableCell className="text-center">3.490.000 đ</TableCell>
-            <TableCell className="text-center">6.490.000 đ</TableCell>
-          </TableRow>
+          {bill.itemArr.map((item, index) => {
+            return (
+              <TableRow key={index}>
+                <TableCell className="text-center">1</TableCell>
+                <TableCell className="text-center">{item.name}</TableCell>
+                <TableCell className="text-center">{item.quantity}</TableCell>
+                <TableCell className="text-center">
+                  {formatCurrency(item.price as any)}đ
+                </TableCell>
+                <TableCell className="text-center">
+                  {formatCurrency(
+                    (Number(item.price) * Number(item.quantity)) as any
+                  )}
+                  đ
+                </TableCell>
+              </TableRow>
+            );
+          })}
         </TableBody>
+
         <TableFooter>
           <TableRow>
             <TableHead></TableHead>
@@ -160,7 +159,7 @@ const Bill = () => {
               Tổng Số Tiền
             </TableHead>
             <TableHead className="text-red-600 font-semibold">
-              109.213.321 đ
+              {formatCurrency(bill.total as any)}đ
             </TableHead>
           </TableRow>
         </TableFooter>

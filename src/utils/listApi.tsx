@@ -13,4 +13,5 @@ export const listApi = {
   cart: () => `${domain}/api/cart`,
   createPayment: () => `${domainNextServer}/payment/create_payment_url`,
   createBill: () => `${domainNextServer}/user/bill/`,
+  updateSuccessBill: (id: string) => `${domainNextServer}/user/bill/${id}`,
 };

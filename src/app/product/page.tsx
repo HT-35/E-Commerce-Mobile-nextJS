@@ -247,7 +247,7 @@ const ProductPage = () => {
       </div>*/}
 
       <div className="product grid grid-cols-4 w-full h-full gap-8 my-4 max-lg:grid-cols-2 max-lg:gap-2">
-        {productList.map((item: any, index) => {
+        {productList?.map((item: any, index) => {
           const productImage =
             item?.option?.[0]?.img?.[0]?.link ?? '/placeholder-image.jpg'; // Ảnh fallback
           const productPrice = item?.option?.[0]?.price ?? 0;

@@ -155,7 +155,7 @@ export default function Home() {
         </div>
 
         <div className="product grid grid-cols-5  w-full h-full gap-8 my-4   max-lg:grid-cols-2  max-lg:gap-2">
-          {productList.map((item: any, index) => {
+          {productList?.map((item: any, index) => {
             return (
               <Link href={`product/${item.slug}`} key={index}>
                 <div className="product shadow-lg rounded-lg bg-white pt-1">
