@@ -1,7 +1,5 @@
-import { user } from '@/user';
 import Purchase from '@/components/user/orders/purchase';
 import Shipping from '@/components/user/orders/shipping/shipping';
-
 
 import React from 'react';
 

@@ -23,8 +23,26 @@ import { AcceptDeleteProduct } from '@/components/admin/form/DeleteProduct';
 import { FormUpdateProduct } from '@/components/admin/form/FormUpdateProduct';
 import ModalUpdate from '@/components/admin/modal/ModalUpdate';
 import { Scrollbar } from 'swiper/modules';
-import { ListBrand } from '@/app/product/page';
+
 import { Swiper, SwiperSlide } from 'swiper/react';
+
+const ListBrand: any = [
+  {
+    brand: 'Tất Cả',
+  },
+  {
+    brand: 'iPhone',
+  },
+  {
+    brand: 'Samsung',
+  },
+  {
+    brand: 'Xiaomi',
+  },
+  {
+    brand: 'Oppo',
+  },
+];
 
 const MangegerProduct = () => {
   const [selectedBrand, setSelectedBrand] = useState('');
@@ -130,7 +148,7 @@ const MangegerProduct = () => {
             modules={[Scrollbar]}
             className="mySwiper bg-transparent"
           >
-            {ListBrand.map((item, index) => {
+            {ListBrand.map((item: any, index: any) => {
               return (
                 <SwiperSlide key={index}>
                   <Button

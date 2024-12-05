@@ -1,0 +1,29 @@
+# Bỏ qua các thư mục node_modules và file lock
+node_modules
+npm-debug.log
+yarn.lock
+pnpm-lock.yaml
+package-lock.json
+
+# Loại bỏ các tệp build cục bộ
+.next
+out
+
+# Loại bỏ các tệp cấu hình môi trường
+#.env
+#.env.local
+#.env.development
+#.env.production
+
+# Loại bỏ các tệp IDE/Editor
+.vscode/
+.idea/
+*.swp
+
+# Loại bỏ tệp git
+.git
+.gitignore
+
+# Loại bỏ các tệp hệ thống
+.DS_Store
+Thumbs.db

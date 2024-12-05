@@ -4,7 +4,15 @@ import queryString from 'query-string';
 // Send data JSON
 export const sendRequest = async <T,>(props: IRequest) => {
   //type
-  let { url, method, body, queryParams = {}, useCredentials = false, headers = {}, nextOption = {} } = props;
+  let {
+    url,
+    method,
+    body,
+    queryParams = {},
+    useCredentials = false,
+    headers = {},
+    nextOption = {},
+  } = props;
 
   // Lọc headers để đảm bảo không có giá trị null hoặc undefined
   const validHeaders = Object.fromEntries(
@@ -50,7 +58,15 @@ export const sendRequest = async <T,>(props: IRequest) => {
 // Send file : img, PDF,....
 export const sendRequestFile = async <T,>(props: IRequest) => {
   //type
-  let { url, method, body, queryParams = {}, useCredentials = false, headers = {}, nextOption = {} } = props;
+  let {
+    url,
+    method,
+    body,
+    queryParams = {},
+    useCredentials = false,
+    headers = {},
+    nextOption = {},
+  } = props;
 
   if (url.startsWith('localhost')) {
     url = `http://${url}`;
