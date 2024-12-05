@@ -63,56 +63,65 @@ const InputChat = ({
           onClick={handleActive}
         ></Cross1Icon>
       </div>
-      <div className={`basis-6/12  message h-full  min-h-[300px] max-h-[500px] `}>
+      <div
+        className={`basis-6/12  message h-full  min-h-[300px] max-h-[500px] `}
+      >
         <div className="message pl-4 mt-4 max-h-[300px]  overflow-y-auto">
           {showMessages && _id?.length ? (
-            showMessages?.map((item: { message: string; sender: string }, index) => {
-              const showAvatar =
-                index === showMessages?.length - 1 || showMessages[index].sender !== showMessages[index + 1].sender;
-              return (
-                <div key={index} className="">
-                  <div
-                    className={` flex   
+            showMessages?.map(
+              (item: { message: string; sender: string }, index) => {
+                const showAvatar =
+                  index === showMessages?.length - 1 ||
+                  showMessages[index].sender !== showMessages[index + 1].sender;
+                return (
+                  <div key={index} className="">
+                    <div
+                      className={` flex   
                        ${item.sender === 'employee' ? 'justify-start items-end' : ' items-end flex-row-reverse'}
                         
                        `}
-                  >
-                    <div className="w-5 h-5">
-                      {showAvatar && (
-                        <Image
-                          src={'/imgs/employee.png'}
-                          width="0"
-                          height="0"
-                          sizes="10vw"
-                          className="shadow-2xl relative z-10 cursor-pointer"
-                          style={{
-                            width: '20px',
-                            height: '20px',
-                            borderRadius: '100px',
-                          }}
-                          alt="Picture of the author"
-                        ></Image>
-                      )}
-                    </div>
-                    <div className="message pl-2">
-                      <div
-                        className={`rounded-xl  mb-2 max-w-max px-2 py-[2px]
+                    >
+                      <div className="w-5 h-5">
+                        {showAvatar && (
+                          <Image
+                            src={'/imgs/employee.png'}
+                            width="0"
+                            height="0"
+                            sizes="10vw"
+                            className="shadow-2xl relative z-10 cursor-pointer"
+                            style={{
+                              width: '20px',
+                              height: '20px',
+                              borderRadius: '100px',
+                            }}
+                            alt="Picture of the author"
+                          ></Image>
+                        )}
+                      </div>
+                      <div className="message pl-2">
+                        <div
+                          className={`rounded-xl  mb-2 max-w-max px-2 py-[2px]
                          ${item.sender === 'employee' ? 'bg-slate-200 mr-16' : ' bg-red-200 ml-16'}
                         `}
-                      >
-                        {item.message}
+                        >
+                          {item.message}
+                        </div>
                       </div>
                     </div>
                   </div>
-                </div>
-              );
-            })
+                );
+              }
+            )
           ) : (
             <div className="text-center mt-20">
               <h1 className="mb-4">Vui Lòng Login Để Nhắn Tin</h1>
               <Link href={'/auth'}>
-                <Button type="submit" className=" bg-red-600 " onClick={sendMessage}>
-                  Login
+                <Button
+                  type="submit"
+                  className=" bg-red-600 "
+                  onClick={sendMessage}
+                >
+                  Đăng Nhập
                 </Button>
               </Link>
             </div>

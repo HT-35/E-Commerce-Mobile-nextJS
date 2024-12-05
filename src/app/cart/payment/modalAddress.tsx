@@ -226,7 +226,7 @@ export function AddressForm({ setOpen }: { setOpen: (open: boolean) => void }) {
 
     if (createAddress) {
       setOpen(false); // Đóng modal
-      window.location.reload(); // Reload lại trang
+      window?.location?.reload(); // Reload lại trang
     }
   }
 

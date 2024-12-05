@@ -2,7 +2,14 @@
 
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-import { PersonIcon, UpdateIcon, ResetIcon, ReaderIcon } from '@radix-ui/react-icons';
+import {
+  PersonIcon,
+  UpdateIcon,
+  ResetIcon,
+  ReaderIcon,
+} from '@radix-ui/react-icons';
+import { sendRequest } from '@/utils/fetchApi';
+import { listApi } from '@/utils/listApi';
 
 const LayOutUser = ({ children }: { children: React.ReactNode }) => {
   const pathname = usePathname();
@@ -39,14 +46,20 @@ const LayOutUser = ({ children }: { children: React.ReactNode }) => {
     },
   ];
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
+    await sendRequest({
+      method: 'POST',
+      url: listApi.logout(),
+    });
     router.push('/');
+    router.refresh();
   };
 
   // Hàm kiểm tra menu nào đang active
   const isActive = (itemPath: string, subPaths?: string[]) => {
     if (pathname === itemPath) return true;
-    if (subPaths) return subPaths.some((subPath) => pathname.startsWith(subPath)); // Kiểm tra các subPath
+    if (subPaths)
+      return subPaths.some((subPath) => pathname.startsWith(subPath)); // Kiểm tra các subPath
     return false;
   };
 
@@ -58,18 +71,33 @@ const LayOutUser = ({ children }: { children: React.ReactNode }) => {
             <div
               key={item.path}
               className={`block-menu__item-menu cursor-pointer mb-4 p-[0.5px_10px] relative ${
-                isActive(item.path, item.subPaths) ? 'bg-[#fee] border border-[#e11b1e] rounded-xl text-[#e11b1e]' : ''
+                isActive(item.path, item.subPaths)
+                  ? 'bg-[#fee] border border-[#e11b1e] rounded-xl text-[#e11b1e]'
+                  : ''
               }`}
-              onClick={item.label === 'Thoát tài khoản' ? handleLogout : undefined}
+              onClick={
+                item.label === 'Thoát tài khoản' ? handleLogout : undefined
+              }
             >
               <div className="item-menu flex items-center justify-start py-1.5">
-                <span className={`${isActive(item.path, item.subPaths) ? 'text-[#e11b1e]' : ''}`}>{item.icon}</span>
+                <span
+                  className={`${isActive(item.path, item.subPaths) ? 'text-[#e11b1e]' : ''}`}
+                >
+                  {item.icon}
+                </span>
                 {item.path ? (
-                  <Link href={item.path} className={`ml-2 ${isActive(item.path, item.subPaths) ? 'text-[#e11b1e]' : ''}`}>
+                  <Link
+                    href={item.path}
+                    className={`ml-2 ${isActive(item.path, item.subPaths) ? 'text-[#e11b1e]' : ''}`}
+                  >
                     {item.label}
                   </Link>
                 ) : (
-                  <span className={`ml-2 ${isActive(item.path, item.subPaths) ? 'text-[#e11b1e]' : ''}`}>{item.label}</span>
+                  <span
+                    className={`ml-2 ${isActive(item.path, item.subPaths) ? 'text-[#e11b1e]' : ''}`}
+                  >
+                    {item.label}
+                  </span>
                 )}
               </div>
             </div>

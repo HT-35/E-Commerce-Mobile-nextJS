@@ -14,4 +14,5 @@ export const listApi = {
   createPayment: () => `${domainNextServer}/payment/create_payment_url`,
   createBill: () => `${domainNextServer}/user/bill/`,
   updateSuccessBill: (id: string) => `${domainNextServer}/user/bill/${id}`,
+  logout: () => `${domain}/api/auth/logout`,
 };
