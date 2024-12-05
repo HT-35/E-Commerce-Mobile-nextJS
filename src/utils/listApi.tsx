@@ -1,3 +1,5 @@
+import { register } from 'module';
+
 const domain = 'http://localhost:3000';
 const domainNextServer = 'http://localhost:4000';
 
@@ -15,4 +17,9 @@ export const listApi = {
   createBill: () => `${domainNextServer}/user/bill/`,
   updateSuccessBill: (id: string) => `${domainNextServer}/user/bill/${id}`,
   logout: () => `${domain}/api/auth/logout`,
+  login: () => `${domain}/api/auth/login`,
+  register: () => `${domain}/api/auth/register`,
+  activeAcount: () => `${domain}/api/auth/active`,
+  reSendOTP: (email: string) =>
+    `${domain}/api/auth/re-send-otp-code?email=${email}`,
 };

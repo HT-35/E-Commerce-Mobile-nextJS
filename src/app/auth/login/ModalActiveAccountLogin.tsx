@@ -1,4 +1,3 @@
-'use client';
 import { Button } from '@/components/ui/button';
 import {
   Dialog,
@@ -19,24 +18,32 @@ import { defineStepper } from '@stepperize/react';
 import { sendRequest } from '@/utils/fetchApi';
 import { listApi } from '@/utils/listApi';
 import { Bounce, toast } from 'react-toastify';
-import { useRouter } from 'next/navigation';
 
-const { useStepper, Scoped } = defineStepper({ id: 'first' }, { id: 'second' });
+const { useStepper, Scoped } = defineStepper(
+  { id: 'first' },
+  { id: 'second' }
+  //{ id: 'third' }
+);
 
 // =========
-export default function ModalActiveAccount({
-  open,
-  setOpen,
+export default function ModalActiveAccountLogin({
+  openActiveAccoutLogin = false,
+  setOpenActiveAccoutLogin,
   idUser,
+  email,
 }: {
-  open?: boolean;
-  setOpen: any;
   idUser: string;
+  email: string;
+  openActiveAccoutLogin: any;
+  setOpenActiveAccoutLogin: any;
 }) {
-  //const stepper = useStepper();
-  const [codeID, setCodeID] = useState<string>('');
+  const [codeID, setCodeID] = useState('');
+
   return (
-    <Dialog open={open}>
+    <Dialog
+      open={openActiveAccoutLogin}
+      onOpenChange={() => setOpenActiveAccoutLogin(false)}
+    >
       <DialogContent
         className="sm:max-w-[800px] lg:min-h-[600px]"
         onEscapeKeyDown={(e) => e.preventDefault()}
@@ -46,14 +53,15 @@ export default function ModalActiveAccount({
           <DialogTitle>Kích Hoạt Tài Khoản</DialogTitle>
         </DialogHeader>
         <Scoped>
-          <MySteps setCodeID={setCodeID} />
-          <MyActions setOpen={setOpen} codeID={codeID} idUser={idUser} />
+          <MySteps setCodeID={setCodeID} email={email} />
+          <MyActions idUser={idUser} codeID={codeID} />
         </Scoped>
       </DialogContent>
     </Dialog>
   );
 }
-const MySteps = ({ setCodeID }: { setCodeID: any }) => {
+
+const MySteps = ({ setCodeID, email }: { setCodeID: any; email: string }) => {
   const stepper = useStepper();
 
   return (
@@ -62,8 +70,9 @@ const MySteps = ({ setCodeID }: { setCodeID: any }) => {
         <>
           <DialogHeader>
             <DialogDescription className="text-black">
-              Mã Xác Thực Đã Được Gửi Tới Email Của Bạn, Bạn Vui Lòng Kiểm Tra
-              Email.
+              Mã Xác Thực Đã Được Gửi Tới Email{' '}
+              <span className="text-red-500"> {email}</span>, bạn Vui Lòng Kiểm
+              Tra Email .
             </DialogDescription>
           </DialogHeader>
           <div className="flex flex-col gap-4 py-4">
@@ -85,6 +94,7 @@ const MySteps = ({ setCodeID }: { setCodeID: any }) => {
 
       {stepper.when('second', () => (
         <p>
+          {' '}
           Bạn Đã Kích Hoạt Tài Khoản Thành Công, Vui lòng tiến hành đăng nhập.
         </p>
       ))}
@@ -92,18 +102,8 @@ const MySteps = ({ setCodeID }: { setCodeID: any }) => {
   );
 };
 
-const MyActions = ({
-  setOpen,
-  codeID,
-  idUser,
-}: {
-  setOpen: any;
-  codeID: string;
-  idUser: string;
-}) => {
+const MyActions = ({ idUser, codeID }: { idUser: string; codeID: string }) => {
   const stepper = useStepper();
-
-  const router = useRouter();
 
   const handleActiveAccount = async () => {
     const activeAccount = await sendRequest<IBackendRes<any>>({
@@ -118,7 +118,7 @@ const MyActions = ({
     if (activeAccount.statusCode === 201) {
       stepper.next();
     } else {
-      toast.error('Bạn đã nhập sai mã OTP, vui lòng kiểm tra lại !', {
+      toast.error('Bạn đã nhập sai mã xác thực, vui lòng kiểm tra lại !', {
         position: 'top-right',
         autoClose: 3000,
         hideProgressBar: false,
@@ -134,19 +134,20 @@ const MyActions = ({
     console.log(activeAccount);
   };
 
-  const reload = () => {
-    window.location.reload();
-    setOpen(false);
-    //router.refresh();
-  };
-
   return !stepper.isLast ? (
     <div className="flex items-center gap-2">
+      {/*<Button
+        onClick={stepper.prev}
+        className={`${stepper.isFirst ? 'hidden' : ''}`}
+      >
+        Quay Lại
+      </Button>*/}
+
       <Button onClick={handleActiveAccount}>Tiếp Theo</Button>
     </div>
   ) : (
     <div className="flex items-center gap-2">
-      <Button onClick={reload}>
+      <Button onClick={stepper.reset}>
         <DialogClose>Hoàn Tất</DialogClose>
       </Button>
     </div>

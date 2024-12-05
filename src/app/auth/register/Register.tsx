@@ -44,6 +44,8 @@ import { Bounce, toast } from 'react-toastify';
 import { EyeNoneIcon, EyeOpenIcon } from '@radix-ui/react-icons';
 import { useState } from 'react';
 import ModalActiveAccount from '@/app/auth/register/modalActive';
+import { sendRequest } from '@/utils/fetchApi';
+import { listApi } from '@/utils/listApi';
 
 export function Register() {
   const [activeAccount, setActiveAccount] = useState<boolean>(false);
@@ -51,6 +53,8 @@ export function Register() {
   const [openPassword, setOpenPassword] = useState<boolean>(false);
 
   const [disableBtn, SetDisableBtn] = useState<boolean>(false);
+
+  const [idUser, setIdUser] = useState<string>('');
 
   // 1. Define your form.
   const form = useForm<z.infer<typeof formSchema>>({
@@ -66,8 +70,7 @@ export function Register() {
   const { getValues } = form;
 
   // 2. Define a submit handler.
-  function onSubmit(values: z.infer<typeof formSchema>) {
-
+  async function onSubmit(values: z.infer<typeof formSchema>) {
     if (values.password !== values.reEnterPassword) {
       SetDisableBtn(true);
       return toast.error('Nhập Lại Mật Khẩu Không Khớp !', {
@@ -82,18 +85,41 @@ export function Register() {
         transition: Bounce,
       });
     }
-    //toast.success('Register Successfull!', {
-    //  position: 'top-right',
-    //  autoClose: 5000,
-    //  hideProgressBar: false,
-    //  closeOnClick: true,
-    //  pauseOnHover: true,
-    //  draggable: true,
-    //  progress: undefined,
-    //  theme: 'light',
-    //  transition: Bounce,
-    //});
-    setActiveAccount(true);
+
+    console.log('');
+    console.log('');
+    console.log('values  :   ', values);
+    console.log('');
+    console.log('');
+    console.log('');
+
+    const register = await sendRequest<IBackendRes<any>>({
+      method: `POST`,
+      url: listApi.register(),
+      body: {
+        name: values.name,
+        email: values.email,
+        password: values.password,
+      },
+    });
+    console.log(register);
+
+    if (+register.statusCode >= 400) {
+      toast.error(`${register.message}`, {
+        position: 'top-right',
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: 'light',
+        transition: Bounce,
+      });
+    } else {
+      setIdUser(register.data._id);
+      setActiveAccount(true);
+    }
   }
 
   return (
@@ -297,7 +323,11 @@ export function Register() {
           Đăng Ký
         </Button>
       </form>
-      <ModalActiveAccount open={activeAccount} setOpen={setActiveAccount} />
+      <ModalActiveAccount
+        open={activeAccount}
+        setOpen={setActiveAccount}
+        idUser={idUser}
+      />
     </Form>
   );
 }

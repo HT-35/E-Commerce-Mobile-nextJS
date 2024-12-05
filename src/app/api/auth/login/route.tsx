@@ -18,10 +18,13 @@ export async function POST(request: Request) {
     const statusCode = res.statusCode ?? 400;
 
     console.log('res:', res);
-    //const data = await res.json();
 
-    //const resData = res.data.user;
-
+    if (res.statusCode > 400) {
+      return Response.json(res, {
+        status: res.statusCode,
+        headers: { 'Content-Type': 'application/json' },
+      });
+    }
     const cookieStore = cookies();
 
     // Đặt access_token và refresh_token vào cookie
@@ -64,7 +67,7 @@ export async function POST(request: Request) {
   } catch (error: any) {
     return Response.json(
       {
-        Error: error.message,
+        error,
       },
       {
         status: 500,
