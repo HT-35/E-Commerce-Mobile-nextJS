@@ -4,10 +4,14 @@ const domain = 'http://localhost:3000';
 //const domain = 'http://nextjs:3000';
 
 const domainNextServer = 'http://localhost:4000';
+//const domainNextServer = 'http://nestjs:4000';
+//const domainNextServer = 'http://172.27.0.2:4000';
 
 export const apiLiveStream = `http://localhost:5001`;
+//export const apiLiveStream = `http://172.27.0.2:5001`;
 
 export const apiChat = `http://localhost:5000`;
+//export const apiChat = `http://172.27.0.2:5000`;
 
 export const listApi_Next_Server = {
   getAllProduct: () => `${domain}/api/product?current=1&pageSize=1000`,
