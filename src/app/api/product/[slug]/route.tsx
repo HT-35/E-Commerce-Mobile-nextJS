@@ -1,17 +1,16 @@
 import { sendRequest } from '@/utils/fetchApi';
-
-const Port = process.env.NEXT_PUBLIC_PORT_NEST_SERVER;
+import { listApi_Nest_Server_API_Route } from '@/utils/listApi';
 
 export async function GET(
   request: Request,
   { params }: { params: { slug: string } }
 ) {
-  const nameSmartPhone = params.slug;
+  const slug = params.slug;
 
   try {
     const res: any = await sendRequest<IBackendRes<any>>({
       method: 'GET',
-      url: `localhost:${Port}/product/${nameSmartPhone}`,
+      url: listApi_Nest_Server_API_Route.detailProduct(slug),
     });
 
     //console.log('product', product);

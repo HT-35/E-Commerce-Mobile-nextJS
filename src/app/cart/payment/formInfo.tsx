@@ -18,6 +18,7 @@ import { useEffect, useState } from 'react';
 import { ModalAddress } from '@/app/cart/payment/modalAddress';
 import { sendRequest } from '@/utils/fetchApi';
 import { useAppSelector } from '@/lib/redux/hooks';
+import { listApi_Next_Server } from '@/utils/listApi';
 
 interface ProfileFormProps {
   form: UseFormReturn<z.infer<typeof formSchema>>;
@@ -47,7 +48,7 @@ export function ProfileForm({ form }: ProfileFormProps) {
   useEffect(() => {
     const getAddress = async () => {
       const address = await sendRequest<IBackendRes<any[]>>({
-        url: `http://localhost:3000/api/address`,
+        url: listApi_Next_Server.getAllAddress(),
         method: 'GET',
         headers: { Authorization: `Bearer ${accessToken}` },
       });

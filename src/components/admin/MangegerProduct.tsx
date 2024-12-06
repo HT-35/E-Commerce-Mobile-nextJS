@@ -15,7 +15,7 @@ import ModalCreate from '@/components/admin/modal/ModalCreate';
 import { FormCreateProduct } from '@/components/admin/form/CreateProduct';
 import FormCreateUser from '@/components/admin/form/CreateUser';
 import { sendRequest } from '@/utils/fetchApi';
-import { listApi } from '@/utils/listApi';
+
 import { useAppSelector } from '@/lib/redux/hooks';
 import { useRouter } from 'next/navigation';
 import { Bounce, toast } from 'react-toastify';
@@ -25,6 +25,10 @@ import ModalUpdate from '@/components/admin/modal/ModalUpdate';
 import { Scrollbar } from 'swiper/modules';
 
 import { Swiper, SwiperSlide } from 'swiper/react';
+import {
+  listApi_Nest_Server_API_Route,
+  listApi_Next_Server,
+} from '@/utils/listApi';
 
 const ListBrand: any = [
   {
@@ -78,7 +82,7 @@ const MangegerProduct = () => {
     const getProduct = async () => {
       const product = await sendRequest<IBackendRes<any>>({
         method: 'GET',
-        url: listApi.getAllProduct(),
+        url: listApi_Next_Server.getAllProduct(),
       });
 
       setProduct(product.data.result);
@@ -90,7 +94,7 @@ const MangegerProduct = () => {
   const handleBrandFilter = async (brand: any) => {
     setSelectedBrand(brand); // Update selected brand
     const res = await sendRequest<IBackendRes<any>>({
-      url: `localhost:4000/product/brand/${brand.toLowerCase()}`,
+      url: listApi_Nest_Server_API_Route.getProductByBrandToLowerCase(brand),
       method: 'GET',
     });
 

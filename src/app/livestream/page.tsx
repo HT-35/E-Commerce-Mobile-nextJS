@@ -11,8 +11,10 @@ import { Imessage } from '@/components/admin/LiveStreamAdmin';
 import { sendRequest } from '@/utils/fetchApi';
 import { InputChatLiveStreamForm } from '@/components/admin/form/FormInputLiveStream';
 import BackGroundLiveStream from '@/components/animation/BackGroundLiveStream';
+import { apiLiveStream, listApi_Nest_Server_API_Route } from '@/utils/listApi';
 
-const socket = io(`http://localhost:5001`);
+//const socket = io(`http://localhost:5001`);
+const socket = io(apiLiveStream);
 
 const LiveStream = () => {
   const [_idLiveStream, set_IdLiveStream] = useState<string>('');
@@ -48,12 +50,16 @@ const LiveStream = () => {
     const getLiveStream = async () => {
       const liveStream = await sendRequest<IBackendRes<any>>({
         method: 'GET',
-        url: 'http://localhost:4000/livestream/client-get-livestream',
+
+        url: listApi_Nest_Server_API_Route.clientGetLiveStream(),
         headers: { Authorization: `Bearer ${accessToken}` },
       });
 
       if (liveStream?.data?.length > 0) {
-        const _id = (await liveStream?.data?.length) > 0 ? await liveStream?.data[0]?._id : '';
+        const _id =
+          (await liveStream?.data?.length) > 0
+            ? await liveStream?.data[0]?._id
+            : '';
         const newListMassage =
           liveStream?.data[0]?.messages?.map((item: any) => {
             //console.log(item);
@@ -126,9 +132,15 @@ const LiveStream = () => {
     };
   }, [_id]);
 
-  const handleSendMessageLiveStream = async ({ message }: { message: string }) => {
+  const handleSendMessageLiveStream = async ({
+    message,
+  }: {
+    message: string;
+  }) => {
     const sendMessageChatLiveStream = await sendRequest({
-      url: `http://localhost:4000/livestream/message/${_idLiveStream}`,
+      url: listApi_Nest_Server_API_Route.clientSendMessageLiveStream(
+        _idLiveStream
+      ),
       method: 'POST',
       body: {
         senderId: _id,
@@ -186,7 +198,13 @@ const LiveStream = () => {
           <div className="flex xl:justify-between xl:items-center max-lg:flex-col gap-3 w-full  ">
             {/* video */}
             <div className="basis-8/12  ">
-              <video className="w-full h-full " ref={remoteVideoRef} id="videoplayer" autoPlay muted></video>
+              <video
+                className="w-full h-full "
+                ref={remoteVideoRef}
+                id="videoplayer"
+                autoPlay
+                muted
+              ></video>
             </div>
 
             {/* message */}
@@ -203,7 +221,8 @@ const LiveStream = () => {
                       <div className="author">
                         <p>
                           {' '}
-                          {item.name} {item.role === 'employee' ? '(admin)' : ''}:{' '}
+                          {item.name}{' '}
+                          {item.role === 'employee' ? '(admin)' : ''}:{' '}
                         </p>
                       </div>
                       <div className="massage">{item.massage}</div>
@@ -224,8 +243,12 @@ const LiveStream = () => {
         </div>
       ) : (
         <BackGroundLiveStream>
-          <div className="w-full h-full text-center text-2xl mt-6">LiveStream Đã Kết Thúc.</div>
-          <div className="w-full h-full text-center text-2xl mt-6">Hẹn Gặp Lại Các Bạn.</div>
+          <div className="w-full h-full text-center text-2xl mt-6">
+            LiveStream Đã Kết Thúc.
+          </div>
+          <div className="w-full h-full text-center text-2xl mt-6">
+            Hẹn Gặp Lại Các Bạn.
+          </div>
         </BackGroundLiveStream>
       )}
     </div>

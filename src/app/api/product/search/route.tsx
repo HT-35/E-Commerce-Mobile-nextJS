@@ -1,8 +1,7 @@
 import { sendRequest } from '@/utils/fetchApi';
+import { listApi_Nest_Server_API_Route } from '@/utils/listApi';
 import { env } from '@/utils/listENV';
 import { NextRequest } from 'next/server';
-
-const PORT = await env.NEXT_PUBLIC_PORT_NEST_SERVER();
 
 export const GET = async (request: NextRequest) => {
   try {
@@ -12,7 +11,7 @@ export const GET = async (request: NextRequest) => {
     }
 
     const res: any = await sendRequest({
-      url: `localhost:${PORT}/product/search?name=${name}`,
+      url: listApi_Nest_Server_API_Route.searchProductByName(name),
       method: 'GET',
     });
 

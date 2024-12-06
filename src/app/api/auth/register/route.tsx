@@ -1,7 +1,6 @@
 import { checkMissingData } from '@/utils/checkMissingData';
 import { sendRequest } from '@/utils/fetchApi';
-
-const Port = process.env.NEXT_PUBLIC_PORT_NEST_SERVER;
+import { listApi_Nest_Server_API_Route } from '@/utils/listApi';
 
 export async function POST(request: Request) {
   try {
@@ -9,7 +8,8 @@ export async function POST(request: Request) {
 
     const res: any = await sendRequest<IBackendRes<IRegisterUser>>({
       method: 'POST',
-      url: `http://localhost:${Port}/auth/register`,
+
+      url: listApi_Nest_Server_API_Route.register(),
       body: { ...dataBody },
     });
 

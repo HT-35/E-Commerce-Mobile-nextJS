@@ -24,7 +24,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { sendRequest } from '@/utils/fetchApi';
-import { listApi } from '@/utils/listApi';
+import { listApi_Next_Server } from '@/utils/listApi';
 import { useAppSelector } from '@/lib/redux/hooks';
 
 import { Bounce, toast } from 'react-toastify';
@@ -94,7 +94,7 @@ export default function FormCreateUser({
 
     const createAccount = await sendRequest<IBackendRes<any>>({
       method: `POST`,
-      url: listApi.createAccount(),
+      url: listApi_Next_Server.createAccount(),
       headers: { Authorization: `Bearer ${accessToken}` },
       body: { ...data },
     });

@@ -11,7 +11,7 @@ import {
 } from '@/components/ui/alert-dialog';
 
 import { sendRequest } from '@/utils/fetchApi';
-import { listApi } from '@/utils/listApi';
+import { listApi_Next_Server } from '@/utils/listApi';
 import { useState } from 'react';
 import { Bounce, toast } from 'react-toastify';
 
@@ -34,13 +34,15 @@ export function DeleteUser({
     setLoading(true);
     const deleteUser = await sendRequest<IBackendRes<any>>({
       method: 'DELETE',
-      url: listApi.deleteUser(dataDeleteUser._id),
+      url: listApi_Next_Server.deleteUser(dataDeleteUser._id),
       headers: { Authorization: `Bearer ${accessToken}` },
     });
     console.log(`deleteUser:`, deleteUser);
 
     if (deleteUser.statusCode === 200) {
-      setUser((prevUsers: any[]) => prevUsers.filter((item) => item._id !== dataDeleteUser._id));
+      setUser((prevUsers: any[]) =>
+        prevUsers.filter((item) => item._id !== dataDeleteUser._id)
+      );
       setActiveDelete(false);
       setLoading(false);
       toast.success(`Xóa user ${dataDeleteUser.name} Thành Công !`, {
@@ -75,12 +77,21 @@ export function DeleteUser({
     <AlertDialog open={activeDelete}>
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>Bạn có chắc chắn muốn xóa tài khoản {dataDeleteUser.name}</AlertDialogTitle>
-          <AlertDialogDescription>Sau khi xóa tài khoản sẽ không thể khôi phục.</AlertDialogDescription>
+          <AlertDialogTitle>
+            Bạn có chắc chắn muốn xóa tài khoản {dataDeleteUser.name}
+          </AlertDialogTitle>
+          <AlertDialogDescription>
+            Sau khi xóa tài khoản sẽ không thể khôi phục.
+          </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel onClick={() => setActiveDelete(false)}>Hủy</AlertDialogCancel>
-          <AlertDialogAction className="relative" onClick={() => handleDeleteUser()}>
+          <AlertDialogCancel onClick={() => setActiveDelete(false)}>
+            Hủy
+          </AlertDialogCancel>
+          <AlertDialogAction
+            className="relative"
+            onClick={() => handleDeleteUser()}
+          >
             Xác Nhận Xóa
             {loadding && (
               <div className=" w-5 h-5 rounded-full border-4 border-white border-t-transparent border-b-transparent animate-spin" />

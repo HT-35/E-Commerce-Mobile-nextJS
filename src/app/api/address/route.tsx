@@ -1,4 +1,5 @@
 import { sendRequest } from '@/utils/fetchApi';
+import { listApi_Nest_Server_API_Route } from '@/utils/listApi';
 import { headers } from 'next/headers';
 import { NextRequest } from 'next/server';
 
@@ -6,7 +7,7 @@ export async function GET() {
   const bearerToken = headers().get('authorization');
 
   const res = await sendRequest({
-    url: 'localhost:4000/user/address',
+    url: listApi_Nest_Server_API_Route.address(),
     method: 'GET',
     headers: { Authorization: bearerToken },
   });
@@ -23,7 +24,7 @@ export async function POST(request: NextRequest) {
     dataText.length > 0 ? (dataJson = JSON.parse(dataText)) : (dataJson = null);
 
     const createAddress = await sendRequest({
-      url: 'localhost:4000/user/address',
+      url: listApi_Nest_Server_API_Route.address(),
       method: 'POST',
       body: { ...dataJson },
       headers: { Authorization: bearerToken },
@@ -40,5 +41,3 @@ export async function POST(request: NextRequest) {
     );
   }
 }
-
-

@@ -9,7 +9,7 @@ import {
   ReaderIcon,
 } from '@radix-ui/react-icons';
 import { sendRequest } from '@/utils/fetchApi';
-import { listApi } from '@/utils/listApi';
+import { listApi_Next_Server } from '@/utils/listApi';
 
 const LayOutUser = ({ children }: { children: React.ReactNode }) => {
   const pathname = usePathname();
@@ -49,7 +49,7 @@ const LayOutUser = ({ children }: { children: React.ReactNode }) => {
   const handleLogout = async () => {
     await sendRequest({
       method: 'POST',
-      url: listApi.logout(),
+      url: listApi_Next_Server.logout(),
     });
     router.push('/');
     router.refresh();

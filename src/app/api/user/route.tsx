@@ -1,9 +1,8 @@
 import { sendRequest } from '@/utils/fetchApi';
+import { listApi_Nest_Server_API_Route } from '@/utils/listApi';
 import { env } from '@/utils/listENV';
 import { headers } from 'next/headers';
 import { NextRequest } from 'next/server';
-
-const PORT = await env.NEXT_PUBLIC_PORT_NEST_SERVER();
 
 // get all user
 export async function GET(request: NextRequest) {
@@ -16,7 +15,7 @@ export async function GET(request: NextRequest) {
     const pageSize = searchParams.get('pageSize') ?? 10;
 
     const res: any = await sendRequest({
-      url: `http://localhost:${PORT}/user?current=${current}&pageSize=${pageSize}`,
+      url: listApi_Nest_Server_API_Route.getAllUser({ current, pageSize }),
       method: 'GET',
       headers: { Authorization: bearerToken },
     });
@@ -49,7 +48,7 @@ export const POST = async (request: NextRequest) => {
   try {
     const res: any = await sendRequest({
       method: 'POST',
-      url: `localhost:${PORT}/user/`,
+      url: listApi_Nest_Server_API_Route.user(),
       headers: { Authorization: bearerToken },
       body: { ...dataJson },
     });
@@ -90,7 +89,7 @@ export const PATCH = async (request: NextRequest) => {
     }
 
     const res: any = await sendRequest({
-      url: `localhost:${PORT}/user/update/${id}`,
+      url: listApi_Nest_Server_API_Route.updateUser(id),
       method: 'PATCH',
       headers: { Authorization: token },
       body: { ...dataJson },
@@ -130,7 +129,7 @@ export const DELETE = async (request: NextRequest) => {
     }
 
     const res: any = await sendRequest({
-      url: `localhost:${PORT}/user/delete/${id}`,
+      url: listApi_Nest_Server_API_Route.deleteUser(id),
       method: 'DELETE',
       headers: { Authorization: token },
     });

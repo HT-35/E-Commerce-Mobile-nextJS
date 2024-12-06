@@ -24,6 +24,10 @@ import { Scrollbar } from 'swiper/modules';
 import { useEffect, useState } from 'react';
 import { sendRequest } from '@/utils/fetchApi';
 import { formatPrice } from '@/utils/index';
+import {
+  listApi_Nest_Server_API_Route,
+  listApi_Next_Server,
+} from '@/utils/listApi';
 
 // import {sendRequest} from '@/'
 const subBanner = [
@@ -77,7 +81,7 @@ const ProductPage = () => {
   useEffect(() => {
     const res = async () => {
       const res = await sendRequest<IBackendRes<any>>({
-        url: 'localhost:3000/api/product?current=1&pageSize=10',
+        url: listApi_Next_Server.getAllProduct(),
         method: 'GET',
       });
       setProductList(res?.data?.result);
@@ -102,7 +106,7 @@ const ProductPage = () => {
 
     setSelectedBrand(brand); // Update selected brand
     const res = await sendRequest<IBackendRes<any>>({
-      url: `localhost:4000/product/brand/${brand.toLowerCase()}`,
+      url: listApi_Nest_Server_API_Route.getProductByBrandToLowerCase(brand),
       method: 'GET',
     });
     setProductList(res.data);

@@ -1,8 +1,7 @@
 import { sendRequest } from '@/utils/fetchApi';
+import { listApi_Nest_Server_API_Route } from '@/utils/listApi';
 
 import { NextRequest } from 'next/server';
-
-const Port = process.env.NEXT_PUBLIC_PORT_NEST_SERVER;
 
 export async function GET(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams;
@@ -12,7 +11,7 @@ export async function GET(request: NextRequest) {
   try {
     const res: any = await sendRequest<IBackendRes<IRegisterUser>>({
       method: 'GET',
-      url: `localhost:${Port}/auth/re-send-codeid?email=${email}`,
+      url: listApi_Nest_Server_API_Route.reSendCodeid(email!),
     });
 
     return Response.json(res, {

@@ -1,7 +1,11 @@
 import { sendRequest } from '@/utils/fetchApi';
+import { listApi_Nest_Server_API_Route } from '@/utils/listApi';
 import { headers } from 'next/headers';
 
-export async function PATCH(request: Request, { params }: { params: { id: string } }) {
+export async function PATCH(
+  request: Request,
+  { params }: { params: { id: string } }
+) {
   try {
     console.log('');
     console.log('');
@@ -18,7 +22,7 @@ export async function PATCH(request: Request, { params }: { params: { id: string
     dataText.length > 0 ? (dataJson = JSON.parse(dataText)) : (dataJson = null);
 
     const createAddress = await sendRequest({
-      url: `localhost:4000/user/address/${params.id}`,
+      url: listApi_Nest_Server_API_Route.addressDetail(params.id),
       method: 'PATCH',
       body: { ...dataJson },
       headers: { Authorization: bearerToken },
@@ -36,7 +40,10 @@ export async function PATCH(request: Request, { params }: { params: { id: string
   }
 }
 
-export async function DELETE(request: Request, { params }: { params: { id: string } }) {
+export async function DELETE(
+  request: Request,
+  { params }: { params: { id: string } }
+) {
   try {
     console.log('');
     console.log('');
@@ -49,7 +56,7 @@ export async function DELETE(request: Request, { params }: { params: { id: strin
     const bearerToken = headers().get('authorization');
 
     const deleteAddress = await sendRequest({
-      url: `localhost:4000/user/address/${params.id}`,
+      url: listApi_Nest_Server_API_Route.addressDetail(params.id),
       method: 'DELETE',
       headers: { Authorization: bearerToken },
     });

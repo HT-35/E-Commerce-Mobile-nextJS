@@ -12,8 +12,9 @@ import {
 import { useRouter, useSearchParams } from 'next/navigation';
 import { sendRequest } from '@/utils/fetchApi';
 import { useAppSelector } from '@/lib/redux/hooks';
-import { listApi } from '@/utils/listApi';
+
 import { formatCurrency } from '@/utils/price';
+import { listApi_Nest_Server } from '@/utils/listApi';
 
 const Bill = () => {
   const searchParams = useSearchParams();
@@ -53,7 +54,7 @@ const Bill = () => {
     const createBill = async () => {
       const bill = await sendRequest<IBackendRes<any>>({
         method: 'PATCH',
-        url: listApi.updateSuccessBill(idOrder),
+        url: listApi_Nest_Server.updateSuccessBill(idOrder),
         headers: { Authorization: `Bearer ${accessToken}` },
       });
       console.log('');

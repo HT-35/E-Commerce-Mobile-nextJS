@@ -1,9 +1,8 @@
 import { sendRequest } from '@/utils/fetchApi';
+import { listApi_Nest_Server_API_Route } from '@/utils/listApi';
 import { env } from '@/utils/listENV';
 import { headers } from 'next/headers';
 import { NextRequest } from 'next/server';
-
-const PORT = await env.NEXT_PUBLIC_PORT_NEST_SERVER();
 
 export const GET = async (request: NextRequest) => {
   const bearerToken = headers().get('authorization');
@@ -15,7 +14,7 @@ export const GET = async (request: NextRequest) => {
   try {
     const res: any = await sendRequest({
       method: 'GET',
-      url: `localhost:${PORT}/user/cart`,
+      url: listApi_Nest_Server_API_Route.cart(),
       headers: { Authorization: bearerToken },
     });
 
@@ -44,7 +43,7 @@ export const POST = async (request: NextRequest) => {
   try {
     const res: any = await sendRequest({
       method: 'POST',
-      url: `localhost:${PORT}/user/cart`,
+      url: listApi_Nest_Server_API_Route.cart(),
       headers: { Authorization: bearerToken },
       body: { ...dataJson },
     });
@@ -81,7 +80,8 @@ export const DELETE = async (request: NextRequest) => {
   try {
     const res: any = await sendRequest({
       method: 'DELETE',
-      url: `localhost:${PORT}/user/cart/delete/${product}`,
+
+      url: listApi_Nest_Server_API_Route.deleteProductInCart(product!),
       headers: { Authorization: bearerToken },
       body: { ...dataJson },
     });

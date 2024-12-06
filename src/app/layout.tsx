@@ -6,6 +6,7 @@ import ProviderRedux from '@/lib/redux/ProviderRedux';
 import { sendRequest } from '@/utils/fetchApi';
 import { cookies } from 'next/headers';
 import { InitialAccountRedux } from '@/lib/redux/slices/accountSlice';
+import { listApi_Next_Server } from '@/utils/listApi';
 
 const roboto = Roboto({
   weight: '400',
@@ -38,7 +39,8 @@ export default async function RootLayout({
     try {
       res = await sendRequest<IBackendRes<IUser>>({
         method: 'GET',
-        url: `localhost:3000/api/user/${id?.value}`,
+
+        url: listApi_Next_Server.detailUser(id?.value!),
         headers: { Authorization: `Bearer ${accessToken_cookie?.value}` },
       });
       //console.log(`res:`, res);

@@ -1,10 +1,9 @@
 import { sendRequest } from '@/utils/fetchApi';
+import { listApi_Nest_Server_API_Route } from '@/utils/listApi';
 import { env } from '@/utils/listENV';
 import { error } from 'console';
 import { headers } from 'next/headers';
 import { NextRequest } from 'next/server';
-
-const PORT = await env.NEXT_PUBLIC_PORT_NEST_SERVER();
 
 // get all product
 export async function GET(request: NextRequest) {
@@ -16,7 +15,7 @@ export async function GET(request: NextRequest) {
     const brand = searchParams.get('brand') ?? 10;
 
     const res: any = await sendRequest({
-      url: `http://localhost:${PORT}/product?current=${current}&pageSize=${pageSize}`,
+      url: listApi_Nest_Server_API_Route.getAllProduct({ current, pageSize }),
       method: 'GET',
     });
 
@@ -68,7 +67,7 @@ export const POST = async (request: NextRequest) => {
 
     const res: any = await sendRequest({
       method: 'POST',
-      url: `localhost:${PORT}/product`,
+      url: listApi_Nest_Server_API_Route.createProduct(),
       headers: { Authorization: headerList },
       body: { ...dataJson },
     });
@@ -118,7 +117,7 @@ export const PATCH = async (request: NextRequest) => {
     }
 
     const res: any = await sendRequest({
-      url: `localhost:${PORT}/product/${slug}`,
+      url: listApi_Nest_Server_API_Route.detailProduct(slug!),
       method: 'PATCH',
       body: { ...dataJSON },
       headers: { Authorization: token },
@@ -157,7 +156,7 @@ export const DELETE = async (request: NextRequest) => {
     }
 
     const res: any = await sendRequest({
-      url: `localhost:${PORT}/product/${slug}`,
+      url: listApi_Nest_Server_API_Route.detailProduct(slug),
       method: 'DELETE',
 
       headers: { Authorization: token },

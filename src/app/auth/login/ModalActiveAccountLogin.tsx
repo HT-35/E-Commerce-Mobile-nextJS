@@ -16,7 +16,7 @@ import React, { useState } from 'react';
 
 import { defineStepper } from '@stepperize/react';
 import { sendRequest } from '@/utils/fetchApi';
-import { listApi } from '@/utils/listApi';
+import { listApi_Next_Server } from '@/utils/listApi';
 import { Bounce, toast } from 'react-toastify';
 
 const { useStepper, Scoped } = defineStepper(
@@ -108,7 +108,7 @@ const MyActions = ({ idUser, codeID }: { idUser: string; codeID: string }) => {
   const handleActiveAccount = async () => {
     const activeAccount = await sendRequest<IBackendRes<any>>({
       method: 'POST',
-      url: listApi.activeAcount(),
+      url: listApi_Next_Server.activeAcount(),
       body: {
         codeId: codeID,
         id: idUser,

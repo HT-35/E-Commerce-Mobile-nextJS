@@ -7,10 +7,14 @@ import { useRouter } from 'next/navigation';
 import { io } from 'socket.io-client';
 
 import { Button } from '@/components/ui/button';
-import { CreateLiveStreamForm, CreateLiveStreamFormSchema } from '@/components/admin/form/CreateLiveStream';
+import {
+  CreateLiveStreamForm,
+  CreateLiveStreamFormSchema,
+} from '@/components/admin/form/CreateLiveStream';
 import { z } from 'zod';
 import { sendRequest } from '@/utils/fetchApi';
 import { InputChatLiveStreamForm } from '@/components/admin/form/FormInputLiveStream';
+import { apiLiveStream, listApi_Nest_Server_API_Route } from '@/utils/listApi';
 
 export interface Imessage {
   name: string;
@@ -18,7 +22,8 @@ export interface Imessage {
   role: string;
 }
 
-const socket = io(`http://localhost:5001`);
+//const socket = io(`http://localhost:5001`);
+const socket = io(apiLiveStream);
 
 const LiveStream = () => {
   const [countView, setCountView] = useState<number>(0);
@@ -45,7 +50,7 @@ const LiveStream = () => {
 
   useEffect(() => {
     const handleEndLiveWhenUnLoad = () => {
-      const url = `http://localhost:4000/livestream/end/`;
+      const url = listApi_Nest_Server_API_Route.adminEndLiveStream();
       const data = new Blob(['unload'], { type: 'text/plain' });
       navigator.sendBeacon(url, data); // Gửi dữ liệu ngay cả khi trang bị đóng
     };
@@ -76,10 +81,12 @@ const LiveStream = () => {
   useEffect(() => {
     socket.on('Admin-reciever-client', (viewerId) => {
       // gọi tới client sau khi server gửi viewerId của client
-      navigator.mediaDevices.getUserMedia({ video: { width: 1280, height: 720 }, audio: true }).then((stream) => {
-        const call = peerInstance.current?.call(viewerId.viewerId, stream);
-        call?.on('stream', (remoteStream) => {});
-      });
+      navigator.mediaDevices
+        .getUserMedia({ video: { width: 1280, height: 720 }, audio: true })
+        .then((stream) => {
+          const call = peerInstance.current?.call(viewerId.viewerId, stream);
+          call?.on('stream', (remoteStream) => {});
+        });
     });
 
     return () => {};
@@ -87,11 +94,13 @@ const LiveStream = () => {
 
   useEffect(() => {
     if (_idLiveStream.length > 0) {
-      navigator.mediaDevices.getUserMedia({ video: { width: 1280, height: 720 }, audio: true }).then((stream) => {
-        if (userVideoRef.current) {
-          userVideoRef.current.srcObject = stream;
-        }
-      });
+      navigator.mediaDevices
+        .getUserMedia({ video: { width: 1280, height: 720 }, audio: true })
+        .then((stream) => {
+          if (userVideoRef.current) {
+            userVideoRef.current.srcObject = stream;
+          }
+        });
     }
 
     return () => {};
@@ -133,9 +142,15 @@ const LiveStream = () => {
     };
   }, []);
 
-  const handleSendMessageLiveStream = async ({ message }: { message: string }) => {
+  const handleSendMessageLiveStream = async ({
+    message,
+  }: {
+    message: string;
+  }) => {
     const sendMessageChatLiveStream = await sendRequest({
-      url: `http://localhost:4000/livestream/message/${_idLiveStream}`,
+      url: listApi_Nest_Server_API_Route.employeeSendMessageLiveStream(
+        _idLiveStream
+      ),
       method: 'POST',
       body: {
         senderId: _id,
@@ -152,9 +167,11 @@ const LiveStream = () => {
   };
 
   // create livestream
-  async function createLiveStream(title: z.infer<typeof CreateLiveStreamFormSchema>) {
+  async function createLiveStream(
+    title: z.infer<typeof CreateLiveStreamFormSchema>
+  ) {
     const livestream = await sendRequest<IBackendRes<any>>({
-      url: 'http://localhost:4000/livestream',
+      url: listApi_Nest_Server_API_Route.adminCreateLiveStream(),
       method: 'POST',
       headers: { Authorization: `Bearer ${accessToken}` },
       body: {
@@ -172,7 +189,10 @@ const LiveStream = () => {
   const handleEndLiveStream = async () => {
     const liveStream = await sendRequest<IBackendRes<any>>({
       method: 'GET',
-      url: `http://localhost:4000/livestream/end/${_idLiveStream}`,
+
+      url: listApi_Nest_Server_API_Route.adminEndLiveStreamDetail(
+        _idLiveStream
+      ),
       headers: { Authorization: `Bearer ${accessToken}` },
     });
     console.log(liveStream);
@@ -194,7 +214,9 @@ const LiveStream = () => {
       {_idLiveStream.length > 0 ? (
         <div>
           <div className="title text-xs max-lg:text-sm flex items-center gap-4 my-2">
-            <p className=" text-xs max-lg:text-sm">Số Người Xem: {countView} người</p>
+            <p className=" text-xs max-lg:text-sm">
+              Số Người Xem: {countView} người
+            </p>
             <Button className="h-6" onClick={handleEndLiveStream}>
               Kết Thúc
             </Button>
@@ -202,7 +224,12 @@ const LiveStream = () => {
 
           <div className="flex xl:justify-between xl:items-center max-lg:flex-col gap-3 w-full  ">
             <div className="basis-8/12  ">
-              <video className=" w-full h-full " ref={userVideoRef} autoPlay playsInline></video>
+              <video
+                className=" w-full h-full "
+                ref={userVideoRef}
+                autoPlay
+                playsInline
+              ></video>
             </div>
 
             <div className="basis-4/12 h-full  rounded-md">
@@ -218,7 +245,8 @@ const LiveStream = () => {
                       <div className="author">
                         <p>
                           {' '}
-                          {item.name} {item.role === 'employee' ? '(admin)' : ''}:{' '}
+                          {item.name}{' '}
+                          {item.role === 'employee' ? '(admin)' : ''}:{' '}
                         </p>
                       </div>
                       <div className="massage">{item.massage}</div>
@@ -239,7 +267,9 @@ const LiveStream = () => {
         </div>
       ) : (
         <div className="createLiveStream">
-          <CreateLiveStreamForm onSubmit={createLiveStream}></CreateLiveStreamForm>
+          <CreateLiveStreamForm
+            onSubmit={createLiveStream}
+          ></CreateLiveStreamForm>
         </div>
       )}
     </>

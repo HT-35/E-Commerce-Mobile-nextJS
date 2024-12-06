@@ -41,7 +41,7 @@ import { useEffect, useState } from 'react';
 import { sendRequest } from '@/utils/fetchApi';
 import { env } from '@/utils/listENV';
 import { useAppSelector } from '@/lib/redux/hooks';
-import { listApi } from '@/utils/listApi';
+import { listApi_Next_Server } from '@/utils/listApi';
 
 const NEXT_PUBLIC_KEY_GHN_DEV = env.NEXT_PUBLIC_KEY_GHN_DEV();
 
@@ -212,7 +212,7 @@ export function AddressForm({ setOpen }: { setOpen: (open: boolean) => void }) {
 
   async function onSubmit(data: z.infer<typeof FormSchema>) {
     const createAddress = await sendRequest({
-      url: listApi.createAddress(),
+      url: listApi_Next_Server.createAddress(),
       method: 'POST',
       body: { ...data },
       headers: { Authorization: `Bearer ${accessToken}` },

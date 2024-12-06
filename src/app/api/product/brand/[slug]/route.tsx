@@ -1,7 +1,6 @@
 import { sendRequest } from '@/utils/fetchApi';
+import { listApi_Nest_Server_API_Route } from '@/utils/listApi';
 import { NextRequest, NextResponse } from 'next/server';
-
-const Port = process.env.NEXT_PUBLIC_PORT_NEST_SERVER;
 
 // get detail by slug
 export async function GET(request: NextRequest) {
@@ -15,7 +14,7 @@ export async function GET(request: NextRequest) {
   try {
     const res: any = await sendRequest<IBackendRes<any>>({
       method: 'GET',
-      url: `localhost:${Port}/product/brand/${slug}`,
+      url: listApi_Nest_Server_API_Route.getProductByBrand(slug),
     });
 
     return NextResponse.json(res, {

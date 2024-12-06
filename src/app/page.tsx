@@ -14,6 +14,7 @@ import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { sendRequest } from '@/utils/fetchApi';
 import { formatPrice } from '@/utils/index';
+import { listApi_Next_Server } from '@/utils/listApi';
 
 const brandArr = [
   { brand: 'Apple', href: '/Apple' },
@@ -44,7 +45,7 @@ export default function Home() {
   useEffect(() => {
     const res = async () => {
       const res = await sendRequest<IBackendRes<any>>({
-        url: 'localhost:3000/api/product?current=1&pageSize=10',
+        url: listApi_Next_Server.getAllProduct(),
         method: 'GET',
       });
       setProductList(res?.data?.result);

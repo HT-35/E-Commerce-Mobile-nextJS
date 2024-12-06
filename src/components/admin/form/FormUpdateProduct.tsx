@@ -8,12 +8,26 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { sendRequest, sendRequestFile } from '@/utils/fetchApi';
 import { useAppSelector } from '@/lib/redux/hooks';
-import { listApi } from '@/utils/listApi';
-import { useForm } from 'react-hook-form';
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
-import { Bounce, toast } from 'react-toastify';
 
-export function FormUpdateProduct({ data, setActiveFormUpdate }: { data: any; setActiveFormUpdate: any }) {
+import { useForm } from 'react-hook-form';
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '@/components/ui/form';
+import { Bounce, toast } from 'react-toastify';
+import { listApi_Next_Server } from '@/utils/listApi';
+
+export function FormUpdateProduct({
+  data,
+  setActiveFormUpdate,
+}: {
+  data: any;
+  setActiveFormUpdate: any;
+}) {
   const slug = data?.slug;
 
   console.log(data);
@@ -122,7 +136,7 @@ export function FormUpdateProduct({ data, setActiveFormUpdate }: { data: any; se
       };
       const createProduct = await sendRequest<IBackendRes<any>>({
         method: 'PATCH',
-        url: listApi.updateProduct(slug),
+        url: listApi_Next_Server.updateProduct(slug),
         body: { ...data },
         headers: { Authorization: `Bearer ${accessToken}` },
       });
@@ -172,9 +186,14 @@ export function FormUpdateProduct({ data, setActiveFormUpdate }: { data: any; se
           {listProduct.map((data, index) => {
             //const typeNumber = ['price', 'amount', 'ram', 'rom', 'battery'];
             const typeNumber = ['price'];
-            const typeInput = typeNumber.includes(data.name) ? 'number' : 'text';
+            const typeInput = typeNumber.includes(data.name)
+              ? 'number'
+              : 'text';
             return (
-              <div key={index} className="group relative transition-all duration-500">
+              <div
+                key={index}
+                className="group relative transition-all duration-500"
+              >
                 <FormField
                   control={control}
                   name={data.name as any}

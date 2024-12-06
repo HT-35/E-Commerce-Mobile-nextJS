@@ -1,6 +1,5 @@
 import { sendRequest } from '@/utils/fetchApi';
-
-const Port = process.env.NEXT_PUBLIC_PORT_NEST_SERVER;
+import { listApi_Nest_Server_API_Route } from '@/utils/listApi';
 
 export async function POST(request: Request) {
   try {
@@ -14,7 +13,7 @@ export async function POST(request: Request) {
     }
 
     const res: any = await sendRequest<IBackendRes<any>>({
-      url: `localhost:${Port}/auth/new-password`,
+      url: listApi_Nest_Server_API_Route.newPassword(),
       method: 'POST',
       body: { ...jsonData },
     });

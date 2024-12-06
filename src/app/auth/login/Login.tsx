@@ -37,7 +37,9 @@ import {
   setDataAccount,
 } from '@/lib/redux/slices/accountSlice';
 import ModalActiveAccountLogin from '@/app/auth/login/ModalActiveAccountLogin';
-import { listApi } from '@/utils/listApi';
+//import { listApi_Next_Server } from '@/utils/listApi';
+
+import { listApi_Next_Server } from '@/utils/listApi';
 
 export function Login() {
   const searchParams = useSearchParams();
@@ -71,7 +73,7 @@ export function Login() {
 
     const res: any = await sendRequest<IBackendRes<any>>({
       method: 'POST',
-      url: listApi.login(),
+      url: listApi_Next_Server.login(),
       body: { ...values },
     });
     console.log(`res:`, res);
@@ -101,7 +103,7 @@ export function Login() {
     } else if (res?.message?._idUser) {
       const resendOTP = await sendRequest<IBackendRes<any>>({
         method: 'GET',
-        url: listApi.reSendOTP(values.email),
+        url: listApi_Next_Server.reSendOTP(values.email),
       });
       console.log('');
       console.log('');

@@ -45,7 +45,7 @@ import { EyeNoneIcon, EyeOpenIcon } from '@radix-ui/react-icons';
 import { useState } from 'react';
 import ModalActiveAccount from '@/app/auth/register/modalActive';
 import { sendRequest } from '@/utils/fetchApi';
-import { listApi } from '@/utils/listApi';
+import { listApi_Next_Server } from '@/utils/listApi';
 
 export function Register() {
   const [activeAccount, setActiveAccount] = useState<boolean>(false);
@@ -95,7 +95,7 @@ export function Register() {
 
     const register = await sendRequest<IBackendRes<any>>({
       method: `POST`,
-      url: listApi.register(),
+      url: listApi_Next_Server.register(),
       body: {
         name: values.name,
         email: values.email,

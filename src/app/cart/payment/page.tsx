@@ -18,7 +18,8 @@ import { sendRequest } from '@/utils/fetchApi';
 import { useAppSelector } from '@/lib/redux/hooks';
 import { ICart } from '@/components/cart/cart';
 import { formatCurrency } from '@/utils/price';
-import { listApi } from '@/utils/listApi';
+import { listApi_Next_Server } from '@/utils/listApi';
+import { listApi_Nest_Server } from '@/utils/listApi';
 
 // Định nghĩa schema của form
 const formSchema = z.object({
@@ -75,7 +76,7 @@ const Payment = () => {
   useEffect(() => {
     const getCart = async () => {
       const cart = await sendRequest<IBackendRes<any[]>>({
-        url: listApi.cart(),
+        url: listApi_Next_Server.cart(),
         method: `GET`,
         headers: { Authorization: `Bearer ${accessToken}` },
       });
@@ -156,7 +157,7 @@ const Payment = () => {
 
       const crateOrder = await sendRequest<IBackendRes<any>>({
         method: 'POST',
-        url: listApi.createPayment(),
+        url: listApi_Nest_Server.createPayment(),
         body: payload,
         headers: { Authorization: `Bearer ${accessToken}` },
       });

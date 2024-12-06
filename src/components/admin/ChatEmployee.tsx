@@ -6,6 +6,7 @@ import { SmileIcon } from '@/components/icons';
 import { Input } from '@/components/ui/input';
 import { useAppSelector } from '@/lib/redux/hooks';
 import { sendRequest } from '@/utils/fetchApi';
+import { apiChat, listApi_Nest_Server_API_Route } from '@/utils/listApi';
 import { env } from '@/utils/listENV';
 import { saveMessage } from '@/utils/saveMessage';
 import EmojiPicker from 'emoji-picker-react';
@@ -14,11 +15,11 @@ import Image from 'next/image';
 import React, { useEffect, useRef, useState } from 'react';
 import { io } from 'socket.io-client';
 
-const PORT_SOCKET = env.NEXT_PUBLIC_PORT_SOCKET_SERVER();
+//const PORT_SOCKET = env.NEXT_PUBLIC_PORT_SOCKET_SERVER();
 
-const PORT_NEST = env.NEXT_PUBLIC_PORT_NEST_SERVER();
-
-const socket = io(`http://localhost:${PORT_SOCKET}`);
+//const socket = io(`http://localhost:${PORT_SOCKET}`);
+//const socket = io(`http://localhost:5000`);
+const socket = io(apiChat);
 
 export interface typeListChatUser {
   nameCustomer: string;
@@ -60,7 +61,7 @@ const ChatEmployee = () => {
   useEffect(() => {
     const listCustomerChat = async () => {
       const res = await sendRequest<IBackendRes<any>>({
-        url: `localhost:${PORT_NEST}/chat/all`,
+        url: listApi_Nest_Server_API_Route.employeeGetAllChat(),
         method: 'GET',
         headers: { Authorization: `Bearer ${accessToken}` },
       });
@@ -80,31 +81,36 @@ const ChatEmployee = () => {
 
   //nhận tin nhắn từ customer
   useEffect(() => {
-    socket.on('AdminReceiveMessageByUser', async ({ userId, name, message }) => {
-      console.log(`message:`, message);
-      const res = await sendRequest<IBackendRes<any>>({
-        url: `localhost:${PORT_NEST}/chat/all`,
-        method: 'GET',
-        headers: { Authorization: `Bearer ${accessToken}` },
-      });
+    socket.on(
+      'AdminReceiveMessageByUser',
+      async ({ userId, name, message }) => {
+        console.log(`message:`, message);
+        const res = await sendRequest<IBackendRes<any>>({
+          url: listApi_Nest_Server_API_Route.employeeGetAllChat(),
+          method: 'GET',
+          headers: { Authorization: `Bearer ${accessToken}` },
+        });
 
-      const listArrChat: typeListChatUser[] = await res.data.map((item: any, index: number) => {
-        return {
-          nameCustomer: item.nameCustomer,
-          customerId: item.customerId,
-          isWaitingForReply: item.isWaitingForReply,
-          lastMessage: item.lastMessage,
+        const listArrChat: typeListChatUser[] = await res.data.map(
+          (item: any, index: number) => {
+            return {
+              nameCustomer: item.nameCustomer,
+              customerId: item.customerId,
+              isWaitingForReply: item.isWaitingForReply,
+              lastMessage: item.lastMessage,
+            };
+          }
+        );
+        setUserList(listArrChat);
+
+        const newMessage: typeMessage = {
+          sender: 'customer',
+          message,
         };
-      });
-      setUserList(listArrChat);
 
-      const newMessage: typeMessage = {
-        sender: 'customer',
-        message,
-      };
-
-      setMessages((prev: any) => [...prev, newMessage]);
-    });
+        setMessages((prev: any) => [...prev, newMessage]);
+      }
+    );
 
     return () => {
       socket.off('AdminReceiveMessageByUser');
@@ -122,7 +128,8 @@ const ChatEmployee = () => {
 
     const res = await sendRequest<IBackendRes<any>>({
       method: 'GET',
-      url: `localhost:4000/chat/room/${userId}`,
+
+      url: listApi_Nest_Server_API_Route.employeeGetDetailChatRoom(userId),
       headers: { Authorization: `Bearer ${accessToken}` },
     });
 
@@ -140,7 +147,7 @@ const ChatEmployee = () => {
   const replyMessage = async (message: string) => {
     if (currentUserId && message.length > 0) {
       const saveMessage123 = await saveMessage({
-        url: `localhost:${PORT_NEST}/chat/reply/`,
+        url: listApi_Nest_Server_API_Route.employeeReply(),
         data: {
           customerId: currentUserId.userId,
           employeeId: _id,
@@ -155,7 +162,9 @@ const ChatEmployee = () => {
         message: message,
       });
 
-      const findIndex = userList.findIndex((item) => item.customerId === currentUserId.userId);
+      const findIndex = userList.findIndex(
+        (item) => item.customerId === currentUserId.userId
+      );
       console.log(`findIndex:`, findIndex);
 
       setUserList((prv: any): any => {
@@ -191,12 +200,21 @@ const ChatEmployee = () => {
   //max-h-[${screenHeight}px]
 
   return (
-    <div className={`flex   overflow-hidden `} style={{ height: `${screenHeight}px` }}>
+    <div
+      className={`flex   overflow-hidden `}
+      style={{ height: `${screenHeight}px` }}
+    >
       {/* List User Chat */}
-      <div className={`user basis-3/12     overflow-y-auto flex flex-col gap-6 pr-1 border-r-2`} style={{ height: `${screenHeight}px` }}>
+      <div
+        className={`user basis-3/12     overflow-y-auto flex flex-col gap-6 pr-1 border-r-2`}
+        style={{ height: `${screenHeight}px` }}
+      >
         {userList?.map((item: typeListChatUser, index: any) => {
           return (
-            <div key={index} onClick={() => joinRoom(item.nameCustomer, item.customerId)}>
+            <div
+              key={index}
+              onClick={() => joinRoom(item.nameCustomer, item.customerId)}
+            >
               <UserChat
                 className={` max-xl:text-sm  ${item.isWaitingForReply ? 'text-red-600' : 'text-black'}`}
                 name={item.nameCustomer}
@@ -212,7 +230,10 @@ const ChatEmployee = () => {
 
       {/* Detail User Chat */}
 
-      <div className={`chatMessage basis-9/12  `} style={{ height: `${screenHeight}px` }}>
+      <div
+        className={`chatMessage basis-9/12  `}
+        style={{ height: `${screenHeight}px` }}
+      >
         {currentUserId?.name?.length > 0 ? (
           <div className="flex flex-col">
             <div className="header bg-slate-300 rounded-xl px-2 mx-2 h-[50px] flex justify-start items-center">
@@ -222,48 +243,55 @@ const ChatEmployee = () => {
             </div>
 
             {/* content */}
-            <div className={`message pl-4 mt-4  overflow-y-auto `} style={{ height: `${screenHeight - 120}px` }}>
+            <div
+              className={`message pl-4 mt-4  overflow-y-auto `}
+              style={{ height: `${screenHeight - 120}px` }}
+            >
               {messages.length > 0 &&
-                messages.map((item: { message: string; sender: string }, index) => {
-                  const showAvatar = index === messages.length - 1 || messages[index].sender !== messages[index + 1].sender;
-                  return (
-                    <div key={index} className="">
-                      <div
-                        className={` flex
+                messages.map(
+                  (item: { message: string; sender: string }, index) => {
+                    const showAvatar =
+                      index === messages.length - 1 ||
+                      messages[index].sender !== messages[index + 1].sender;
+                    return (
+                      <div key={index} className="">
+                        <div
+                          className={` flex
                         ${item.sender === 'employee' ? 'justify-start  items-end flex-row-reverse' : 'items-end '}
 
                        `}
-                      >
-                        <div className="w-5 h-5">
-                          {showAvatar && (
-                            <Image
-                              src={'/imgs/employee.png'}
-                              width="0"
-                              height="0"
-                              sizes="10vw"
-                              className="shadow-2xl relative z-10 cursor-pointer"
-                              style={{
-                                width: '20px',
-                                height: '20px',
-                                borderRadius: '100px',
-                              }}
-                              alt="Picture of the author"
-                            ></Image>
-                          )}
-                        </div>
-                        <div className="message pl-2">
-                          <div
-                            className={`rounded-xl   mb-2 max-w-max px-2 py-[2px]
+                        >
+                          <div className="w-5 h-5">
+                            {showAvatar && (
+                              <Image
+                                src={'/imgs/employee.png'}
+                                width="0"
+                                height="0"
+                                sizes="10vw"
+                                className="shadow-2xl relative z-10 cursor-pointer"
+                                style={{
+                                  width: '20px',
+                                  height: '20px',
+                                  borderRadius: '100px',
+                                }}
+                                alt="Picture of the author"
+                              ></Image>
+                            )}
+                          </div>
+                          <div className="message pl-2">
+                            <div
+                              className={`rounded-xl   mb-2 max-w-max px-2 py-[2px]
                          ${item.sender !== 'employee' ? 'bg-slate-200 mr-16' : ' bg-red-200 ml-16'}
                         `}
-                          >
-                            {item.message}
+                            >
+                              {item.message}
+                            </div>
                           </div>
                         </div>
                       </div>
-                    </div>
-                  );
-                })}
+                    );
+                  }
+                )}
               <div ref={messageEndRef}></div>
             </div>
 
@@ -301,7 +329,10 @@ const ChatEmployee = () => {
                   }}
                 />
 
-                <div className="icon  w-[40px] cursor-pointer" onClick={handleActiveEmojiPicker}>
+                <div
+                  className="icon  w-[40px] cursor-pointer"
+                  onClick={handleActiveEmojiPicker}
+                >
                   <SmileIcon></SmileIcon>
                 </div>
               </div>

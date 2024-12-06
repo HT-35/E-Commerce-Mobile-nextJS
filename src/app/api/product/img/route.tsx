@@ -1,9 +1,8 @@
 import { sendRequest, sendRequestFile } from '@/utils/fetchApi';
+import { listApi_Nest_Server_API_Route } from '@/utils/listApi';
 import { env } from '@/utils/listENV';
 import { headers } from 'next/headers';
 import { NextRequest } from 'next/server';
-
-const PORT = await env.NEXT_PUBLIC_PORT_NEST_SERVER();
 
 export const POST = async (request: Request) => {
   try {
@@ -13,7 +12,8 @@ export const POST = async (request: Request) => {
     const bearerToken = headers().get('authorization');
     const res: any = await sendRequestFile({
       method: 'POST',
-      url: `localhost:${PORT}/product/img`,
+
+      url: listApi_Nest_Server_API_Route.productImg(),
       headers: { Authorization: bearerToken },
       body: data,
     });

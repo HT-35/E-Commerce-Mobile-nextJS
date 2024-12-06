@@ -18,7 +18,7 @@ import Image from 'next/image';
 import { useAppSelector } from '@/lib/redux/hooks';
 import { useRouter } from 'next/navigation';
 import { sendRequest } from '@/utils/fetchApi';
-import { listApi } from '@/utils/listApi';
+import { listApi_Next_Server } from '@/utils/listApi';
 import { DeleteUser } from '@/components/admin/form/DeleteUser';
 import UpdateUser from '@/components/admin/form/UpdateUser';
 import ModalUpdate from '@/components/admin/modal/ModalUpdate';
@@ -92,7 +92,7 @@ const MangegerAccount = () => {
     const getUser = async () => {
       const user = await sendRequest<IBackendRes<any>>({
         method: 'GET',
-        url: listApi.getAllAccount(),
+        url: listApi_Next_Server.getAllAccount(),
 
         headers: { Authorization: `Bearer ${accessToken}` },
       });

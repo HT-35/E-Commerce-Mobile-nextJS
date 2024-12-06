@@ -4,12 +4,23 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useFieldArray, useForm } from 'react-hook-form';
 import { z } from 'zod';
 
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { sendRequest, sendRequestFile } from '@/utils/fetchApi';
 import { useAppSelector } from '@/lib/redux/hooks';
 import { useState } from 'react';
+import {
+  listApi_Nest_Server_API_Route,
+  listApi_Next_Server,
+} from '@/utils/listApi';
 
 const listProduct = [
   {
@@ -42,9 +53,24 @@ const listProduct = [
     message: 'Hãng điện thoại phải từ 3 kí tự trở lên',
     title: 'Hãng điện thoại',
   },
-  { name: 'ram', testData: '8GB', message: 'RAM phải từ 1 kí tự trở lên', title: 'RAM' },
-  { name: 'rom', testData: '128GB', message: 'ROM phải từ 6 kí tự trở lên', title: 'ROM' },
-  { name: 'battery', testData: '5000mAh', message: 'Pin phải từ 3 kí tự trở lên', title: 'Pin' },
+  {
+    name: 'ram',
+    testData: '8GB',
+    message: 'RAM phải từ 1 kí tự trở lên',
+    title: 'RAM',
+  },
+  {
+    name: 'rom',
+    testData: '128GB',
+    message: 'ROM phải từ 6 kí tự trở lên',
+    title: 'ROM',
+  },
+  {
+    name: 'battery',
+    testData: '5000mAh',
+    message: 'Pin phải từ 3 kí tự trở lên',
+    title: 'Pin',
+  },
   {
     name: 'cameraBefore',
     testData: '12 MP',
@@ -153,7 +179,8 @@ export function FormCreateProduct() {
         // Chờ upload ảnh
         const sendImg = await sendRequestFile<IBackendRes<any>>({
           method: 'POST',
-          url: `localhost:3000/api/product/img`,
+
+          url: listApi_Next_Server.imgProduct(),
           body: formData,
           headers: { Authorization: `Bearer ${accessToken}` },
         });
@@ -173,7 +200,7 @@ export function FormCreateProduct() {
       // Gửi yêu cầu tạo sản phẩm sau khi xử lý xong ảnh
       const createProduct = await sendRequest<IBackendRes<any>>({
         method: 'POST',
-        url: `localhost:3000/api/product`,
+        url: listApi_Next_Server.createProduct(),
         body: { ...data },
         headers: { Authorization: `Bearer ${accessToken}` },
       });
@@ -195,9 +222,14 @@ export function FormCreateProduct() {
           {listProduct.map((item, index) => {
             //const typeNumber = ['price', 'amount', 'ram', 'rom', 'battery'];
             const typeNumber = ['price'];
-            const typeInput = typeNumber.includes(item.name) ? 'number' : 'text';
+            const typeInput = typeNumber.includes(item.name)
+              ? 'number'
+              : 'text';
             return (
-              <div key={index} className="group relative transition-all duration-500">
+              <div
+                key={index}
+                className="group relative transition-all duration-500"
+              >
                 <FormField
                   control={control}
                   name={item.name as any}
@@ -225,7 +257,10 @@ export function FormCreateProduct() {
         <div className="col-span-3 grid">
           <h3>Options</h3>
           {optionFields.map((option, index) => (
-            <div key={option.id} className="col-span-3  xl:flex xl:justify-between xl:items-center">
+            <div
+              key={option.id}
+              className="col-span-3  xl:flex xl:justify-between xl:items-center"
+            >
               <FormField
                 control={control}
                 name={`option.${index}.color`}
@@ -281,7 +316,11 @@ export function FormCreateProduct() {
                 )}
               />
 
-              <Button type="button" onClick={() => remove(index)} className="max-xl:w-full mt-2">
+              <Button
+                type="button"
+                onClick={() => remove(index)}
+                className="max-xl:w-full mt-2"
+              >
                 Xóa Option
               </Button>
             </div>

@@ -10,12 +10,10 @@ import InputChat from '@/components/chatClient/InputChat';
 import { useAppSelector } from '@/lib/redux/hooks';
 import { sendRequest } from '@/utils/fetchApi';
 import { saveMessage } from '@/utils/saveMessage';
+import { apiChat, listApi_Nest_Server_API_Route } from '@/utils/listApi';
 
-const PORT = env.NEXT_PUBLIC_PORT_SOCKET_SERVER();
-
-const NEXT_PUBLIC_PORT_NEST_SERVER = env.NEXT_PUBLIC_PORT_NEST_SERVER();
-
-const socket = io(`http://localhost:${PORT}`);
+//const socket = io(`http://localhost:5000`);
+const socket = io(apiChat);
 
 export interface typeMessage {
   sender: 'customer' | 'employee';
@@ -23,7 +21,9 @@ export interface typeMessage {
 }
 
 const ChatClient = () => {
-  const { name, _id, accessToken } = useAppSelector((state: any) => state.account);
+  const { name, _id, accessToken } = useAppSelector(
+    (state: any) => state.account
+  );
 
   const { active, handleActive } = useActive(false);
 
@@ -45,7 +45,7 @@ const ChatClient = () => {
       const messageOld = async () => {
         const res = await sendRequest<IBackendRes<any>>({
           method: 'GET',
-          url: `localhost:4000/chat/room/${_id}`,
+          url: listApi_Nest_Server_API_Route.clientGetDetailChatRoom(_id),
           headers: { Authorization: `Bearer ${accessToken}` },
         });
         //console.log(res);
@@ -74,7 +74,10 @@ const ChatClient = () => {
         message: message.message,
         sender: 'employee',
       };
-      setShowMessages((prevMessages: any) => [...prevMessages, newMessageOfEmployee]);
+      setShowMessages((prevMessages: any) => [
+        ...prevMessages,
+        newMessageOfEmployee,
+      ]);
     });
 
     return () => {
@@ -90,7 +93,8 @@ const ChatClient = () => {
     if (message.length > 0 && _id) {
       // lưu tin nhắn vào db
       await saveMessage({
-        url: `localhost:${NEXT_PUBLIC_PORT_NEST_SERVER}/chat/send`,
+        url: listApi_Nest_Server_API_Route.clientSendMessageChat(),
+
         data: {
           customerId: _id,
           nameCustomer: name,
@@ -111,7 +115,10 @@ const ChatClient = () => {
         message: message,
         sender: 'customer',
       };
-      setShowMessages((prevMessages: any) => [...prevMessages, newMessageOfCustomer]);
+      setShowMessages((prevMessages: any) => [
+        ...prevMessages,
+        newMessageOfCustomer,
+      ]);
 
       setMessage('');
     }
