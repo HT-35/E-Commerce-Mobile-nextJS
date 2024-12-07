@@ -52,7 +52,7 @@ const LiveStream = () => {
     const handleEndLiveWhenUnLoad = () => {
       const url = listApi_Nest_Server_API_Route.adminEndLiveStream();
       const data = new Blob(['unload'], { type: 'text/plain' });
-      navigator.sendBeacon(url, data); // Gửi dữ liệu ngay cả khi trang bị đóng
+      navigator?.sendBeacon(url, data); // Gửi dữ liệu ngay cả khi trang bị đóng
     };
 
     window.addEventListener('beforeunload', handleEndLiveWhenUnLoad);
@@ -81,9 +81,9 @@ const LiveStream = () => {
   useEffect(() => {
     socket.on('Admin-reciever-client', (viewerId) => {
       // gọi tới client sau khi server gửi viewerId của client
-      navigator.mediaDevices
-        .getUserMedia({ video: { width: 1280, height: 720 }, audio: true })
-        .then((stream) => {
+      navigator?.mediaDevices
+        ?.getUserMedia({ video: { width: 1280, height: 720 }, audio: true })
+        ?.then((stream) => {
           const call = peerInstance.current?.call(viewerId.viewerId, stream);
           call?.on('stream', (remoteStream) => {});
         });
@@ -94,9 +94,9 @@ const LiveStream = () => {
 
   useEffect(() => {
     if (_idLiveStream.length > 0) {
-      navigator.mediaDevices
-        .getUserMedia({ video: { width: 1280, height: 720 }, audio: true })
-        .then((stream) => {
+      navigator?.mediaDevices
+        ?.getUserMedia({ video: { width: 1280, height: 720 }, audio: true })
+        ?.then((stream) => {
           if (userVideoRef.current) {
             userVideoRef.current.srcObject = stream;
           }

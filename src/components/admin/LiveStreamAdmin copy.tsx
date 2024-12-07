@@ -56,9 +56,9 @@ const LiveStream = () => {
   useEffect(() => {
     socket.on('Admin-reciever-client', (viewerId) => {
       // gọi tới client sau khi server gửi viewerId của client
-      navigator.mediaDevices
-        .getUserMedia({ video: { width: 1280, height: 720 }, audio: true })
-        .then((stream) => {
+      navigator?.mediaDevices
+        ?.getUserMedia({ video: { width: 1280, height: 720 }, audio: true })
+        ?.then((stream) => {
           const call = peerInstance.current?.call(viewerId.viewerId, stream);
           call?.on('stream', (remoteStream) => {});
         });
@@ -68,9 +68,9 @@ const LiveStream = () => {
   }, []);
 
   useEffect(() => {
-    navigator.mediaDevices
-      .getUserMedia({ video: { width: 1280, height: 720 }, audio: true })
-      .then((stream) => {
+    navigator?.mediaDevices
+      ?.getUserMedia({ video: { width: 1280, height: 720 }, audio: true })
+      ?.then((stream) => {
         if (userVideoRef.current) {
           userVideoRef.current.srcObject = stream;
         }
