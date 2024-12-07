@@ -9,8 +9,7 @@ export async function POST() {
       path: '/',
       httpOnly: true,
       sameSite: 'strict',
-      secure: true,
-      maxAge: 0,
+      maxAge: 24 * 60 * 60 * 1000,
     });
     cookieStore.set({
       name: 'refresh_token',
@@ -18,8 +17,7 @@ export async function POST() {
       path: '/',
       httpOnly: true,
       sameSite: 'strict',
-      secure: true,
-      maxAge: 0,
+      maxAge: 24 * 60 * 60 * 1000,
     });
     cookieStore.set({
       name: 'id',
@@ -27,8 +25,7 @@ export async function POST() {
       path: '/',
       httpOnly: true,
       sameSite: 'strict',
-      secure: true,
-      maxAge: 0,
+      maxAge: 24 * 60 * 60 * 1000,
     });
     return Response.json(
       { message: 'Logout successful. All cookies cleared.' },
