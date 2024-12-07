@@ -1,6 +1,8 @@
 import { register } from 'module';
 
-const domain = 'http://localhost:3000';
+//const domain = 'http://localhost:3000';
+const domain = 'http://14.225.254.209:3000';
+
 //const domain = 'http://nextjs:3000';
 
 //const domainNextServer = 'http://localhost:4000';
