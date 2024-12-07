@@ -30,31 +30,28 @@ export async function POST(request: Request) {
     cookieStore.set({
       name: 'access_token',
       value: res.data.access_token,
-      httpOnly: true,
-      sameSite: 'strict',
-      secure: true,
       path: '/',
-      maxAge: 10000,
+      httpOnly: true,
+      sameSite: 'lax',
+      maxAge: 24 * 60 * 60 * 1000,
     });
 
     cookieStore.set({
       name: 'refresh_token',
       value: res.data.refesh_token,
-      httpOnly: true,
-      sameSite: 'strict',
-      secure: true,
       path: '/',
-      maxAge: 10000,
+      httpOnly: true,
+      sameSite: 'lax',
+      maxAge: 24 * 60 * 60 * 1000,
     });
 
     cookieStore.set({
       name: 'id',
       value: res.data.user._id,
-      httpOnly: true,
-      sameSite: 'strict',
-      secure: true,
       path: '/',
-      maxAge: 10000,
+      httpOnly: true,
+      sameSite: 'lax',
+      maxAge: 24 * 60 * 60 * 1000,
     });
 
     return Response.json(res, {

@@ -8,15 +8,16 @@ export async function POST() {
       value: '',
       path: '/',
       httpOnly: true,
-      sameSite: 'strict',
+      sameSite: 'lax',
       maxAge: 24 * 60 * 60 * 1000,
     });
+
     cookieStore.set({
       name: 'refresh_token',
       value: '',
       path: '/',
       httpOnly: true,
-      sameSite: 'strict',
+      sameSite: 'lax',
       maxAge: 24 * 60 * 60 * 1000,
     });
     cookieStore.set({
@@ -24,7 +25,7 @@ export async function POST() {
       value: '',
       path: '/',
       httpOnly: true,
-      sameSite: 'strict',
+      sameSite: 'lax',
       maxAge: 24 * 60 * 60 * 1000,
     });
     return Response.json(
