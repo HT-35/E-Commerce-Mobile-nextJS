@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
@@ -13,82 +12,59 @@ import { InputChatLiveStreamForm } from '@/components/admin/form/FormInputLiveSt
 import BackGroundLiveStream from '@/components/animation/BackGroundLiveStream';
 import { apiLiveStream, listApi_Nest_Server_API_Route } from '@/utils/listApi';
 
-//const socket = io(`http://localhost:5001`);
 const socket = io(apiLiveStream);
 
 const LiveStream = () => {
   const [_idLiveStream, set_IdLiveStream] = useState<string>('');
-
   const [countView, setCountView] = useState<number>(0);
-
   const [isLiveStream, setIsLiveStream] = useState<boolean>(false);
+  const [isMuted, setIsMuted] = useState<boolean>(true); // state để theo dõi âm thanh
 
   const router = useRouter();
-
   const [listMessage, setListMessage] = useState<Imessage[]>([]);
-
   const messageEndRef = useRef<HTMLDivElement>(null);
+
+  const { _id, name, accessToken } = useAppSelector((state) => state.account);
+
+  const remoteVideoRef = useRef<HTMLVideoElement>(null);
+  const peerInstance = useRef<Peer | null>(null);
 
   useEffect(() => {
     if (messageEndRef.current) {
       messageEndRef.current.scrollIntoView({ behavior: 'smooth' });
     }
-    //return () => {};
   }, [listMessage]);
-
-  const { _id, name, accessToken } = useAppSelector((state) => state.account);
-
-  if (!_id) {
-    router.push('/auth');
-  }
-
-  const remoteVideoRef = useRef<HTMLVideoElement>(null);
-
-  const peerInstance = useRef<Peer | null>(null);
 
   useEffect(() => {
     const getLiveStream = async () => {
       const liveStream = await sendRequest<IBackendRes<any>>({
         method: 'GET',
-
         url: listApi_Nest_Server_API_Route.clientGetLiveStream(),
         headers: { Authorization: `Bearer ${accessToken}` },
       });
 
       if (liveStream?.data?.length > 0) {
-        const _id =
-          (await liveStream?.data?.length) > 0
-            ? await liveStream?.data[0]?._id
-            : '';
+        const _id = liveStream?.data[0]?._id ?? '';
         const newListMassage =
           liveStream?.data[0]?.messages?.map((item: any) => {
-            //console.log(item);
             return {
               name: item.nameSender,
               massage: item.content,
               role: item.sender,
             };
           }) ?? [];
-
         setListMessage([...newListMassage]);
-        console.log(`newListMassage:`, newListMassage);
-
         if (_id !== '') {
           set_IdLiveStream(_id);
           setIsLiveStream(true);
         }
       }
     };
-
     getLiveStream();
-  }, [_idLiveStream, isLiveStream]);
+  }, [_idLiveStream, accessToken, isLiveStream]);
 
-  // connect stream
   useEffect(() => {
-    console.log('_idLiveStream   ', _idLiveStream);
-
     if (_idLiveStream !== '') {
-      console.log('_idLiveStream   ', _idLiveStream);
       const peer = new Peer(_id as string);
 
       peer.on('open', (id) => {
@@ -96,41 +72,40 @@ const LiveStream = () => {
       });
 
       peer.on('call', (call) => {
-        // Khi có cuộc gọi đến
-
-        call.answer(); // Trả lời cuộc gọi với stream rỗng
+        call.answer(); // Trả lời cuộc gọi
         call.on('stream', (remoteStream) => {
           if (remoteVideoRef.current) {
-            remoteVideoRef.current.srcObject = remoteStream; // Gán remote stream vào video element
+            remoteVideoRef.current.srcObject = remoteStream;
+            // Kết nối âm thanh nếu cần
+            let a: any = new Audio();
+            a.muted = isMuted; // Dùng trạng thái isMuted để kiểm soát âm thanh
+            a.srcObject = remoteStream;
+            a.addEventListener('canplaythrough', () => {
+              a = null;
+            });
           }
         });
       });
 
       peerInstance.current = peer;
-
       return () => {
         peer.destroy();
-
-        //socket.disconnect();
       };
     }
-  }, [_id, _idLiveStream]);
+  }, [_id, _idLiveStream, isMuted]);
 
-  useEffect(() => {
-    socket.on('end-livestream', () => {});
+  const handleToggleMute = () => {
+    setIsMuted((prevMuted) => !prevMuted); // Thay đổi trạng thái âm thanh
+  };
 
-    const handleBeforeUnload = () => {
-      // Gửi sự kiện rời khỏi stream
-      socket.emit('client-leave-stream', { viewerId: _id });
+  const handleSetMessage = ({ massage }: { massage: string }) => {
+    const newMessage: Imessage = {
+      name: name!,
+      massage: massage,
+      role: 'customer',
     };
-
-    window.addEventListener('beforeunload', handleBeforeUnload);
-    setIsLiveStream(false);
-    // Clean up the event listener on component unmount
-    return () => {
-      window.removeEventListener('beforeunload', handleBeforeUnload);
-    };
-  }, [_id]);
+    setListMessage((prev: Imessage[]) => [...prev, newMessage]);
+  };
 
   const handleSendMessageLiveStream = async ({
     message,
@@ -155,84 +130,56 @@ const LiveStream = () => {
     socket.emit('client-chat', { message, name, role: 'client' });
   };
 
-  const handleSetMessage = ({ massage }: { massage: string }) => {
-    const newMessage: Imessage = {
-      name: name!,
-      massage: massage,
-      role: 'customer',
-    };
-    setListMessage((prev: Imessage[]) => [...prev, newMessage]);
-  };
-
-  useEffect(() => {
-    socket.on('chat-all', (e) => {
-      console.log(e);
-      const message: Imessage = {
-        name: e.name,
-        massage: e.message,
-        role: e.role,
-      };
-      setListMessage((prev) => [...prev, message]);
-    });
-
-    socket.on('count-connect-stream', (e) => {
-      setCountView(e);
-    });
-
-    return () => {
-      socket.off('chat-all');
-      socket.off('count-connect-stream');
-    };
-  }, []);
-
   return (
-    <div className="  pt-4  overflow-x-hidden overflow-y-hidden  max-lg:pt-[20px]">
+    <div className="pt-4 overflow-x-hidden overflow-y-hidden">
       {isLiveStream ? (
-        <div className=" lg:px-16  pt-20  overflow-x-hidden max-lg:px-3 max-lg:pt-[136px]">
-          <div className="count mb-4 ">
-            <div className="viewer flex gap-3">
-              <span>Số Người Xem : </span>
-              <span>{countView} người</span>
-            </div>
+        <div className="lg:px-16 pt-20">
+          <div className="viewer flex gap-3">
+            <span>Số Người Xem : </span>
+            <span>{countView} người</span>
           </div>
-          <div className="flex xl:justify-between xl:items-center max-lg:flex-col gap-3 w-full  ">
-            {/* video */}
-            <div className="basis-8/12  ">
+          <div className="flex xl:justify-between xl:items-center max-lg:flex-col gap-3 w-full">
+            <div className="basis-8/12 relative">
               <video
-                className="w-full h-full "
+                className="w-full h-full"
                 ref={remoteVideoRef}
                 id="videoplayer"
                 autoPlay
-                muted
+                muted={isMuted} // Điều khiển âm thanh qua muted
               ></video>
+              <div className="absolute bottom-5 right-5">
+                <button
+                  onClick={handleToggleMute}
+                  className="bg-white text-black p-3 rounded-xl"
+                >
+                  {isMuted ? 'Unmute' : 'Mute'}
+                </button>
+              </div>
             </div>
 
-            {/* message */}
-            <div className="basis-4/12 h-full  rounded-md bg-white py-2 px-2">
-              <div className="message h-[500px] max-h-[450px] max-lg:max-h-[300px] max-md:max-h-[450px] overflow-y-auto max-lg:text-xs text-base">
+            <div className="basis-4/12 h-full rounded-md bg-white py-2 px-2">
+              <div className="message h-[500px] max-h-[450px] overflow-y-auto">
                 {listMessage.map((item: Imessage, index) => {
                   return (
                     <div
                       key={index}
-                      className={`flex justify-start items-center w-full  gap-4 text-xs max-lg:text-sm mb-1
-                ${item.role === 'employee' ? 'text-green-400' : 'text-black'}
-                `}
+                      className={`flex justify-start items-center w-full gap-4 text-xs`}
                     >
                       <div className="author">
                         <p>
-                          {' '}
                           {item.name}{' '}
-                          {item.role === 'employee' ? '(admin)' : ''}:{' '}
+                          {item.role === 'employee' ? '(admin)' : ''}:
                         </p>
                       </div>
                       <div className="massage">{item.massage}</div>
                     </div>
                   );
                 })}
-                <div className="" ref={messageEndRef}></div>
+                <div ref={messageEndRef}></div>
               </div>
+              <div className="chat h-1/6 flex justify-center items-center gap-3">
+                {/*<InputChatLiveStreamForm />*/}
 
-              <div className="chat  h-1/6  flex justify-center items-center  gap-3 relative w-full py-2">
                 <InputChatLiveStreamForm
                   handleSetMessage={handleSetMessage}
                   handleSendMessageLiveStream={handleSendMessageLiveStream}
@@ -251,6 +198,15 @@ const LiveStream = () => {
           </div>
         </BackGroundLiveStream>
       )}
+
+      {/*<div className="absolute bottom-5 right-5">
+        <button
+          onClick={handleToggleMute}
+          className="bg-gray-800 text-white p-3 rounded-full"
+        >
+          {isMuted ? 'Unmute' : 'Mute'}
+        </button>
+      </div>*/}
     </div>
   );
 };
