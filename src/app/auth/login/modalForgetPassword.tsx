@@ -10,11 +10,17 @@ import {
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import React from 'react';
+import React, { useState } from 'react';
 
 // =========
 
 import { defineStepper } from '@stepperize/react';
+import { sendRequest } from '@/utils/fetchApi';
+import {
+  listApi_Nest_Server,
+  listApi_Nest_Server_API_Route,
+} from '@/utils/listApi';
+import { Bounce, toast } from 'react-toastify';
 
 const { useStepper, Scoped } = defineStepper(
   { id: 'first' },
@@ -29,12 +35,12 @@ export default function ModalForgetPassword({
   children: React.ReactNode;
 }) {
   //const stepper = useStepper();
+
+  const [email, setEmail] = useState<string>('');
+  const [codeId, setCodeId] = useState<string>('');
+  const [password, setPassword] = useState<string>('');
   return (
-    <Dialog
-      modal={true}
-      //onEscapeKeyDown={(e) => e.preventDefault()}
-      //onInteractOutside={(e) => e.preventDefault()}
-    >
+    <Dialog modal={true}>
       <DialogTrigger asChild>
         <Button variant="link" className="text-slate-400 text-xm">
           {children}
@@ -49,14 +55,26 @@ export default function ModalForgetPassword({
           <DialogTitle>Quên Mật Khẩu</DialogTitle>
         </DialogHeader>
         <Scoped>
-          <MySteps />
-          <MyActions />
+          <MySteps
+            setEmail={setEmail}
+            setCodeId={setCodeId}
+            setPassword={setPassword}
+          />
+          <MyActions email={email} codeId={codeId} password={password} />
         </Scoped>
       </DialogContent>
     </Dialog>
   );
 }
-const MySteps = () => {
+const MySteps = ({
+  setEmail,
+  setCodeId,
+  setPassword,
+}: {
+  setEmail: any;
+  setCodeId: any;
+  setPassword: any;
+}) => {
   const stepper = useStepper();
 
   return (
@@ -79,6 +97,7 @@ const MySteps = () => {
                 autoComplete="off"
                 placeholder="Nhập email của bạn"
                 className=""
+                onChange={(e) => setEmail(e.target.value)}
               />
             </div>
           </div>
@@ -98,19 +117,21 @@ const MySteps = () => {
               <Label htmlFor="OTP" className="text-right text-slate-500">
                 Mã Xác Thực
               </Label>
-              <Input id="OTP" className="" />
+              <Input
+                id="OTP"
+                className=""
+                onChange={(e) => setCodeId(e.target.value)}
+              />
             </div>
             <div className="flex flex-col justify-start items-start  gap-2">
               <Label htmlFor="password" className="text-right text-slate-500">
                 Nhập Mật Khẩu Mới
               </Label>
-              <Input id="password" className="" />
-            </div>
-            <div className="flex flex-col justify-start items-start  gap-2">
-              <Label htmlFor="rePassword" className="text-right text-slate-500">
-                Nhập Lại Mật Khẩu
-              </Label>
-              <Input id="rePassword" className="" />
+              <Input
+                id="password"
+                className=""
+                onChange={(e) => setPassword(e.target.value)}
+              />
             </div>
           </div>
         </>
@@ -123,8 +144,79 @@ const MySteps = () => {
   );
 };
 
-const MyActions = () => {
+const MyActions = ({
+  email,
+  codeId,
+  password,
+}: {
+  email: string;
+  password: string;
+  codeId: string;
+}) => {
   const stepper = useStepper();
+  const [idUser, setIdUser] = useState('');
+  const [finish, setFinish] = useState<boolean>(false);
+
+  const handleSendOtp = async () => {
+    const sendOtp = await sendRequest<IBackendRes<any>>({
+      method: 'GET',
+      url: listApi_Nest_Server_API_Route.reSendCodeid(email),
+    });
+    console.log(sendOtp);
+
+    if (sendOtp.statusCode === 200) {
+      setIdUser(sendOtp.data.id);
+      stepper.next();
+      setFinish(true);
+    } else {
+      toast.error(`${sendOtp.message}`, {
+        position: 'top-right',
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: 'light',
+        transition: Bounce,
+      });
+    }
+  };
+
+  const handleSendNewPasword = async () => {
+    const sendNewPassword = await sendRequest<IBackendRes<any>>({
+      method: 'POST',
+      url: listApi_Nest_Server_API_Route.newPassword(),
+      body: {
+        id: idUser,
+        password: password,
+        codeId: codeId,
+      },
+    });
+    console.log('');
+    console.log('');
+    console.log('');
+    console.log('sendNewPassword', sendNewPassword);
+    console.log('');
+    console.log('');
+
+    if (sendNewPassword.statusCode === 201) {
+      stepper.next();
+      setFinish(false);
+    } else {
+      toast.error(`${sendNewPassword.message}`, {
+        position: 'top-right',
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: 'light',
+        transition: Bounce,
+      });
+    }
+  };
 
   return !stepper.isLast ? (
     <div className="flex items-center gap-2">
@@ -135,7 +227,12 @@ const MyActions = () => {
         Quay Lại
       </Button>
 
-      <Button onClick={stepper.next}>Tiếp Theo</Button>
+      <Button
+        onClick={finish ? handleSendNewPasword : handleSendOtp}
+        disabled={email === '' ? true : false}
+      >
+        Tiếp Theo
+      </Button>
     </div>
   ) : (
     <div className="flex items-center gap-2">

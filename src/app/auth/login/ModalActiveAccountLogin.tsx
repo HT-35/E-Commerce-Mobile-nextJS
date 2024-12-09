@@ -105,6 +105,12 @@ const MySteps = ({ setCodeID, email }: { setCodeID: any; email: string }) => {
 const MyActions = ({ idUser, codeID }: { idUser: string; codeID: string }) => {
   const stepper = useStepper();
 
+  const reload = () => {
+    window.location.reload();
+    //setOpen(false);
+    //router.refresh();
+  };
+
   const handleActiveAccount = async () => {
     const activeAccount = await sendRequest<IBackendRes<any>>({
       method: 'POST',
@@ -147,7 +153,7 @@ const MyActions = ({ idUser, codeID }: { idUser: string; codeID: string }) => {
     </div>
   ) : (
     <div className="flex items-center gap-2">
-      <Button onClick={stepper.reset}>
+      <Button onClick={reload}>
         <DialogClose>Hoàn Tất</DialogClose>
       </Button>
     </div>
