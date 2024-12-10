@@ -122,12 +122,7 @@ const ProductDetail = ({ params }: { params: { slug: string } }) => {
               {Array(6)
                 .fill(null)
                 .map((_, index) => {
-                  return (
-                    <LoadingSkeleton
-                      key={index}
-                      className=" w-[150px] h-[60px]"
-                    ></LoadingSkeleton>
-                  );
+                  return <LoadingSkeleton key={index} className=" w-[150px] h-[60px]"></LoadingSkeleton>;
                 })}
             </div>
           </>
@@ -142,9 +137,7 @@ const ProductDetail = ({ params }: { params: { slug: string } }) => {
             <LoadingSkeleton className="px-[10px] xl:w-[500px]   h-[30px] mb-2"></LoadingSkeleton>
           </>
         ) : (
-          <Title className="text-black font-semibold py-0 max-xl:text-black ">
-            {productList?.name!}
-          </Title>
+          <Title className="text-black font-semibold py-0 max-xl:text-black ">{productList?.name!}</Title>
         )}
 
         {loadding ? (
@@ -153,12 +146,7 @@ const ProductDetail = ({ params }: { params: { slug: string } }) => {
             {Array(3)
               .fill(null)
               .map((_, index) => {
-                return (
-                  <LoadingSkeleton
-                    key={index}
-                    className="w-[120px] h-[40px]"
-                  ></LoadingSkeleton>
-                );
+                return <LoadingSkeleton key={index} className="w-[120px] h-[40px]"></LoadingSkeleton>;
               })}
           </div>
         ) : (
@@ -198,17 +186,13 @@ const ProductDetail = ({ params }: { params: { slug: string } }) => {
             <TableBody>
               {/* Màn hình */}
               <TableRow>
-                <TableCell className="font-medium rounded-lg">
-                  Màn hình:
-                </TableCell>
-                <TableCell className="text-left rounded-lg">
-                  {productList?.screen}
-                </TableCell>
+                <TableCell className="font-medium rounded-lg">Màn hình:</TableCell>
+                <TableCell className="text-left rounded-lg">{productList?.screen}</TableCell>
               </TableRow>
               {/* Chip */}
               <TableRow className="bg-white">
                 <TableCell className="font-medium">Chip:</TableCell>
-                <TableCell className="text-left">Apple A13 Bionic</TableCell>
+                <TableCell className="text-left">APPLE A13 Bionic</TableCell>
               </TableRow>
               {/* RAM */}
               <TableRow>
@@ -217,26 +201,18 @@ const ProductDetail = ({ params }: { params: { slug: string } }) => {
               </TableRow>
               {/* Dung lượng lưu trữ */}
               <TableRow className="bg-white">
-                <TableCell className="font-medium">
-                  Dung lượng lưu trữ:
-                </TableCell>
+                <TableCell className="font-medium">Dung lượng lưu trữ:</TableCell>
                 <TableCell className="text-left">{productList?.rom}</TableCell>
               </TableRow>
               {/* SIM */}
               <TableRow>
                 <TableCell className="font-medium">SIM:</TableCell>
-                <TableCell className="text-left">
-                  1 Nano SIM & 1 eSIMHỗ trợ 4G&apos;
-                </TableCell>
+                <TableCell className="text-left">1 Nano SIM & 1 eSIMHỗ trợ 4G&apos;</TableCell>
               </TableRow>
               {/* Pin, Sạc */}
               <TableRow className="bg-white ">
-                <TableCell className="font-medium rounded-lg ">
-                  Pin, Sạc:
-                </TableCell>
-                <TableCell className="text-left rounded-lg ">
-                  {productList?.battery}
-                </TableCell>
+                <TableCell className="font-medium rounded-lg ">Pin, Sạc:</TableCell>
+                <TableCell className="text-left rounded-lg ">{productList?.battery}</TableCell>
               </TableRow>
             </TableBody>
           </Table>
@@ -246,15 +222,10 @@ const ProductDetail = ({ params }: { params: { slug: string } }) => {
         </Button>
 
         <div className=" flex gap-2 items-center  mx-2 my-2 text-white">
-          <div
-            className="text-center bg-blue-600 px-4 py-2 rounded-lg w-full cursor-pointer"
-            onClick={handleAddToCart}
-          >
+          <div className="text-center bg-blue-600 px-4 py-2 rounded-lg w-full cursor-pointer" onClick={handleAddToCart}>
             Thêm Vào Giỏ
           </div>
-          <div className="bg-[#FB6E2E]  px-4 py-2 rounded-lg w-full cursor-pointer text-center">
-            Mua Ngay
-          </div>
+          <div className="bg-[#FB6E2E]  px-4 py-2 rounded-lg w-full cursor-pointer text-center">Mua Ngay</div>
         </div>
       </div>
     </div>

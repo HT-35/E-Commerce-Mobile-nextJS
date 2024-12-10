@@ -13,16 +13,13 @@ const SideBar = ({
 }) => {
   return (
     <div
-      className={`flex flex-col  items-center   h-full w-full relative  rounded-lg
-					${menu ? 'lg:h-[480px] justify-between' : 'lg:h-[230px] justify-between '}
+      className={`flex flex-col  items-center   h-full w-full relative  
+					${menu ? 'lg:h-[500px] justify-between' : 'lg:h-[210px] justify-between '}
 				`}
     >
       {subBanner.map((item) => {
         return (
-          <div
-            key={item.index}
-            className={` relative  rounded-lg  ${menu ? 'w-[270px]' : 'w-[470px] '}`}
-          >
+          <div key={item.index} className={` relative    ${menu ? 'w-[270px]' : 'w-[470px] '}`}>
             <Image
               src={item.url}
               alt="smart-phone"
@@ -30,7 +27,7 @@ const SideBar = ({
               height="500"
               quality={100}
               sizes="100vw"
-              className={` w-full rounded-lg  ${menu ? '' : 'h-[110px] '}`}
+              className={` w-full   ${menu ? '' : 'h-[100px] '}`}
               priority
             ></Image>
           </div>

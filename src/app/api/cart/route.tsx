@@ -67,34 +67,3 @@ export const POST = async (request: NextRequest) => {
     );
   }
 };
-
-export const DELETE = async (request: NextRequest) => {
-  const product = request.nextUrl.searchParams.get('product');
-
-  const bearerToken = headers().get('authorization');
-
-  const dataText = await request.text();
-  let dataJson;
-
-  dataText.length > 0 ? (dataJson = JSON.parse(dataText)) : (dataJson = null);
-  try {
-    const res: any = await sendRequest({
-      method: 'DELETE',
-
-      url: listApi_Nest_Server_API_Route.deleteProductInCart(product!),
-      headers: { Authorization: bearerToken },
-      body: { ...dataJson },
-    });
-
-    return Response.json(res, { status: res.statusCode });
-  } catch (error: any) {
-    return Response.json(
-      {
-        Error: error.message,
-      },
-      {
-        status: 500,
-      }
-    );
-  }
-};

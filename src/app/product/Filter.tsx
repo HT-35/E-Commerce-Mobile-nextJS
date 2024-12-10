@@ -2,94 +2,79 @@
 
 import { useForm } from 'react-hook-form';
 
-import { Button } from '@/components/ui/button';
 import { Form, FormControl, FormField, FormItem } from '@/components/ui/form';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
-const filterPrice: { lable: string; value: string }[] = [
-  {
-    lable: 'dưới 2 tr',
-    value: '2000000',
-  },
-  {
-    lable: 'từ 2 - 4 tr',
-    value: '2000000 - 4000000',
-  },
-  {
-    lable: 'từ 4 - 8 tr',
-    value: '4000000 - 8000000',
-  },
-  {
-    lable: 'từ 8 - 12 tr',
-    value: '8000000 - 12000000',
-  },
-];
-
 const filterRam: { lable: string; value: string }[] = [
   {
-    lable: '8 GB',
-    value: '8',
+    lable: 'RAM',
+    value: 'RAM',
   },
   {
-    lable: '16 GB',
-    value: '16',
+    lable: '8GB',
+    value: '8GB',
   },
   {
-    lable: '32 GB',
-    value: '32',
+    lable: '12GB',
+    value: '12GB',
+  },
+  {
+    lable: '16GB',
+    value: '16GB',
+  },
+  {
+    lable: '32GB',
+    value: '32GB',
   },
 ];
 const filterRom: { lable: string; value: string }[] = [
   {
-    lable: '32 GB',
-    value: '32',
+    lable: 'ROM',
+    value: 'ROM',
   },
   {
-    lable: '64 GB',
-    value: '64',
+    lable: '32GB',
+    value: '32GB',
   },
   {
-    lable: '128 GB',
-    value: '128',
+    lable: '64GB',
+    value: '64GB',
   },
   {
-    lable: '256 GB',
-    value: '256',
-  },
-];
-const filterPin: { lable: string; value: string }[] = [
-  {
-    lable: 'Trên 4000 mAh',
-    value: '4000',
+    lable: '128GB',
+    value: '128GB',
   },
   {
-    lable: 'Trên 5000 mAh',
-    value: '5000',
-  },
-  {
-    lable: 'Trên 6000 mAh',
-    value: '6000',
+    lable: '256GB',
+    value: '256GB',
   },
 ];
 
 const filterOS: { lable: string; value: string }[] = [
   {
-    lable: 'Android',
-    value: 'Android',
+    lable: 'OS',
+    value: 'OS',
+  },
+  {
+    lable: 'ANDROID',
+    value: 'ANDROID',
   },
   {
     lable: 'ISO',
     value: 'ISO',
   },
+  {
+    lable: 'MIUI',
+    value: 'MIUI',
+  },
 ];
 
-export function SelectForm() {
+export function SelectForm({ setFilter }: { setFilter: any }) {
   const form = useForm({
     defaultValues: {
       RAM: '',
       ROM: '',
-      Price: '',
-      Pin: '',
+
       OS: '',
     },
   });
@@ -98,42 +83,47 @@ export function SelectForm() {
     console.log(data);
   }
 
+  const handleGetRAM = async (e: any) => {
+    console.log(e);
+    if (e === 'RAM') {
+      setFilter((data: any) => ({ ...data, RAM: '' }));
+    } else {
+      setFilter((data: any) => ({ ...data, RAM: e }));
+    }
+  };
+
+  const handleGetROM = (e: any) => {
+    if (e === 'ROM') {
+      setFilter((data: any) => ({ ...data, ROM: '' }));
+    } else {
+      setFilter((data: any) => ({ ...data, ROM: e }));
+    }
+  };
+
+  const handleGetOS = (e: any) => {
+    if (e === 'OS') {
+      setFilter((data: any) => ({ ...data, OS: '' }));
+    } else {
+      setFilter((data: any) => ({ ...data, OS: e }));
+    }
+  };
+
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className=" flex justify-between items-center flex-wrap  ">
-        {/* Price */}
-        <FormField
-          control={form.control}
-          name="Price"
-          render={({ field }) => (
-            <FormItem className="  outline-none ">
-              <Select onValueChange={field.onChange} defaultValue={field.value}>
-                <FormControl className="border-[1px] border-slate-400  bg-white">
-                  <SelectTrigger>
-                    <SelectValue placeholder="Price" />
-                  </SelectTrigger>
-                </FormControl>
-                <SelectContent>
-                  {filterPrice.map((item, index) => {
-                    return (
-                      <SelectItem key={index} value={item.value}>
-                        {item.lable}
-                      </SelectItem>
-                    );
-                  })}
-                </SelectContent>
-              </Select>
-            </FormItem>
-          )}
-        />
-
+      <form onSubmit={form.handleSubmit(onSubmit)} className=" flex justify-start gap-20 items-center flex-wrap  ">
         {/* OS */}
         <FormField
           control={form.control}
           name="OS"
           render={({ field }) => (
             <FormItem>
-              <Select onValueChange={field.onChange} defaultValue={field.value}>
+              <Select
+                onValueChange={(event: any) => {
+                  field.onChange;
+                  handleGetOS(event);
+                }}
+                defaultValue={field.value}
+              >
                 <FormControl className="border-[1px] border-slate-400 bg-white">
                   <SelectTrigger>
                     <SelectValue placeholder="OS" />
@@ -159,7 +149,13 @@ export function SelectForm() {
           name="RAM"
           render={({ field }) => (
             <FormItem>
-              <Select onValueChange={field.onChange} defaultValue={field.value}>
+              <Select
+                onValueChange={(event: any) => {
+                  field.onChange;
+                  handleGetRAM(event);
+                }}
+                defaultValue={field.value}
+              >
                 <FormControl className="border-[1px] border-slate-400 bg-white">
                   <SelectTrigger>
                     <SelectValue placeholder=" RAM " />
@@ -184,7 +180,13 @@ export function SelectForm() {
           name="ROM"
           render={({ field }) => (
             <FormItem>
-              <Select onValueChange={field.onChange} defaultValue={field.value}>
+              <Select
+                onValueChange={(event: any) => {
+                  field.onChange;
+                  handleGetROM(event);
+                }}
+                defaultValue={field.value}
+              >
                 <FormControl className="border-[1px] border-slate-400 bg-white">
                   <SelectTrigger>
                     <SelectValue placeholder="ROM" />
@@ -204,33 +206,7 @@ export function SelectForm() {
           )}
         />
 
-        {/* Pin */}
-        <FormField
-          control={form.control}
-          name="Pin"
-          render={({ field }) => (
-            <FormItem>
-              <Select onValueChange={field.onChange} defaultValue={field.value}>
-                <FormControl className="border-[1px] border-slate-400 bg-white">
-                  <SelectTrigger>
-                    <SelectValue placeholder="Pin" />
-                  </SelectTrigger>
-                </FormControl>
-                <SelectContent>
-                  {filterPin.map((item, index) => {
-                    return (
-                      <SelectItem key={index} value={item.value}>
-                        {item.lable}
-                      </SelectItem>
-                    );
-                  })}
-                </SelectContent>
-              </Select>
-            </FormItem>
-          )}
-        />
-
-        <Button type="submit">Lọc</Button>
+        {/*<Button type="submit">Lọc</Button>*/}
       </form>
     </Form>
   );

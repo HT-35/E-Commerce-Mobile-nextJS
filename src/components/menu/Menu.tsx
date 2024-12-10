@@ -1,45 +1,35 @@
+import Link from 'next/link';
 import React from 'react';
-
+import { map } from 'zod';
+const ListBrand: any[] = [
+  {
+    brand: 'iPhone',
+  },
+  {
+    brand: 'SAMSUNG',
+  },
+  {
+    brand: 'XIAOMI',
+  },
+  {
+    brand: 'OPPO',
+  },
+];
 const Menu = () => {
   return (
-    <ul className="">
-      <li className="py-1 px-4  hover:bg-slate-200 cursor-pointer hover:rounded-lg">
-        Iphone
-      </li>
-      <li className="py-1 px-4  hover:bg-slate-200 cursor-pointer hover:rounded-lg">
-        SamSung
-      </li>
-      <li className="py-1 px-4  hover:bg-slate-200 cursor-pointer hover:rounded-lg">
-        Xiaomi
-      </li>
-      <li className="py-1 px-4  hover:bg-slate-200 cursor-pointer hover:rounded-lg">
-        Nokia
-      </li>
-      <li className="py-1 px-4  hover:bg-slate-200 cursor-pointer hover:rounded-lg">
-        Oppo
-      </li>
-      <li className="py-1 px-4  hover:bg-slate-200 cursor-pointer hover:rounded-lg">
-        Vivo
-      </li>
-      <li className="py-1 px-4  hover:bg-slate-200 cursor-pointer hover:rounded-lg">
-        Iphone
-      </li>
-      <li className="py-1 px-4  hover:bg-slate-200 cursor-pointer hover:rounded-lg">
-        SamSung
-      </li>
-      <li className="py-1 px-4  hover:bg-slate-200 cursor-pointer hover:rounded-lg">
-        Xiaomi
-      </li>
-      <li className="py-1 px-4  hover:bg-slate-200 cursor-pointer hover:rounded-lg">
-        Nokia
-      </li>
-      <li className="py-1 px-4  hover:bg-slate-200 cursor-pointer hover:rounded-lg">
-        Oppo
-      </li>
-      <li className="py-1 px-4  hover:bg-slate-200 cursor-pointer hover:rounded-lg">
-        Vivo
-      </li>
-    </ul>
+    <div className="flex flex-col justify-between items-start h-full w-full">
+      {ListBrand?.map((item, index) => {
+        return (
+          <Link
+            href={`/product?brand=${item.brand}`}
+            key={index}
+            className="py-1 px-4 w-full  hover:bg-slate-200 cursor-pointer hover:rounded-lg"
+          >
+            {item.brand}
+          </Link>
+        );
+      })}
+    </div>
   );
 };
 

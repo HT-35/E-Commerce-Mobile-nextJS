@@ -20,13 +20,7 @@ const ButtonMenu = () => {
     setActive((prev) => !prev);
   };
 
-  const brandArr = [
-    { brand: 'Apple' },
-    { brand: 'Samsung' },
-    { brand: 'Xiaomi' },
-    { brand: 'OPPO' },
-    { brand: 'Nokia' },
-  ];
+  const brandArr = [{ brand: 'APPLE' }, { brand: 'SAMSUNG' }, { brand: 'XIAOMI' }, { brand: 'OPPO' }];
 
   return (
     <DropdownMenu>

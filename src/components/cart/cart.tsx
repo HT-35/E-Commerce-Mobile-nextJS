@@ -11,10 +11,8 @@ import Link from 'next/link';
 import { sendRequest } from '@/utils/fetchApi';
 import { formatCurrency } from '@/utils/price';
 import { useRouter } from 'next/navigation';
-import {
-  listApi_Nest_Server_API_Route,
-  listApi_Next_Server,
-} from '@/utils/listApi';
+import { listApi_Nest_Server_API_Route, listApi_Next_Server } from '@/utils/listApi';
+import { Bounce, toast } from 'react-toastify';
 
 export interface ICart {
   color: string;
@@ -42,11 +40,13 @@ enum typeChage {
 const Cart = () => {
   const router = useRouter();
 
-  const dispatch = useAppDispatch();
-
   // Get cart and account info from Redux store
-  const { name, accessToken } = useAppSelector((state: any) => state.account);
+  const { accessToken } = useAppSelector((state: any) => state.account);
+  //console.log(`accessToken:`, accessToken);
 
+  if (!accessToken) {
+    router.push('/auth');
+  }
   const [cart, setCart] = useState<ICart[]>([]);
 
   const [selectProduct, setSelectProduct] = useState<selectProduct[]>([]);
@@ -67,9 +67,7 @@ const Cart = () => {
       if (cart.data) {
         console.log(cart.data);
         const newCart = cart?.data?.map((item, index) => {
-          const option = item?.slug?.option?.findIndex(
-            (itemOption: any) => itemOption.color === item.color
-          );
+          const option = item?.slug?.option?.findIndex((itemOption: any) => itemOption.color === item.color);
           //option;
           //console.log(`option:`, option);
           return {
@@ -98,9 +96,7 @@ const Cart = () => {
     price: number;
     quantity: number;
   }) => {
-    const check = selectProduct.findIndex(
-      (item, index) => item?.slug === slug && item?.color === color
-    );
+    const check = selectProduct.findIndex((item, index) => item?.slug === slug && item?.color === color);
     if (check === -1) {
       setSelectProduct((prv) => [
         ...prv,
@@ -199,9 +195,7 @@ const Cart = () => {
       console.log('');
       console.log('');
       const newCart = updatedCart.map((item: any) => {
-        const option = item?.slug?.option?.findIndex(
-          (itemOption: any) => itemOption.color === item.color
-        );
+        const option = item?.slug?.option?.findIndex((itemOption: any) => itemOption.color === item.color);
         return {
           color: item?.color,
           slug: item?.slug?.slug,
@@ -209,8 +203,7 @@ const Cart = () => {
           price: item?.slug?.option[option]?.price,
           img: item?.slug?.option[option]?.img,
           quantity: item?.quantity,
-          total:
-            Number(item?.quantity) * Number(item?.slug?.option[option]?.price),
+          total: Number(item?.quantity) * Number(item?.slug?.option[option]?.price),
         };
       });
       setCart([...newCart]); // Đảm bảo tạo mảng mới
@@ -223,23 +216,57 @@ const Cart = () => {
 
   useEffect(() => {
     const updatedTotal = selectProduct.reduce((acc, item) => {
-      const product = cart.find(
-        (p) => p.slug === item.slug && p.color === item.color
-      );
+      const product = cart.find((p) => p.slug === item.slug && p.color === item.color);
       return acc + (product ? product.price * Number(item.quantity) : 0);
     }, 0);
     setTotal(updatedTotal);
   }, [cart, selectProduct]); // Cập nhật dependency cho useEffect
 
-  const handleRemoveFromCart = (id: string) => {};
+  const handleRemoveFromCart = async ({ slug, color }: { slug: string; color: string }) => {
+    const deleteProduct = await sendRequest<IBackendRes<any>>({
+      method: 'DELETE',
+      url: listApi_Nest_Server_API_Route.deleteProductInCart({ color, slug }),
+      headers: { Authorization: `Bearer ${accessToken}` },
+    });
+    console.log(deleteProduct);
+    if (deleteProduct.statusCode === 200) {
+      //setCart((prevCart: any[]) => prevCart.filter((item) => item.slug !== slug));
+
+      setCart((prvCart: any[]) => prvCart.filter((item) => !(item.slug === slug && item.color === color)));
+
+      router.refresh();
+
+      toast.success(`Đã xóa sản phẩm ra khỏi giỏ hàng !`, {
+        position: 'top-right',
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: 'light',
+        transition: Bounce,
+      });
+    } else {
+      toast.error(``, {
+        position: 'top-right',
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: 'light',
+        transition: Bounce,
+      });
+    }
+  };
 
   const handleBuyNow = () => {
     console.log(`selectProduct:`, selectProduct);
 
     if (selectProduct.length > 0) {
-      const queryString = selectProduct
-        .map((item: any) => `slug=${item.slug}&color=${item.color}`)
-        .join('&');
+      const queryString = selectProduct.map((item: any) => `slug=${item.slug}&color=${item.color}`).join('&');
 
       router.push(`cart/payment?${queryString}`);
       router.refresh();
@@ -263,11 +290,7 @@ const Cart = () => {
           <div className="mt-3 mb-[3.75rem]">
             <div className="listItemSuperCart">
               <div className="flex items-center mb-[20px]">
-                <Checkbox
-                  className="mr-[6px]"
-                  onCheckedChange={handleSelectAllChange}
-                  checked={isCheckAll}
-                />
+                <Checkbox className="mr-[6px]" onCheckedChange={handleSelectAllChange} checked={isCheckAll} />
                 <label>Chọn tất cả</label>
               </div>
               {/* List Product */}
@@ -291,19 +314,13 @@ const Cart = () => {
                                 })
                               }
                               checked={selectProduct.some(
-                                (item) =>
-                                  item.slug === product.slug &&
-                                  item.color === product.color
+                                (item) => item.slug === product.slug && item.color === product.color
                               )}
                             />
 
                             <div>
                               <img
-                                src={
-                                  product?.img?.length > 0
-                                    ? (product?.img[0]?.link as string)
-                                    : ''
-                                }
+                                src={product?.img?.length > 0 ? (product?.img[0]?.link as string) : ''}
                                 className="w-[300px] rounded-lg"
                               ></img>
                             </div>
@@ -315,21 +332,16 @@ const Cart = () => {
                             <p>{product.name}</p>
                             <TrashIcon
                               className="bg-transparent border-0 cursor-pointer p-0 z-10 w-6 h-7"
-                              onClick={() => handleRemoveFromCart(product.slug)}
+                              onClick={() => handleRemoveFromCart({ color: product.color, slug: product.slug })}
                             />
                           </div>
                           <div className="color flex gap-4">
                             <span className="max-lg:text-sm">Màu Sắc : </span>
-                            <span className="max-lg:text-sm">
-                              {product.color}
-                            </span>
+                            <span className="max-lg:text-sm">{product.color}</span>
                           </div>
                           <div className="price flex gap-4">
                             <span className="max-lg:text-sm">Giá Tiền : </span>
-                            <p className="text-red-600/100 max-lg:text-sm">
-                              {' '}
-                              {formatCurrency(product.price as any)}đ
-                            </p>
+                            <p className="text-red-600/100 max-lg:text-sm"> {formatCurrency(product.price as any)}đ</p>
                           </div>
                           <div className="flex justify-start  items-center gap-4 mt-[10px] select-none">
                             <span className="max-lg:text-sm">Số lượng : </span>
@@ -375,19 +387,12 @@ const Cart = () => {
             <div className="temp-info flex flex-col">
               <div className="price-temp">
                 <p>
-                  Tổng tiền:{' '}
-                  <span className="text-red-600/100">
-                    {formatCurrency(total as any)} đ
-                  </span>
+                  Tổng tiền: <span className="text-red-600/100">{formatCurrency(total as any)} đ</span>
                 </p>
               </div>
             </div>
 
-            <Button
-              className="bg-[#d1041d] px-6 py-1"
-              onClick={handleBuyNow}
-              disabled={total <= 0}
-            >
+            <Button className="bg-[#d1041d] px-6 py-1" onClick={handleBuyNow} disabled={total <= 0}>
               Mua ngay
               {/*<Link href="cart/payment" className="px-6 py-1">
               </Link>*/}
@@ -401,16 +406,9 @@ const Cart = () => {
             alt="no purchase"
             className="w-24 h-24 mb-4"
           />
-          <span className="block text-lg font-semibold mb-2">
-            Giỏ hàng của bạn đang trống
-          </span>
-          <span className="block text-sm mb-4">
-            Hãy chọn thêm sản phẩm để mua sắm nhé
-          </span>
-          <Link
-            href="/"
-            className="bg-[#d70018] text-white px-4 py-2 rounded-md"
-          >
+          <span className="block text-lg font-semibold mb-2">Giỏ hàng của bạn đang trống</span>
+          <span className="block text-sm mb-4">Hãy chọn thêm sản phẩm để mua sắm nhé</span>
+          <Link href="/" className="bg-[#d70018] text-white px-4 py-2 rounded-md">
             Tiếp tục mua hàng
           </Link>
         </div>

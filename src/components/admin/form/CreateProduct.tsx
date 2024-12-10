@@ -4,23 +4,13 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useFieldArray, useForm } from 'react-hook-form';
 import { z } from 'zod';
 
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from '@/components/ui/form';
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { sendRequest, sendRequestFile } from '@/utils/fetchApi';
 import { useAppSelector } from '@/lib/redux/hooks';
 import { useState } from 'react';
-import {
-  listApi_Nest_Server_API_Route,
-  listApi_Next_Server,
-} from '@/utils/listApi';
+import { listApi_Nest_Server_API_Route, listApi_Next_Server } from '@/utils/listApi';
 
 const listProduct = [
   {
@@ -49,7 +39,7 @@ const listProduct = [
   },
   {
     name: 'brand',
-    testData: 'SamSung',
+    testData: 'SAMSUNG',
     message: 'Hãng điện thoại phải từ 3 kí tự trở lên',
     title: 'Hãng điện thoại',
   },
@@ -222,14 +212,9 @@ export function FormCreateProduct() {
           {listProduct.map((item, index) => {
             //const typeNumber = ['price', 'amount', 'ram', 'rom', 'battery'];
             const typeNumber = ['price'];
-            const typeInput = typeNumber.includes(item.name)
-              ? 'number'
-              : 'text';
+            const typeInput = typeNumber.includes(item.name) ? 'number' : 'text';
             return (
-              <div
-                key={index}
-                className="group relative transition-all duration-500"
-              >
+              <div key={index} className="group relative transition-all duration-500">
                 <FormField
                   control={control}
                   name={item.name as any}
@@ -257,10 +242,7 @@ export function FormCreateProduct() {
         <div className="col-span-3 grid">
           <h3>Options</h3>
           {optionFields.map((option, index) => (
-            <div
-              key={option.id}
-              className="col-span-3  xl:flex xl:justify-between xl:items-center"
-            >
+            <div key={option.id} className="col-span-3  xl:flex xl:justify-between xl:items-center">
               <FormField
                 control={control}
                 name={`option.${index}.color`}
@@ -316,11 +298,7 @@ export function FormCreateProduct() {
                 )}
               />
 
-              <Button
-                type="button"
-                onClick={() => remove(index)}
-                className="max-xl:w-full mt-2"
-              >
+              <Button type="button" onClick={() => remove(index)} className="max-xl:w-full mt-2">
                 Xóa Option
               </Button>
             </div>

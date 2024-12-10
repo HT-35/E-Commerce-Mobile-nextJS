@@ -7,27 +7,19 @@ import Title from '@/components/title/Title';
 import { Button } from '@/components/ui/button';
 import Footer from '@/components/footer/footer';
 import { StarFilledIcon, StarIcon } from '@radix-ui/react-icons';
-import { useAppSelector } from '@/lib/redux/hooks';
 import Image from 'next/image';
 import Link from 'next/link';
-
-import { Swiper, SwiperSlide } from 'swiper/react';
 
 // Import Swiper styles
 import 'swiper/css';
 import 'swiper/css/pagination';
 
-//import './styles.css';
-
 // import required modules
-import { Scrollbar } from 'swiper/modules';
 import { useEffect, useState } from 'react';
 import { sendRequest } from '@/utils/fetchApi';
 import { formatPrice } from '@/utils/index';
-import {
-  listApi_Nest_Server_API_Route,
-  listApi_Next_Server,
-} from '@/utils/listApi';
+import { listApi_Nest_Server_API_Route, listApi_Next_Server } from '@/utils/listApi';
+import { useSearchParams } from 'next/navigation';
 
 // import {sendRequest} from '@/'
 const subBanner = [
@@ -63,31 +55,56 @@ const ListBrand: any = [
     brand: 'iPhone',
   },
   {
-    brand: 'Samsung',
+    brand: 'SAMSUNG',
   },
   {
-    brand: 'Xiaomi',
+    brand: 'XIAOMI',
   },
   {
-    brand: 'Oppo',
+    brand: 'OPPO',
   },
 ];
 
 const ProductPage = () => {
+  const searchParams = useSearchParams();
+  const searchBrand = searchParams.get('brand') || '';
   const [productList, setProductList] = useState([]);
+  const [filterProductList, setFilterProductList] = useState([]);
   const [sortOrder, setSortOrder] = useState('asc'); // Thêm state để lưu trữ thứ tự sắp xếp
-  const [selectedBrand, setSelectedBrand] = useState('');
+  const [selectedBrand, setSelectedBrand] = useState(searchBrand);
+
+  const [filter, setFilter] = useState<{
+    RAM: string;
+    ROM: string;
+
+    OS: string;
+  }>({
+    RAM: '',
+    ROM: '',
+    OS: '',
+  });
 
   useEffect(() => {
-    const res = async () => {
-      const res = await sendRequest<IBackendRes<any>>({
-        url: listApi_Next_Server.getAllProduct(),
-        method: 'GET',
-      });
-      setProductList(res?.data?.result);
-    };
-    res();
-  }, []);
+    if (searchBrand !== '') {
+      const res = async () => {
+        const res = await sendRequest<IBackendRes<any>>({
+          url: listApi_Nest_Server_API_Route.getProductByBrandToLowerCase(searchBrand),
+          method: 'GET',
+        });
+        setProductList(res.data);
+      };
+      res();
+    } else {
+      const res = async () => {
+        const res = await sendRequest<IBackendRes<any>>({
+          url: listApi_Next_Server.getAllProduct(),
+          method: 'GET',
+        });
+        setProductList(res?.data?.result);
+      };
+      res();
+    }
+  }, [searchBrand]);
 
   // Hàm xử lý sắp xếp
   const handleSort = (order: any) => {
@@ -102,30 +119,68 @@ const ProductPage = () => {
 
   // Handle brand filter
   const handleBrandFilter = async (brand: any) => {
-    console.log(brand);
-
-    setSelectedBrand(brand); // Update selected brand
-    const res = await sendRequest<IBackendRes<any>>({
-      url: listApi_Nest_Server_API_Route.getProductByBrandToLowerCase(brand),
-      method: 'GET',
-    });
-    setProductList(res.data);
-    console.log('');
-    console.log('');
-    console.log('res.data  :  ', res.data);
-    console.log('');
-    console.log('');
-    console.log('');
+    if (brand === 'Tất Cả') {
+      setSelectedBrand(brand); // Update selected brand
+      const res = await sendRequest<IBackendRes<any>>({
+        url: listApi_Next_Server.getAllProduct(),
+        method: 'GET',
+      });
+      setProductList(res?.data?.result);
+    } else {
+      setSelectedBrand(brand); // Update selected brand
+      const res = await sendRequest<IBackendRes<any>>({
+        url: listApi_Nest_Server_API_Route.getProductByBrandToLowerCase(brand),
+        method: 'GET',
+      });
+      setProductList(res.data);
+    }
   };
+
+  useEffect(() => {
+    const newProductFilter = productList
+      .filter((item: any) => {
+        // Khởi tạo biến kiểm tra
+        let isValid = true;
+
+        // Kiểm tra RAM
+        if (filter.RAM !== '') {
+          const splitRam = item?.ram?.toLowerCase()?.split(' ') ?? [''];
+          if (item.ram.toLowerCase() !== filter.RAM.toLowerCase() && filter.RAM.toLowerCase() !== `${splitRam[0]}gb`) {
+            isValid = false;
+          }
+        }
+
+        // Kiểm tra ROM
+        if (filter.ROM !== '') {
+          const splitRom = item?.rom?.toLowerCase()?.split(' ');
+          if (item.rom.toLowerCase() !== filter.ROM.toLowerCase() && filter.ROM.toLowerCase() !== `${splitRom[0]}gb`) {
+            isValid = false;
+          }
+        }
+
+        // Kiểm tra OS
+        if (filter.OS !== '') {
+          const splitOS = item?.OS?.toLowerCase()?.split(' ') ?? [''];
+          if (item.os.toLowerCase() !== filter.OS.toLowerCase() && filter.OS.toLowerCase() !== `${splitOS[0]}`) {
+            isValid = false;
+          }
+        }
+
+        // Trả về kết quả kiểm tra
+        return isValid;
+      })
+      .filter((item) => item); // Loại bỏ null khỏi mảng
+
+    setFilterProductList(newProductFilter as any);
+
+    console.log('newProductFilter  ', newProductFilter);
+    console.log('filter details: ', filter);
+  }, [filter, productList]);
 
   return (
     <div className="overflow-x-hidden  max-lg:banner  ">
-      <Navigation
-        menu={false}
-        Banner={Banner}
-        subBanner={subBanner}
-      ></Navigation>
-      {/*<Title className="mt-5  ">Hãng Điện Thoại</Title>*/}
+      <Navigation menu={false} Banner={Banner} subBanner={subBanner}></Navigation>
+
       <div className="mt-5   flex items-center justify-start">
         <Title className="lg:min-w-14">Hãng Điện Thoại</Title>
         <div className=" min-h-[30px] max-lg:min-h-[20px] flex justify-start gap-20">
@@ -150,7 +205,7 @@ const ProductPage = () => {
           <Title className=" lg:min-w-32">Bộ Lọc</Title>
         </div>
         <div className=" w-full">
-          <SelectForm></SelectForm>
+          <SelectForm setFilter={setFilter}></SelectForm>
         </div>
       </div>
 
@@ -178,116 +233,116 @@ const ProductPage = () => {
         </div>
       </div>
 
-      {/* Product */}
-
-      {/*<div className="product grid grid-cols-4  w-full h-full gap-8 my-4   max-lg:grid-cols-2  max-lg:gap-2">
-        {productList.map((item: any, index) => {
-          return (
-            <div key={index} className="product rounded-lg bg-white pt-1">
-              <Link href={'/product/' + item?.slug}>
-                <div className="img flex items-center justify-center  min-h-[200px]">
-                  <Image
-                    src={item?.option[0]?.img[0]?.link}
-                    alt="smart-phone"
-                    width="0"
-                    height="0"
-                    sizes="100vw"
-                    className={`w-full h-auto rounded-lg max-w-[200px]`}
-                    priority
-                  ></Image>
-                </div>
-              </Link>
-              <div className="title px-4 py-2 text-xs">
-                <Link href={'/product/' + item?.slug}>
-                  <div className="title font-semibold min-h-10 text-xs">{item?.name}</div>
-                </Link>
-                <div className="price font-semibold text-red-600 min-h-8">{formatPrice(item?.option[0].price)}đ</div>
-                <div className="text-[10px] p-2 border-2 rounded-lg bg-[#F3F4F6] ">
-                  Giảm đến 500K khi trả góp thẻ tín dụng Sacombank qua cổng MPOS
-                </div>
-                <div className="like flex justify-between my-2 mt-3 text-xs">
-                  <div className="start my-2 text-lg flex ">
-                    {Array(5)
-                      .fill(null)
-                      .map((_, index) => (
-                        <StarFilledIcon key={index} color="#F59E0B" className="w-[18px] h-[18px] max-lg:w-[10px]"></StarFilledIcon>
-                      ))}
-                  </div>
-                  <div className="flex items-center gap-1 cursor-pointer">
-                    <span className="text-[12px]">Yêu Thích </span>
-                    <StarIcon color="#F59E0B" className="w-[18px] h-[18px] max-lg:w-[10px]"></StarIcon>
-                  </div>
-                </div>
-              </div>
-            </div>
-          );
-        })}
-      </div>*/}
-
       <div className="product grid grid-cols-4 w-full h-full gap-8 my-4 max-lg:grid-cols-2 max-lg:gap-2">
-        {productList?.map((item: any, index) => {
-          const productImage =
-            item?.option?.[0]?.img?.[0]?.link ?? '/placeholder-image.jpg'; // Ảnh fallback
-          const productPrice = item?.option?.[0]?.price ?? 0;
-          const productSlug = item?.slug ?? '';
-          const productName = item?.name ?? 'Sản phẩm không có tên';
+        {filter.OS === '' &&
+          filter.RAM === '' &&
+          filter.ROM === '' &&
+          filterProductList?.length === 0 &&
+          productList?.length > 0 &&
+          productList?.map((item: any, index) => {
+            const productImage = item?.option?.[0]?.img?.[0]?.link ?? '/placeholder-image.jpg'; // Ảnh fallback
+            const productPrice = item?.option?.[0]?.price ?? 0;
+            const productSlug = item?.slug ?? '';
+            const productName = item?.name ?? 'Sản phẩm không có tên';
 
-          return (
-            <div key={index} className="product rounded-lg bg-white pt-1">
-              {/* Link tới trang sản phẩm */}
-              <Link href={`/product/${productSlug}`}>
-                <div className="img flex items-center justify-center min-h-[200px]">
-                  <Image
-                    src={productImage}
-                    alt="smart-phone"
-                    width="0"
-                    height="0"
-                    sizes="100vw"
-                    className="w-full h-auto rounded-lg max-w-[200px]"
-                    priority
-                  />
-                </div>
-              </Link>
-
-              {/* Chi tiết sản phẩm */}
-              <div className="title px-4 py-2 text-xs">
+            return (
+              <div key={index} className="product rounded-lg bg-white pt-1">
+                {/* Link tới trang sản phẩm */}
                 <Link href={`/product/${productSlug}`}>
-                  <div className="title font-semibold min-h-10 text-xs">
-                    {productName}
-                  </div>
-                </Link>
-                <div className="price font-semibold text-red-600 min-h-8">
-                  {formatPrice(productPrice)}đ
-                </div>
-                <div className="text-[10px] p-2 border-2 rounded-lg bg-[#F3F4F6]">
-                  Giảm đến 500K khi trả góp thẻ tín dụng Sacombank qua cổng MPOS
-                </div>
-
-                {/* Đánh giá và yêu thích */}
-                <div className="like flex justify-between my-2 mt-3 text-xs">
-                  <div className="start my-2 text-lg flex">
-                    {Array(5)
-                      .fill(null)
-                      .map((_, index) => (
-                        <StarFilledIcon
-                          key={index}
-                          color="#F59E0B"
-                          className="w-[18px] h-[18px] max-lg:w-[10px]"
-                        />
-                      ))}
-                  </div>
-                  <div className="flex items-center gap-1 cursor-pointer">
-                    <span className="text-[12px]">Yêu Thích</span>
-                    <StarIcon
-                      color="#F59E0B"
-                      className="w-[18px] h-[18px] max-lg:w-[10px]"
+                  <div className="img flex items-center justify-center min-h-[200px]">
+                    <Image
+                      src={productImage}
+                      alt="smart-phone"
+                      width="0"
+                      height="0"
+                      sizes="100vw"
+                      className="w-full h-auto rounded-lg max-w-[200px]"
+                      priority
                     />
                   </div>
+                </Link>
+
+                {/* Chi tiết sản phẩm */}
+                <div className="title px-4 py-2 text-xs">
+                  <Link href={`/product/${productSlug}`}>
+                    <div className="title font-semibold min-h-10 text-xs">{productName}</div>
+                  </Link>
+                  <div className="price font-semibold text-red-600 min-h-8">{formatPrice(productPrice)}đ</div>
+                  <div className="text-[10px] p-2 border-2 rounded-lg bg-[#F3F4F6]">
+                    Giảm đến 500K khi trả góp thẻ tín dụng Sacombank qua cổng MPOS
+                  </div>
+
+                  {/* Đánh giá và yêu thích */}
+                  <div className="like flex justify-between my-2 mt-3 text-xs">
+                    <div className="start my-2 text-lg flex">
+                      {Array(5)
+                        .fill(null)
+                        .map((_, index) => (
+                          <StarFilledIcon key={index} color="#F59E0B" className="w-[18px] h-[18px] max-lg:w-[10px]" />
+                        ))}
+                    </div>
+                    <div className="flex items-center gap-1 cursor-pointer">
+                      <span className="text-[12px]">Yêu Thích</span>
+                      <StarIcon color="#F59E0B" className="w-[18px] h-[18px] max-lg:w-[10px]" />
+                    </div>
+                  </div>
                 </div>
               </div>
-            </div>
-          );
-        })}
+            );
+          })}
+
+        {filterProductList?.length > 0 &&
+          filterProductList?.map((item: any, index) => {
+            const productImage = item?.option?.[0]?.img?.[0]?.link ?? '/placeholder-image.jpg'; // Ảnh fallback
+            const productPrice = item?.option?.[0]?.price ?? 0;
+            const productSlug = item?.slug ?? '';
+            const productName = item?.name ?? 'Sản phẩm không có tên';
+
+            return (
+              <div key={index} className="product rounded-lg bg-white pt-1">
+                {/* Link tới trang sản phẩm */}
+                <Link href={`/product/${productSlug}`}>
+                  <div className="img flex items-center justify-center min-h-[200px]">
+                    <Image
+                      src={productImage}
+                      alt="smart-phone"
+                      width="0"
+                      height="0"
+                      sizes="100vw"
+                      className="w-full h-auto rounded-lg max-w-[200px]"
+                      priority
+                    />
+                  </div>
+                </Link>
+
+                {/* Chi tiết sản phẩm */}
+                <div className="title px-4 py-2 text-xs">
+                  <Link href={`/product/${productSlug}`}>
+                    <div className="title font-semibold min-h-10 text-xs">{productName}</div>
+                  </Link>
+                  <div className="price font-semibold text-red-600 min-h-8">{formatPrice(productPrice)}đ</div>
+                  <div className="text-[10px] p-2 border-2 rounded-lg bg-[#F3F4F6]">
+                    Giảm đến 500K khi trả góp thẻ tín dụng Sacombank qua cổng MPOS
+                  </div>
+
+                  {/* Đánh giá và yêu thích */}
+                  <div className="like flex justify-between my-2 mt-3 text-xs">
+                    <div className="start my-2 text-lg flex">
+                      {Array(5)
+                        .fill(null)
+                        .map((_, index) => (
+                          <StarFilledIcon key={index} color="#F59E0B" className="w-[18px] h-[18px] max-lg:w-[10px]" />
+                        ))}
+                    </div>
+                    <div className="flex items-center gap-1 cursor-pointer">
+                      <span className="text-[12px]">Yêu Thích</span>
+                      <StarIcon color="#F59E0B" className="w-[18px] h-[18px] max-lg:w-[10px]" />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            );
+          })}
       </div>
       <Footer />
     </div>

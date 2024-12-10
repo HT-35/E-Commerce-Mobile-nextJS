@@ -1,13 +1,6 @@
 'use client';
 import React, { useEffect, useState } from 'react';
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/components/ui/table';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 
 import { InputSearch } from '@/components/input/InputSearch';
 import { Button } from '@/components/ui/button';
@@ -21,10 +14,7 @@ import { AcceptDeleteProduct } from '@/components/admin/form/DeleteProduct';
 import { FormUpdateProduct } from '@/components/admin/form/FormUpdateProduct';
 import ModalUpdate from '@/components/admin/modal/ModalUpdate';
 
-import {
-  listApi_Nest_Server_API_Route,
-  listApi_Next_Server,
-} from '@/utils/listApi';
+import { listApi_Nest_Server_API_Route, listApi_Next_Server } from '@/utils/listApi';
 import { formatCurrency } from '@/utils/price';
 
 const ListBrand: any = [
@@ -35,13 +25,13 @@ const ListBrand: any = [
     brand: 'iPhone',
   },
   {
-    brand: 'Samsung',
+    brand: 'SAMSUNG',
   },
   {
-    brand: 'Xiaomi',
+    brand: 'XIAOMI',
   },
   {
-    brand: 'Oppo',
+    brand: 'OPPO',
   },
 ];
 
@@ -98,10 +88,7 @@ const MangegerProduct = () => {
         //const brandWords = item?.brand?.toLowerCase()?.split(' ') || []; // Tách thương hiệu thành các từ
 
         // Kiểm tra xem từ tìm kiếm có tồn tại trong danh sách từ của tên hoặc thương hiệu
-        return (
-          nameWords.includes(searchLower) ||
-          item?.name?.toLowerCase()?.includes(search)
-        );
+        return nameWords.includes(searchLower) || item?.name?.toLowerCase()?.includes(search);
 
         //if (nameWords.includes(searchLower)) {
         //  return nameWords.includes(searchLower);
@@ -151,14 +138,8 @@ const MangegerProduct = () => {
         dataDeleteProdcut={dataDeleteProdcut}
       ></AcceptDeleteProduct>
 
-      <ModalUpdate
-        activeFormUpdate={activeFormUpdate}
-        setActiveFormUpdate={setActiveFormUpdate}
-      >
-        <FormUpdateProduct
-          data={dataUpdateProdcut}
-          setActiveFormUpdate={setActiveFormUpdate}
-        />
+      <ModalUpdate activeFormUpdate={activeFormUpdate} setActiveFormUpdate={setActiveFormUpdate}>
+        <FormUpdateProduct data={dataUpdateProdcut} setActiveFormUpdate={setActiveFormUpdate} />
       </ModalUpdate>
 
       <div className="menu flex justify-between items-center mb-4">
@@ -188,19 +169,13 @@ const MangegerProduct = () => {
           Thêm Sản Phẩm
         </Button>
 
-        <ModalCreate
-          activeForm={activeFormCreate}
-          setActiveForm={setActiveFormCreate}
-        >
+        <ModalCreate activeForm={activeFormCreate} setActiveForm={setActiveFormCreate}>
           <FormCreateProduct />
         </ModalCreate>
       </div>
 
       <div className="line h-[1px] w-full bg-slate-600 my-2 "></div>
-      <div
-        className="overflow-hidden overflow-y-auto "
-        style={{ height: `${screenHeight - 30}px` }}
-      >
+      <div className="overflow-hidden overflow-y-auto " style={{ height: `${screenHeight - 30}px` }}>
         <Table>
           <TableHeader>
             <TableRow>
@@ -223,9 +198,7 @@ const MangegerProduct = () => {
                     <TableCell>{index + 1}</TableCell>
                     <TableCell>{item.name}</TableCell>
                     <TableCell>{item.brand}</TableCell>
-                    <TableCell>
-                      {formatCurrency(item.option[0].price as any)} đ
-                    </TableCell>
+                    <TableCell>{formatCurrency(item.option[0].price as any)} đ</TableCell>
                     <TableCell>{item.ram}</TableCell>
                     <TableCell>{item.rom}</TableCell>
                     <TableCell className="w-32 cursor-pointer">
@@ -266,10 +239,7 @@ const MangegerProduct = () => {
                     <TableCell>{index + 1}</TableCell>
                     <TableCell>{item.name}</TableCell>
                     <TableCell>{item.brand}</TableCell>
-                    <TableCell>
-                      {' '}
-                      {formatCurrency(item.option[0].price as any)} đ
-                    </TableCell>
+                    <TableCell> {formatCurrency(item.option[0].price as any)} đ</TableCell>
                     <TableCell>{item.ram}</TableCell>
                     <TableCell>{item.rom}</TableCell>
                     <TableCell className="w-32 cursor-pointer">

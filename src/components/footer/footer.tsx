@@ -1,5 +1,6 @@
 'use client';
 
+import Image from 'next/image';
 import React from 'react';
 
 function Footer() {
@@ -30,7 +31,11 @@ function Footer() {
               ))}
               <li>
                 <a>
-                  <img className="w-48 my-4" src="https://theme.hstatic.net/1000075078/1000610097/14/gov.png?v=664" alt="Gov logo" />
+                  <img
+                    className="w-48 my-4"
+                    src="https://theme.hstatic.net/1000075078/1000610097/14/gov.png?v=664"
+                    alt="Gov logo"
+                  />
                 </a>
               </li>
             </ul>
@@ -43,25 +48,13 @@ function Footer() {
             <ul className="flex space-x-2">
               {[
                 {
-                  href: 'https://cellphones.com.vn/sforum/apple-pay-viet-nam',
-                  src: 'https://cdn2.cellphones.com.vn/x35,webp/media/wysiwyg/apple-pay-og.png',
-                },
-                {
                   href: 'https://cellphones.com.vn/sforum/huong-dan-su-dung-vnpay-qrcode-tren-website-cellphones',
                   src: 'https://cdn2.cellphones.com.vn/x35,webp/media/logo/payment/vnpay-logo.png',
-                },
-                {
-                  href: 'https://cellphones.com.vn/huong-dan-thanh-toan-qua-vi-momo-cellphones',
-                  src: 'https://cdn2.cellphones.com.vn/x/media/wysiwyg/momo_1.png',
-                },
-                {
-                  href: 'https://cellphones.com.vn/sforum/huong-dan-toan-bang-zalopay-khi-mua-hang-tren-website-cellphones',
-                  src: 'https://cdn2.cellphones.com.vn/x35,webp/media/logo/payment/zalopay-logo.png',
                 },
               ].map((item, idx) => (
                 <li key={idx} className="border border-gray-300 p-1">
                   <a href={item.href}>
-                    <img className="w-10" src={item.src} alt="Payment method" />
+                    <Image height={500} width={500} className="w-10" src={item.src} alt="Payment method" />
                   </a>
                 </li>
               ))}
@@ -87,9 +80,9 @@ function Footer() {
             </ul>
           </div>
         </div>
-        <div className="bg-gray-200 py-4 text-gray-800">
+        {/*<div className="bg-gray-200 py-4 text-gray-800">
           <p className="text-center m-0">Copyright © 2024 HTS Store. All rights reserved.</p>
-        </div>
+        </div>*/}
       </div>
     </section>
   );
