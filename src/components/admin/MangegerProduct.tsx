@@ -13,22 +13,19 @@ import { InputSearch } from '@/components/input/InputSearch';
 import { Button } from '@/components/ui/button';
 import ModalCreate from '@/components/admin/modal/ModalCreate';
 import { FormCreateProduct } from '@/components/admin/form/CreateProduct';
-import FormCreateUser from '@/components/admin/form/CreateUser';
 import { sendRequest } from '@/utils/fetchApi';
 
 import { useAppSelector } from '@/lib/redux/hooks';
 import { useRouter } from 'next/navigation';
-import { Bounce, toast } from 'react-toastify';
 import { AcceptDeleteProduct } from '@/components/admin/form/DeleteProduct';
 import { FormUpdateProduct } from '@/components/admin/form/FormUpdateProduct';
 import ModalUpdate from '@/components/admin/modal/ModalUpdate';
-import { Scrollbar } from 'swiper/modules';
 
-import { Swiper, SwiperSlide } from 'swiper/react';
 import {
   listApi_Nest_Server_API_Route,
   listApi_Next_Server,
 } from '@/utils/listApi';
+import { formatCurrency } from '@/utils/price';
 
 const ListBrand: any = [
   {
@@ -52,6 +49,7 @@ const MangegerProduct = () => {
   const [selectedBrand, setSelectedBrand] = useState('');
 
   const [product, setProduct] = useState<any>([]);
+  const [listProductSearch, setListProductSearch] = useState<any>([]);
 
   const [acceptDelete, setAcceptDelete] = useState<boolean>(false);
   const [dataDeleteProdcut, setDataDeleteProduct] = useState<{
@@ -66,6 +64,8 @@ const MangegerProduct = () => {
     slug: string;
     name: string;
   }>({ slug: '', name: '' });
+
+  const [search, setSearch] = useState<string>('');
 
   const router = useRouter();
   const { accessToken } = useAppSelector((item) => item.account);
@@ -90,15 +90,55 @@ const MangegerProduct = () => {
     getProduct();
   }, []);
 
+  useEffect(() => {
+    if (search !== '') {
+      const searchAccount = product.filter((item: any) => {
+        const searchLower = search.toLowerCase(); // Chuyển giá trị tìm kiếm về chữ thường
+        const nameWords = item?.name?.toLowerCase()?.split(' ') || []; // Tách tên thành các từ
+        //const brandWords = item?.brand?.toLowerCase()?.split(' ') || []; // Tách thương hiệu thành các từ
+
+        // Kiểm tra xem từ tìm kiếm có tồn tại trong danh sách từ của tên hoặc thương hiệu
+        return (
+          nameWords.includes(searchLower) ||
+          item?.name?.toLowerCase()?.includes(search)
+        );
+
+        //if (nameWords.includes(searchLower)) {
+        //  return nameWords.includes(searchLower);
+        //} else if (item?.name?.toLowerCase()?.includes(search)) {
+        //  return item?.name?.toLowerCase()?.includes(search);
+        //} else {
+        //  [];
+        //}
+      });
+
+      console.log(searchAccount);
+
+      //setListProductSearch(searchAccount);
+      setListProductSearch(searchAccount);
+    } else {
+      setListProductSearch([]);
+    }
+  }, [product, search]);
+
   // Handle brand filter
   const handleBrandFilter = async (brand: any) => {
+    console.log(`brand:`, brand);
     setSelectedBrand(brand); // Update selected brand
-    const res = await sendRequest<IBackendRes<any>>({
-      url: listApi_Nest_Server_API_Route.getProductByBrandToLowerCase(brand),
-      method: 'GET',
-    });
-
-    setProduct(res?.data);
+    if (brand === 'Tất Cả') {
+      const res = await sendRequest<IBackendRes<any>>({
+        url: listApi_Next_Server.getAllProduct(),
+        method: 'GET',
+      });
+      setProduct(res?.data?.result);
+    } else {
+      const res = await sendRequest<IBackendRes<any>>({
+        url: listApi_Nest_Server_API_Route.getProductByBrandToLowerCase(brand),
+        method: 'GET',
+      });
+      console.log(`res:`, res);
+      setProduct(res?.data);
+    }
   };
 
   return (
@@ -126,47 +166,23 @@ const MangegerProduct = () => {
           <InputSearch
             placeholder="Nhập Tên Sản Phẩm..."
             className="placeholder:text-black"
+            setSearch={setSearch}
           ></InputSearch>
         </div>
 
-        <div className=" w-[800px]">
-          <Swiper
-            slidesPerView={4}
-            spaceBetween={5}
-            breakpoints={{
-              1024: {
-                slidesPerView: 4,
-              },
-              768: {
-                slidesPerView: 4,
-                spaceBetween: 10,
-              },
-              0: {
-                slidesPerView: 4,
-                spaceBetween: 5,
-              },
-            }}
-            scrollbar={{
-              hide: true,
-            }}
-            modules={[Scrollbar]}
-            className="mySwiper bg-transparent"
-          >
-            {ListBrand.map((item: any, index: any) => {
-              return (
-                <SwiperSlide key={index}>
-                  <Button
-                    className={`  hover:bg-slate-100 border-[1px] border-slate-400  
+        {ListBrand.map((item: any, index: any) => {
+          return (
+            <div key={index}>
+              <Button
+                className={`  hover:bg-slate-100 border-[1px] border-slate-400  
                       ${selectedBrand === item.brand || (item.brand === 'Tất Cả' && selectedBrand === '') ? 'bg-slate-100 text-black' : 'bg-white text-black'}`}
-                    onClick={() => handleBrandFilter(item.brand)}
-                  >
-                    {item.brand}
-                  </Button>
-                </SwiperSlide>
-              );
-            })}
-          </Swiper>
-        </div>
+                onClick={() => handleBrandFilter(item.brand)}
+              >
+                {item.brand}
+              </Button>
+            </div>
+          );
+        })}
 
         <Button className="" onClick={() => setActiveFormCreate(true)}>
           Thêm Sản Phẩm
@@ -199,45 +215,92 @@ const MangegerProduct = () => {
             </TableRow>
           </TableHeader>
           <TableBody className="">
-            {product.map((item: any, index: number) => {
-              //console.log(`item:`, item);
-              return (
-                <TableRow key={index + 1}>
-                  <TableCell>{index + 1}</TableCell>
-                  <TableCell>{item.name}</TableCell>
-                  <TableCell>{item.brand}</TableCell>
-                  <TableCell>{item.option[0].price}</TableCell>
-                  <TableCell>{item.ram}</TableCell>
-                  <TableCell>{item.rom}</TableCell>
-                  <TableCell className="w-32 cursor-pointer">
-                    <div
-                      className="w-32 bg-yellow-400 text-center rounded-md py-2 hover:bg-red-600"
-                      onClick={() => {
-                        setDataUpdateProduct(item);
-                        setActiveFormUpdate(true);
-                      }}
-                    >
-                      Sửa
-                    </div>
-                  </TableCell>
+            {listProductSearch?.length > 0 &&
+              listProductSearch?.map((item: any, index: number) => {
+                //console.log(`item:`, item);
+                return (
+                  <TableRow key={index + 1}>
+                    <TableCell>{index + 1}</TableCell>
+                    <TableCell>{item.name}</TableCell>
+                    <TableCell>{item.brand}</TableCell>
+                    <TableCell>
+                      {formatCurrency(item.option[0].price as any)} đ
+                    </TableCell>
+                    <TableCell>{item.ram}</TableCell>
+                    <TableCell>{item.rom}</TableCell>
+                    <TableCell className="w-32 cursor-pointer">
+                      <div
+                        className="w-32 bg-yellow-400 text-center rounded-md py-2 hover:bg-red-600"
+                        onClick={() => {
+                          setDataUpdateProduct(item);
+                          setActiveFormUpdate(true);
+                        }}
+                      >
+                        Sửa
+                      </div>
+                    </TableCell>
 
-                  <TableCell className="w-32 cursor-pointer  ">
-                    <div
-                      className="w-32 bg-red-400 text-center rounded-md py-2 hover:bg-red-600"
-                      onClick={() => {
-                        setDataDeleteProduct({
-                          name: item.name,
-                          slug: item.slug,
-                        });
-                        setAcceptDelete(true);
-                      }}
-                    >
-                      Xóa
-                    </div>
-                  </TableCell>
-                </TableRow>
-              );
-            })}
+                    <TableCell className="w-32 cursor-pointer  ">
+                      <div
+                        className="w-32 bg-red-400 text-center rounded-md py-2 hover:bg-red-600"
+                        onClick={() => {
+                          setDataDeleteProduct({
+                            name: item.name,
+                            slug: item.slug,
+                          });
+                          setAcceptDelete(true);
+                        }}
+                      >
+                        Xóa
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                );
+              })}
+            {listProductSearch?.length == 0 &&
+              product?.length > 0 &&
+              product?.map((item: any, index: number) => {
+                //console.log(`item:`, item);
+                return (
+                  <TableRow key={index + 1}>
+                    <TableCell>{index + 1}</TableCell>
+                    <TableCell>{item.name}</TableCell>
+                    <TableCell>{item.brand}</TableCell>
+                    <TableCell>
+                      {' '}
+                      {formatCurrency(item.option[0].price as any)} đ
+                    </TableCell>
+                    <TableCell>{item.ram}</TableCell>
+                    <TableCell>{item.rom}</TableCell>
+                    <TableCell className="w-32 cursor-pointer">
+                      <div
+                        className="w-32 bg-yellow-400 text-center rounded-md py-2 hover:bg-red-600"
+                        onClick={() => {
+                          setDataUpdateProduct(item);
+                          setActiveFormUpdate(true);
+                        }}
+                      >
+                        Sửa
+                      </div>
+                    </TableCell>
+
+                    <TableCell className="w-32 cursor-pointer  ">
+                      <div
+                        className="w-32 bg-red-400 text-center rounded-md py-2 hover:bg-red-600"
+                        onClick={() => {
+                          setDataDeleteProduct({
+                            name: item.name,
+                            slug: item.slug,
+                          });
+                          setAcceptDelete(true);
+                        }}
+                      >
+                        Xóa
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                );
+              })}
           </TableBody>
         </Table>
       </div>

@@ -33,9 +33,12 @@ export const listApi_Next_Server = {
   createAddress: () => `${domain}/api/address`,
   getAllAddress: () => `${domain}/api/address`,
   cart: () => `${domain}/api/cart`,
-  createPayment: () => `${domainNextServer}/payment/create_payment_url`,
-  createBill: () => `${domainNextServer}/user/bill/`,
-  updateSuccessBill: (id: string) => `${domainNextServer}/user/bill/${id}`,
+
+  createBillVnPay: () => `${domainNextServer}/user/bill/vnpay`,
+
+  updateSuccessBill: (id: string) =>
+    `${domainNextServer}/user/vnpay/bill/${id}`,
+
   logout: () => `${domain}/api/auth/logout`,
   login: () => `${domain}/api/auth/login`,
   register: () => `${domain}/api/auth/register`,
@@ -50,12 +53,6 @@ export const listApi_Next_Server = {
   createProduct: () => `${domain}/api/product`,
 
   reduceProductInCart: () => `${domain}/api/cart/reduce`,
-};
-
-export const listApi_Nest_Server = {
-  createPayment: () => `${domainNextServer}/payment/create_payment_url`,
-  createBill: () => `${domainNextServer}/user/bill/`,
-  updateSuccessBill: (id: string) => `${domainNextServer}/user/bill/${id}`,
 };
 
 export const listApi_Nest_Server_API_Route = {
@@ -128,4 +125,15 @@ export const listApi_Nest_Server_API_Route = {
     `${domainNextServer}/chat/room/${_id}`,
 
   clientSendMessageChat: () => `${domainNextServer}/chat/send`,
+
+  getAdminGetAllOrder: () => `${domainNextServer}/user/bill?limit=15&page=1`,
+
+  createPaymentVnPay: () => `${domainNextServer}/payment/create_payment_url`,
+
+  updateSuccessBillVnPay: (id: string) =>
+    `${domainNextServer}/user/bill/vnpay/${id}`,
+
+  createBillCOD: () => `${domainNextServer}/user/bill/cod`,
+
+  getDetailBill: (id: string) => `${domainNextServer}/user/bill/${id}`,
 };

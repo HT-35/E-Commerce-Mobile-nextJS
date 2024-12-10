@@ -90,7 +90,7 @@ export default function TabsDemo() {
 
   return (
     <div className="xl:px-10 px-4 ">
-      <Tabs defaultValue="managerAccount" className="  gap-2  grid grid-cols-1">
+      <Tabs defaultValue="managerOrder" className="  gap-2  grid grid-cols-1">
         {isLargeScreen ? (
           <TabsList
             className="   xl:h-[80px] h-auto  bg-white rounded-md px-2 py-2 

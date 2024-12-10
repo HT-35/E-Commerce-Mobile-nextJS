@@ -7,7 +7,7 @@ const Title = ({
 }) => {
   return (
     <h1
-      className={`font-bold text-xl px-2 py-1 lg:basis-2/5     max-lg:text-base ${className}`}
+      className={`font-bold text-xl px-2 py-1 lg:basis-1/5     max-lg:text-base ${className}`}
     >
       {children}
     </h1>

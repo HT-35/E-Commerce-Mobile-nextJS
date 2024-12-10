@@ -125,46 +125,24 @@ const ProductPage = () => {
         Banner={Banner}
         subBanner={subBanner}
       ></Navigation>
-      <Title className="mt-5  ">Hãng Điện Thoại</Title>
-
-      <div className=" min-h-[30px] max-lg:min-h-[20px]">
-        <Swiper
-          slidesPerView={4}
-          spaceBetween={5}
-          breakpoints={{
-            1024: {
-              slidesPerView: 6,
-            },
-            768: {
-              slidesPerView: 5,
-              spaceBetween: 20,
-            },
-            0: {
-              slidesPerView: 3,
-              spaceBetween: 20,
-            },
-          }}
-          scrollbar={{
-            hide: true,
-          }}
-          modules={[Scrollbar]}
-          className="mySwiper bg-transparent"
-        >
+      {/*<Title className="mt-5  ">Hãng Điện Thoại</Title>*/}
+      <div className="mt-5   flex items-center justify-start">
+        <Title className="lg:min-w-14">Hãng Điện Thoại</Title>
+        <div className=" min-h-[30px] max-lg:min-h-[20px] flex justify-start gap-20">
           {ListBrand.map((item: any, index: any) => {
             return (
-              <SwiperSlide key={index}>
+              <div key={index}>
                 <Button
-                  className={`  hover:bg-slate-100 border-[1px] border-slate-400  ${selectedBrand === item?.brand ? 'bg-slate-100 text-black' : 'bg-white text-black'}`}
-                  onClick={() => handleBrandFilter(item?.brand)}
+                  className={`  hover:bg-slate-100 border-[1px] border-slate-400  
+                      ${selectedBrand === item.brand || (item.brand === 'Tất Cả' && selectedBrand === '') ? 'bg-slate-100 text-black' : 'bg-white text-black'}`}
+                  onClick={() => handleBrandFilter(item.brand)}
                 >
-                  {/*{item?.img ? <img src={item?.img} alt={item?.brand} className="" /> : <p className="text-black">{item?.brand}</p>}*/}
-                  {/*<p className="text-black">{item?.brand}</p>*/}
-                  {item?.brand}
+                  {item.brand}
                 </Button>
-              </SwiperSlide>
+              </div>
             );
           })}
-        </Swiper>
+        </div>
       </div>
 
       <div className="flex justify-start items-center  my-4   ">

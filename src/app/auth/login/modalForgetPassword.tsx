@@ -16,10 +16,7 @@ import React, { useState } from 'react';
 
 import { defineStepper } from '@stepperize/react';
 import { sendRequest } from '@/utils/fetchApi';
-import {
-  listApi_Nest_Server,
-  listApi_Nest_Server_API_Route,
-} from '@/utils/listApi';
+import { listApi_Nest_Server_API_Route } from '@/utils/listApi';
 import { Bounce, toast } from 'react-toastify';
 
 const { useStepper, Scoped } = defineStepper(

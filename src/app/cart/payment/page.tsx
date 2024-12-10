@@ -18,8 +18,10 @@ import { sendRequest } from '@/utils/fetchApi';
 import { useAppSelector } from '@/lib/redux/hooks';
 import { ICart } from '@/components/cart/cart';
 import { formatCurrency } from '@/utils/price';
-import { listApi_Next_Server } from '@/utils/listApi';
-import { listApi_Nest_Server } from '@/utils/listApi';
+import {
+  listApi_Nest_Server_API_Route,
+  listApi_Next_Server,
+} from '@/utils/listApi';
 
 // Định nghĩa schema của form
 const formSchema = z.object({
@@ -29,6 +31,11 @@ const formSchema = z.object({
     .regex(/^0\d{9}$/, 'Số điện thoại gồm 10 chữ số và bắt đầu bằng số 0'),
   address: z.string().nonempty('Vui lòng chọn địa chỉ nhận hàng'),
 });
+
+enum payType {
+  COD = 'COD',
+  VNPAY = 'VNPAY',
+}
 
 const Payment = () => {
   const router = useRouter();
@@ -51,11 +58,6 @@ const Payment = () => {
     PhoneNumber: '',
     address: '',
   });
-
-  enum payType {
-    COD = 'COD',
-    VNPAY = 'VNPAY',
-  }
 
   const [pay, setPay] = useState<payType>(payType.VNPAY);
 
@@ -155,28 +157,50 @@ const Payment = () => {
         addressShiping: infoReceive.address,
       };
 
-      const crateOrder = await sendRequest<IBackendRes<any>>({
-        method: 'POST',
-        url: listApi_Nest_Server.createPayment(),
-        body: payload,
-        headers: { Authorization: `Bearer ${accessToken}` },
-      });
+      if (pay === payType.VNPAY) {
+        const crateOrder = await sendRequest<IBackendRes<any>>({
+          method: 'POST',
+          url: listApi_Nest_Server_API_Route.createPaymentVnPay(),
+          body: payload,
+          headers: { Authorization: `Bearer ${accessToken}` },
+        });
 
-      if (crateOrder.statusCode === 201) {
-        console.log('');
-        console.log('');
-        console.log(' crateOrder.data.vnpUrl :  ', crateOrder.data.vnpUrl);
-        console.log('');
-        console.log('');
-        console.log('');
-        window.location.href = crateOrder.data.vnpUrl;
+        if (crateOrder.statusCode === 201) {
+          console.log('');
+          console.log(' crateOrder.data.vnpUrl :  ', crateOrder.data.vnpUrl);
+          console.log('');
+
+          window.location.href = crateOrder.data.vnpUrl;
+        } else {
+          console.log('');
+          console.log(
+            ' crateOrder.data.vnpUrl Error:  ',
+            crateOrder.data.vnpUrl
+          );
+          console.log('');
+        }
       } else {
-        console.log('');
-        console.log('');
-        console.log(' crateOrder.data.vnpUrl Error:  ', crateOrder.data.vnpUrl);
-        console.log('');
-        console.log('');
-        console.log('');
+        const crateOrder = await sendRequest<IBackendRes<any>>({
+          method: 'POST',
+          url: listApi_Nest_Server_API_Route.createBillCOD(),
+          body: payload,
+          headers: { Authorization: `Bearer ${accessToken}` },
+        });
+
+        if (crateOrder.statusCode === 201) {
+          console.log('');
+          console.log(' crateOrder.data.vnpUrl :  ', crateOrder);
+          console.log('');
+          router.push(`/bill/${crateOrder.data._id}`);
+          //window.location.href = crateOrder.data.vnpUrl;
+        } else {
+          console.log('');
+          console.log(
+            ' crateOrder.data.vnpUrl Error:  ',
+            crateOrder.data.vnpUrl
+          );
+          console.log('');
+        }
       }
     }
   };
