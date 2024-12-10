@@ -101,3 +101,18 @@
 .formatPage {
   @apply lg:px-16  pt-20  overflow-x-hidden max-lg:px-3 max-lg:pt-[136px];
 }
+
+@keyframes slide-down {
+  0% {
+    opacity: 0;
+    transform: translateY(-20%);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-slide-down {
+  animation: slide-down 0.5s ease-out forwards;
+}

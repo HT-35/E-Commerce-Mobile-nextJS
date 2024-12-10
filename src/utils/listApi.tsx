@@ -53,6 +53,8 @@ export const listApi_Next_Server = {
   createProduct: () => `${domain}/api/product`,
 
   reduceProductInCart: () => `${domain}/api/cart/reduce`,
+
+  searchProduct: (name: string) => `${domain}/api/product/search?name=${name}`,
 };
 
 export const listApi_Nest_Server_API_Route = {
