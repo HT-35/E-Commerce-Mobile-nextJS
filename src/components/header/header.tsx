@@ -199,14 +199,45 @@ const Header = () => {
           </div>
           <div className="flex gap-4 justify-center items-center">
             <div className="search relative w-full basis-5/6">
-              <Input
-                className="pr-10 w-full placeholder:text-white"
-                placeholder="Bạn tìm gì ..."
-                onChange={(e) => setNameProduct(e.target.value)}
-              />
-              <div className="absolute top-[50%] -translate-y-[50%] right-2 basis-1/6">
-                <IconSearch />
+              <div className="">
+                <Input
+                  className="pr-10 w-full placeholder:text-white"
+                  placeholder="Bạn tìm gì ..."
+                  onChange={(e) => setNameProduct(e.target.value)}
+                />
+                <div className="absolute top-[50%] -translate-y-[50%] right-2 basis-1/6">
+                  <IconSearch />
+                </div>
               </div>
+              <motion.div
+                initial={{ height: 0 }}
+                animate={{ height: nameProduct !== '' ? '500px' : 0 }}
+                transition={{ duration: 0.8, ease: 'easeOut' }}
+                className="absolute w-full h-96 bg-white mt-[15px] rounded-sm overflow-hidden text-black text-sm 
+              overflow-y-auto  shadow-2xl
+              "
+              >
+                {nameProduct !== '' && arrProduct?.length === 0 ? (
+                  <div className="p-4">Không tìm thấy sản phẩm {nameProduct}</div>
+                ) : (
+                  arrProduct?.map((item, index) => (
+                    <div key={index} className="flex justify-start gap-4 p-4">
+                      <Image
+                        src={item.img}
+                        quality={50}
+                        width={500}
+                        height={500}
+                        alt=""
+                        className="max-w-[100px] max-h-[120px] rounded-sm"
+                      ></Image>
+                      <div>
+                        <div>{item.name}</div>
+                        <div className="text-red-600 font-semibold">{item.price.toLocaleString()} ₫</div>
+                      </div>
+                    </div>
+                  ))
+                )}
+              </motion.div>
             </div>
             <div className="menu">
               <ButtonMenu />
