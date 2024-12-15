@@ -13,7 +13,7 @@ const domainNextServer = 'http://103.90.227.158:4000';
 export const apiLiveStream = `http://103.90.227.158:5001`;
 
 //export const apiChat = `http://localhost:5000`;
-//export const apiChat = `http://103.90.227.158:5000`;
+export const apiChat = `http://103.90.227.158:5000`;
 
 export const listApi_Next_Server = {
   getAllProduct: () => `${domain}/api/product?current=1&pageSize=1000`,
