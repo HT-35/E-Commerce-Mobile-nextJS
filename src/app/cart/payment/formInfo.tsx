@@ -1,13 +1,6 @@
 'use client';
 
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from '@/components/ui/form';
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Checkbox } from '@/components/ui/checkbox';
 
@@ -31,9 +24,7 @@ interface IAddress {
 
 const formSchema = z.object({
   Email: z.string().min(2, { message: 'Email must be at least 2 characters.' }),
-  PhoneNumber: z
-    .string()
-    .regex(/^0\d{9}$/, 'Số điện thoại gồm 10 chữ số và bắt đầu bằng số 0'),
+  PhoneNumber: z.string().regex(/^0\d{9}$/, 'Số điện thoại gồm 10 chữ số và bắt đầu bằng số 0'),
   address: z.string().nonempty('Vui lòng chọn địa chỉ nhận hàng'),
 });
 
@@ -78,11 +69,7 @@ export function ProfileForm({ form }: ProfileFormProps) {
             <FormItem>
               <FormLabel>Email</FormLabel>
               <FormControl>
-                <Input
-                  type="email"
-                  placeholder="Nhập email của bạn "
-                  {...field}
-                />
+                <Input type="email" placeholder="Nhập email của bạn " {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -95,11 +82,7 @@ export function ProfileForm({ form }: ProfileFormProps) {
             <FormItem>
               <FormLabel>Số Điện Thoại</FormLabel>
               <FormControl>
-                <Input
-                  type="number"
-                  placeholder="Nhập PhoneNumber của bạn "
-                  {...field}
-                />
+                <Input type="number" placeholder="Nhập PhoneNumber của bạn " {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -130,16 +113,10 @@ export function ProfileForm({ form }: ProfileFormProps) {
                 </FormItem>
               ))}
               <FormMessage />
-              <div
-                className="span text-blue-500 text-xs underline cursor-pointer"
-                onClick={() => setAddAddress(true)}
-              >
+              <div className="span text-blue-500 text-xs underline cursor-pointer" onClick={() => setAddAddress(true)}>
                 Thêm địa chỉ nhận hàng
               </div>
-              <ModalAddress
-                open={addAddress}
-                setOpen={setAddAddress}
-              ></ModalAddress>
+              <ModalAddress open={addAddress} setOpen={setAddAddress}></ModalAddress>
             </FormItem>
           )}
         />

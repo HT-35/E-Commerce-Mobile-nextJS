@@ -18,17 +18,13 @@ import { sendRequest } from '@/utils/fetchApi';
 import { useAppSelector } from '@/lib/redux/hooks';
 import { ICart } from '@/components/cart/cart';
 import { formatCurrency } from '@/utils/price';
-import {
-  listApi_Nest_Server_API_Route,
-  listApi_Next_Server,
-} from '@/utils/listApi';
+import { listApi_Nest_Server_API_Route, listApi_Next_Server } from '@/utils/listApi';
+import { Bounce, toast } from 'react-toastify';
 
 // Định nghĩa schema của form
 const formSchema = z.object({
   Email: z.string().min(2, { message: 'Email must be at least 2 characters.' }),
-  PhoneNumber: z
-    .string()
-    .regex(/^0\d{9}$/, 'Số điện thoại gồm 10 chữ số và bắt đầu bằng số 0'),
+  PhoneNumber: z.string().regex(/^0\d{9}$/, 'Số điện thoại gồm 10 chữ số và bắt đầu bằng số 0'),
   address: z.string().nonempty('Vui lòng chọn địa chỉ nhận hàng'),
 });
 
@@ -41,17 +37,14 @@ const Payment = () => {
   const router = useRouter();
   const [infoActive, setInfoActive] = useState(false);
 
-  const { accessToken, email, phone, ...data } = useAppSelector(
-    (state: any) => state.account
-  );
-  //console.log(`data:`, data);
+  const { accessToken, email, phone, ...data } = useAppSelector((state: any) => state.account);
 
   const [itemPayment, setItemPayment] = useState<ICart[]>([]);
   const searchParams = useSearchParams();
 
-  const [products, setProducts] = useState<{ slug: string; color: string }[]>(
-    []
-  );
+  const [products, setProducts] = useState<{ slug: string; color: string }[]>([]);
+
+  const [loaddingOrder, setLoadingOrder] = useState(false);
 
   const [infoReceive, setInfoReceive] = useState({
     Email: '',
@@ -68,7 +61,7 @@ const Payment = () => {
     const slugParams = searchParams.getAll('slug');
     const colorParams = searchParams.getAll('color');
 
-    const parsedItems = slugParams.map((slug, index) => ({
+    const parsedItems = slugParams?.map((slug, index) => ({
       slug,
       color: colorParams[index],
     }));
@@ -78,7 +71,7 @@ const Payment = () => {
   useEffect(() => {
     const getCart = async () => {
       const cart = await sendRequest<IBackendRes<any[]>>({
-        url: listApi_Next_Server.cart(),
+        url: listApi_Next_Server?.cart(),
         method: `GET`,
         headers: { Authorization: `Bearer ${accessToken}` },
       });
@@ -90,9 +83,7 @@ const Payment = () => {
           .map((itemCart) => {
             // Tìm item tương ứng trong items dựa trên slug và color
             const matchedItem = products.find(
-              (item) =>
-                item.slug === itemCart?.slug?.slug &&
-                item.color === itemCart?.color
+              (item) => item.slug === itemCart?.slug?.slug && item.color === itemCart?.color
             );
 
             if (matchedItem) {
@@ -101,8 +92,7 @@ const Payment = () => {
               );
 
               // Kiểm tra optionIndex hợp lệ trước khi truy cập các giá trị bên trong
-              const option =
-                optionIndex !== -1 ? itemCart.slug.option[optionIndex] : {};
+              const option = optionIndex !== -1 ? itemCart.slug.option[optionIndex] : {};
 
               //console.log(`itemCart:`, itemCart);
               return {
@@ -118,11 +108,15 @@ const Payment = () => {
           })
           .filter(Boolean); // Lọc các phần tử null ra khỏi mảng
 
+        //if (newCart.length === 0) {
+        //  router.push('/');
+        //}
+        console.log(`newCart:`, newCart);
         setItemPayment(newCart as any);
       }
     };
     getCart();
-  }, [accessToken, products]);
+  }, [accessToken, products, router]);
 
   // Sử dụng useForm tại đây
   const form = useForm<z.infer<typeof formSchema>>({
@@ -130,7 +124,7 @@ const Payment = () => {
     defaultValues: {
       Email: `${email}`,
       //PhoneNumber: phone ?? '0343128733',
-      PhoneNumber: '0343128733',
+      PhoneNumber: '',
       address: '',
     },
   });
@@ -146,8 +140,9 @@ const Payment = () => {
       form.handleSubmit(onSubmit)(); // Gọi submit form
       //console.log('ifno');
     } else {
-      const product = itemPayment.map((item) => {
-        return { slug: item.slug, color: item.color, quantity: item.quantity };
+      setLoadingOrder(true);
+      const product = itemPayment?.map((item) => {
+        return { slug: item?.slug, color: item?.color, quantity: item?.quantity };
       });
 
       const payload = {
@@ -166,20 +161,26 @@ const Payment = () => {
         });
 
         if (crateOrder.statusCode === 201) {
-          console.log('');
-          console.log(' crateOrder.data.vnpUrl :  ', crateOrder.data.vnpUrl);
-          console.log('');
-
-          window.location.href = crateOrder.data.vnpUrl;
+          setLoadingOrder(false);
+          window.location.href = crateOrder?.data?.vnpUrl;
         } else {
           console.log('');
-          console.log(
-            ' crateOrder.data.vnpUrl Error:  ',
-            crateOrder.data.vnpUrl
-          );
+          //console.log(' crateOrder.data.vnpUrl Error:  ', crateOrder?.data?.vnpUrl);
           console.log('');
+          setLoadingOrder(false);
+          toast.error(`${crateOrder.message}`, {
+            position: 'top-right',
+            autoClose: 3000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: 'light',
+            transition: Bounce,
+          });
         }
-      } else {
+      } else if (pay === payType.COD) {
         const crateOrder = await sendRequest<IBackendRes<any>>({
           method: 'POST',
           url: listApi_Nest_Server_API_Route.createBillCOD(),
@@ -193,13 +194,23 @@ const Payment = () => {
           console.log('');
           router.push(`/bill/${crateOrder.data._id}`);
           //window.location.href = crateOrder.data.vnpUrl;
+          setLoadingOrder(false);
         } else {
           console.log('');
-          console.log(
-            ' crateOrder.data.vnpUrl Error:  ',
-            crateOrder.data.vnpUrl
-          );
+          console.log(' crateOrder.data.vnpUrl Error:  ', crateOrder);
           console.log('');
+          toast.error(`${crateOrder.message}`, {
+            position: 'top-right',
+            autoClose: 3000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: 'light',
+            transition: Bounce,
+          });
+          setLoadingOrder(false);
         }
       }
     }
@@ -211,8 +222,13 @@ const Payment = () => {
       return total + Number(item.price) * Number(item.quantity);
     }, 0);
 
+  window.onpopstate = function () {
+    //window.location.href = '/';
+    router.push('/');
+  };
+
   return (
-    <div>
+    <div className="">
       <div className="  min-h-[40px]   pb-28 ">
         <div className="cart-header border-b border-[#e5e5e5] text-[#323232] ">
           <div className="go-back flex justify-between">
@@ -233,9 +249,7 @@ const Payment = () => {
             >
               1.THÔNG TIN
             </Button>
-            <div
-              className={`line w-full h-[3px] ${infoActive ? ' bg-slate-400' : ' bg-red-500'}`}
-            ></div>
+            <div className={`line w-full h-[3px] ${infoActive ? ' bg-slate-400' : ' bg-red-500'}`}></div>
           </div>
           <div className="payment text-center text-slate-400 text-base basis-1/2">
             <Button
@@ -243,9 +257,7 @@ const Payment = () => {
             >
               2.Thanh Toán
             </Button>
-            <div
-              className={`line w-full h-[3px] ${infoActive ? 'bg-red-500' : ' bg-slate-400 '}`}
-            ></div>
+            <div className={`line w-full h-[3px] ${infoActive ? 'bg-red-500' : ' bg-slate-400 '}`}></div>
           </div>
         </div>
 
@@ -271,9 +283,7 @@ const Payment = () => {
                           ></Image>
                         </div>
                         <div className="title basis-4/6">
-                          <div className="nameproduct min-h-11 max-lg:text-sm">
-                            {item.name}
-                          </div>
+                          <div className="nameproduct min-h-11 max-lg:text-sm">{item.name}</div>
                           <div className="price flex justify-between items-center">
                             <div className="color">
                               Màu:{''} {item.color}
@@ -311,9 +321,7 @@ const Payment = () => {
                   <p className="">{infoReceive.Email}</p>
                 </div>
                 <div className="flex justify-between items-start py-2">
-                  <p className="text-slate-500 max-lg:min-w-28">
-                    Nhận hàng tại
-                  </p>
+                  <p className="text-slate-500 max-lg:min-w-28">Nhận hàng tại</p>
                   <p className="">{infoReceive.address}</p>
                 </div>
 
@@ -327,8 +335,7 @@ const Payment = () => {
                 </div>
                 <div className="flex justify-between items-center py-2">
                   <p className="">
-                    Tổng tiền{' '}
-                    <span className="text-slate-500"> (đã gồm VAT)</span>
+                    Tổng tiền <span className="text-slate-500"> (đã gồm VAT)</span>
                   </p>
                   <p className=""> {formatCurrency(total as any)}đ</p>
                 </div>
@@ -386,20 +393,31 @@ const Payment = () => {
           <div className="price-temp">
             <div className="font-semibold w-full flex justify-between items-center text-xl">
               <div className="">Tổng tiền tạm tính:</div>
-              <div className="text-red-600/100">
-                {formatCurrency(total as any)}đ
-              </div>
+              <div className="text-red-600/100">{formatCurrency(total as any)}đ</div>
             </div>
           </div>
 
           <Button
             className="bg-[#d1041d] w-full text-xl"
             onClick={handleActivePayment}
+            disabled={itemPayment.length === 0 ? true : false}
           >
             {infoActive ? 'Thanh Toán' : 'Tiếp tục'}
           </Button>
         </div>
       </div>
+
+      {loaddingOrder && (
+        <div className="inset-0 mb-80 h-full absolute bg-slate-700 bg-opacity-50 select-none">
+          <div className="flex justify-center mt-72 mb-5">
+            {' '}
+            <div className=" w-16 h-16 rounded-full border-8 border-white border-t-transparent border-b-transparent animate-spin flex justify-center items-center">
+              <div className=" w-10 h-10 rounded-full border-8 border-white border-t-transparent border-b-transparent animate-spin"></div>
+            </div>
+          </div>
+          <div className="text-center text-xl text-white">Tiến Hành Đặt Hàng ...</div>
+        </div>
+      )}
     </div>
   );
 };

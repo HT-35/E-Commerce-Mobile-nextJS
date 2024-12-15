@@ -123,7 +123,7 @@ const MangegerProduct = () => {
         url: listApi_Nest_Server_API_Route.getProductByBrandToLowerCase(brand),
         method: 'GET',
       });
-      console.log(`res:`, res);
+      //console.log(`res:`, res);
       setProduct(res?.data);
     }
   };
@@ -151,19 +151,20 @@ const MangegerProduct = () => {
           ></InputSearch>
         </div>
 
-        {ListBrand.map((item: any, index: any) => {
-          return (
-            <div key={index}>
-              <Button
-                className={`  hover:bg-slate-100 border-[1px] border-slate-400  
+        {ListBrand?.length > 0 &&
+          ListBrand.map((item: any, index: any) => {
+            return (
+              <div key={index}>
+                <Button
+                  className={`  hover:bg-slate-100 border-[1px] border-slate-400  
                       ${selectedBrand === item.brand || (item.brand === 'Tất Cả' && selectedBrand === '') ? 'bg-slate-100 text-black' : 'bg-white text-black'}`}
-                onClick={() => handleBrandFilter(item.brand)}
-              >
-                {item.brand}
-              </Button>
-            </div>
-          );
-        })}
+                  onClick={() => handleBrandFilter(item.brand)}
+                >
+                  {item.brand}
+                </Button>
+              </div>
+            );
+          })}
 
         <Button className="" onClick={() => setActiveFormCreate(true)}>
           Thêm Sản Phẩm

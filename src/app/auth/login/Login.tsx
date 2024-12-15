@@ -18,24 +18,14 @@ const formSchema = z.object({
 });
 
 import { Button } from '@/components/ui/button';
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from '@/components/ui/form';
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Bounce, toast } from 'react-toastify';
 import { useEffect, useState } from 'react';
 import ModalForgetPassword from '@/app/auth/login/modalForgetPassword';
 import { sendRequest } from '@/utils/fetchApi';
 import { useAppDispatch, useAppSelector } from '@/lib/redux/hooks';
-import {
-  InitialAccountRedux,
-  setDataAccount,
-} from '@/lib/redux/slices/accountSlice';
+import { InitialAccountRedux, setDataAccount } from '@/lib/redux/slices/accountSlice';
 import ModalActiveAccountLogin from '@/app/auth/login/ModalActiveAccountLogin';
 //import { listApi_Next_Server } from '@/utils/listApi';
 
@@ -50,8 +40,7 @@ export function Login() {
   const [idUser, setIdUser] = useState('');
   const [email, setEmail] = useState('');
 
-  const [openActiveAccoutLogin, setOpenActiveAccoutLogin] =
-    useState<boolean>(false);
+  const [openActiveAccoutLogin, setOpenActiveAccoutLogin] = useState<boolean>(false);
 
   const router = useRouter();
   const dispatch = useAppDispatch();
@@ -76,7 +65,7 @@ export function Login() {
       url: listApi_Next_Server.login(),
       body: { ...values },
     });
-    console.log(`res:`, res);
+    //console.log(`res:`, res);
 
     if (res?.data?.user) {
       dispatch(setDataAccount(res.data.user));
@@ -201,17 +190,9 @@ export function Login() {
                     <div className="absolute top-1/2 right-3 z-20 -translate-y-[50%] cursor-pointer">
                       {getValues('password')?.length > 0 &&
                         (openPassword ? (
-                          <EyeNoneIcon
-                            width={25}
-                            height={25}
-                            onClick={() => setOpenPassword((prev) => !prev)}
-                          />
+                          <EyeNoneIcon width={25} height={25} onClick={() => setOpenPassword((prev) => !prev)} />
                         ) : (
-                          <EyeOpenIcon
-                            width={25}
-                            height={25}
-                            onClick={() => setOpenPassword((prev) => !prev)}
-                          />
+                          <EyeOpenIcon width={25} height={25} onClick={() => setOpenPassword((prev) => !prev)} />
                         ))}
                     </div>
                     <FormMessage />

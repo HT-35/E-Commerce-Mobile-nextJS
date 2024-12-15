@@ -70,17 +70,18 @@ export default function Home() {
             <Title> ĐIỆN THOẠI NỔI BẬT NHẤT</Title>
           </div>
           <div className="brand  flex justify-between items-center basis-3/5 max-lg:hidden ">
-            {brandArr.map((item, index) => {
-              return (
-                <Link
-                  key={index}
-                  href={`/product?brand=${item.brand}`}
-                  className="px-2 py-1 border-2 rounded-lg bg-[#F3F4F6] dark:text-black"
-                >
-                  {item.brand}
-                </Link>
-              );
-            })}
+            {brandArr?.length > 0 &&
+              brandArr?.map((item, index) => {
+                return (
+                  <Link
+                    key={index}
+                    href={`/product?brand=${item.brand}`}
+                    className="px-2 py-1 border-2 rounded-lg bg-[#F3F4F6] dark:text-black"
+                  >
+                    {item.brand}
+                  </Link>
+                );
+              })}
           </div>
 
           <Link href={'/product'} className="max-lg:text-xs text-blue-500 underline lg:hidden">
@@ -89,56 +90,57 @@ export default function Home() {
         </div>
 
         <div className="product grid grid-cols-5  w-full h-full gap-8 my-4   max-lg:grid-cols-2  max-lg:gap-2">
-          {productList?.map((item: any, index) => {
-            return (
-              <Link href={`product/${item.slug}`} key={index}>
-                <div className="product shadow-lg rounded-lg bg-white pt-1">
-                  <div className="img    flex items-center justify-center ">
-                    <Image
-                      src={item.option[0].img[0].link}
-                      alt="smart-phone"
-                      width="0"
-                      height="0"
-                      sizes="100vw"
-                      className="w-1/2 h-1/2 rounded-lg"
-                      priority
-                    ></Image>
-                  </div>
-
-                  <div className="title px-4 py-2  text-xs">
-                    <div className="title font-semibold min-h-14  text-xs">{item.name}</div>
-                    <div className="price font-semibold text-red-600  min-h-8">
-                      {formatPrice(item.option[0].price)}đ
-                    </div>
-                    <div className="text-[10px] p-2 border-2 rounded-lg bg-[#F3F4F6] ">
-                      Giảm đến 500K khi trả góp thẻ tín dụng Sacombank qua cổng MPOS
+          {productList?.length > 0 &&
+            productList?.map((item: any, index) => {
+              return (
+                <Link href={`product/${item.slug}`} key={index}>
+                  <div className="product shadow-lg rounded-lg bg-white pt-1">
+                    <div className="img    flex items-center justify-center ">
+                      <Image
+                        src={item.option[0].img[0].link}
+                        alt="smart-phone"
+                        width="0"
+                        height="0"
+                        sizes="100vw"
+                        className="w-1/2 h-1/2 rounded-lg"
+                        priority
+                      ></Image>
                     </div>
 
-                    <div className="like flex justify-between  my-2 mt-3  text-xs">
-                      <div className="start my-2 text-lg flex ">
-                        {Array(5)
-                          .fill(null)
-                          .map((_, index) => (
-                            <StarFilledIcon
-                              key={index}
-                              color="#F59E0B"
-                              //width="18px"
-                              //height="18px"
-                              className=" w-[18px] h-[18px] max-lg:w-[10px] "
-                            ></StarFilledIcon>
-                          ))}
+                    <div className="title px-4 py-2  text-xs">
+                      <div className="title font-semibold min-h-14  text-xs">{item.name}</div>
+                      <div className="price font-semibold text-red-600  min-h-8">
+                        {formatPrice(item.option[0].price)}đ
+                      </div>
+                      <div className="text-[10px] p-2 border-2 rounded-lg bg-[#F3F4F6] ">
+                        Giảm đến 500K khi trả góp thẻ tín dụng Sacombank qua cổng MPOS
                       </div>
 
-                      <div className=" flex items-center gap-1 cursor-pointer">
-                        <span className="text-[12px]">Yêu Thích </span>
-                        <StarIcon color="#F59E0B" className=" w-[18px] h-[18px] max-lg:w-[10px] "></StarIcon>
+                      <div className="like flex justify-between  my-2 mt-3  text-xs">
+                        <div className="start my-2 text-lg flex ">
+                          {Array(5)
+                            .fill(null)
+                            .map((_, index) => (
+                              <StarFilledIcon
+                                key={index}
+                                color="#F59E0B"
+                                //width="18px"
+                                //height="18px"
+                                className=" w-[18px] h-[18px] max-lg:w-[10px] "
+                              ></StarFilledIcon>
+                            ))}
+                        </div>
+
+                        <div className=" flex items-center gap-1 cursor-pointer">
+                          <span className="text-[12px]">Yêu Thích </span>
+                          <StarIcon color="#F59E0B" className=" w-[18px] h-[18px] max-lg:w-[10px] "></StarIcon>
+                        </div>
                       </div>
                     </div>
                   </div>
-                </div>
-              </Link>
-            );
-          })}
+                </Link>
+              );
+            })}
         </div>
       </div>
       <Footer />

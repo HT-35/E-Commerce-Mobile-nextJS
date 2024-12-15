@@ -7,10 +7,7 @@ import MangegerOrder from '@/components/admin/MangegerOrder';
 import MangegerProduct from '@/components/admin/MangegerProduct';
 import useScreen from '@/components/hooks/useScreen';
 import { PhoneIcon } from '@/components/icons';
-import {
-  DropdownMenuGroup,
-  DropdownMenuSeparator,
-} from '@/components/ui/dropdown-menu';
+import { DropdownMenuGroup, DropdownMenuSeparator } from '@/components/ui/dropdown-menu';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useAppSelector } from '@/lib/redux/hooks';
 import {
@@ -90,24 +87,25 @@ export default function TabsDemo() {
 
   return (
     <div className="xl:px-10 px-4 ">
-      <Tabs defaultValue="managerOrder" className="  gap-2  grid grid-cols-1">
+      <Tabs defaultValue="home" className="  gap-2  grid grid-cols-1">
         {isLargeScreen ? (
           <TabsList
             className="   xl:h-[80px] h-auto  bg-white rounded-md px-2 py-2 
         flex justify-between items-center flex-row   max-xl:flex-wrap "
           >
-            {MenuAdmin.map((item, index) => {
-              return (
-                <TabsTrigger
-                  key={index}
-                  value={item.value}
-                  className="xl:min-w-[190px] flex justify-start items-center gap-3 max-xl:text-sm"
-                >
-                  {item.icon}
-                  {item.title}
-                </TabsTrigger>
-              );
-            })}
+            {MenuAdmin?.length > 0 &&
+              MenuAdmin?.map((item, index) => {
+                return (
+                  <TabsTrigger
+                    key={index}
+                    value={item.value}
+                    className="xl:min-w-[190px] flex justify-start items-center gap-3 max-xl:text-sm"
+                  >
+                    {item.icon}
+                    {item.title}
+                  </TabsTrigger>
+                );
+              })}
           </TabsList>
         ) : (
           <>
@@ -125,30 +123,27 @@ export default function TabsDemo() {
 
               <DropdownMenu>
                 <DropdownMenuTrigger asChild onClick={() => handleActive()}>
-                  {active ? (
-                    <Cross1Icon height={40} width={40} />
-                  ) : (
-                    <HamburgerMenuIcon height={40} width={40} />
-                  )}
+                  {active ? <Cross1Icon height={40} width={40} /> : <HamburgerMenuIcon height={40} width={40} />}
                 </DropdownMenuTrigger>
 
                 <DropdownMenuContent className="w-56 bg-slate-300 text-black p-2 rounded-lg relative z-[9999]">
                   <DropdownMenuGroup>
-                    {MenuAdmin.map((item, index) => {
-                      if (index === 0) {
-                        return;
-                      }
-                      return (
-                        <TabsTrigger
-                          key={index}
-                          value={item.value}
-                          className="w-full flex justify-start items-center gap-3 max-xl:text-sm"
-                        >
-                          {item.icon}
-                          {item.title}
-                        </TabsTrigger>
-                      );
-                    })}
+                    {MenuAdmin?.length > 0 &&
+                      MenuAdmin?.map((item, index) => {
+                        if (index === 0) {
+                          return;
+                        }
+                        return (
+                          <TabsTrigger
+                            key={index}
+                            value={item.value}
+                            className="w-full flex justify-start items-center gap-3 max-xl:text-sm"
+                          >
+                            {item.icon}
+                            {item.title}
+                          </TabsTrigger>
+                        );
+                      })}
                   </DropdownMenuGroup>
                 </DropdownMenuContent>
               </DropdownMenu>
@@ -157,13 +152,14 @@ export default function TabsDemo() {
         )}
 
         <div className=" w-full xl:h-[630px] px-[14px]  bg-white rounded-xl  flex flex-col gap-5">
-          {MenuAdmin.map((item, index) => {
-            return (
-              <TabsContent key={index} value={item.value}>
-                {item.component}
-              </TabsContent>
-            );
-          })}
+          {MenuAdmin?.length > 0 &&
+            MenuAdmin?.map((item, index) => {
+              return (
+                <TabsContent key={index} value={item.value}>
+                  {item.component}
+                </TabsContent>
+              );
+            })}
         </div>
       </Tabs>
     </div>

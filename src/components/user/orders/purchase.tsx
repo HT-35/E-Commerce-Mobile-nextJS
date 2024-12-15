@@ -19,29 +19,25 @@ const Purchase = ({ children }: { children?: React.ReactNode }) => {
   return (
     <div>
       <div className="flex gap-2">
-        {statuses.map((item) => (
-          <div
-            key={item.path}
-            className={`cursor-pointer px-4 py-1.5 whitespace-nowrap border border-[#eaedef] rounded-sm ${
-              pathname === item.path ? 'bg-[#d70018] text-white' : 'bg-white'
-            }`}
-          >
-            <div className="">
-              {item.path ? (
-                <Link
-                  href={item.path}
-                  className={`${pathname === item.path ? '' : ''}`}
-                >
-                  {item.label}
-                </Link>
-              ) : (
-                <span className={`${pathname === item.path ? '' : ''}`}>
-                  {item.label}
-                </span>
-              )}
+        {statuses?.length > 0 &&
+          statuses?.map((item) => (
+            <div
+              key={item?.path}
+              className={`cursor-pointer px-4 py-1.5 whitespace-nowrap border border-[#eaedef] rounded-sm ${
+                pathname === item.path ? 'bg-[#d70018] text-white' : 'bg-white'
+              }`}
+            >
+              <div className="">
+                {item?.path ? (
+                  <Link href={item?.path} className={`${pathname === item?.path ? '' : ''}`}>
+                    {item?.label}
+                  </Link>
+                ) : (
+                  <span className={`${pathname === item?.path ? '' : ''}`}>{item?.label}</span>
+                )}
+              </div>
             </div>
-          </div>
-        ))}
+          ))}
       </div>
     </div>
   );

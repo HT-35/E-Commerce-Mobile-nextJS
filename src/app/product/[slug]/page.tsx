@@ -111,124 +111,223 @@ const ProductDetail = ({ params }: { params: { slug: string } }) => {
       }
     }
   };
+  const handleBuyNow = async () => {
+    if (data.accessToken === '') {
+      router.push(`/auth?callback=/product/${slug}`);
+    } else {
+      const addProduct = await sendRequest<IBackendRes<any>>({
+        method: 'POST',
+
+        url: listApi_Next_Server.cart(),
+        body: {
+          slug,
+          quantity: 1,
+          color: color,
+        },
+        headers: { Authorization: `Bearer ${data.accessToken}` },
+      });
+      console.log(addProduct);
+
+      router.push('/cart');
+    }
+  };
 
   return (
-    <div className="flex gap-4 lg:mt-2 max-xl:flex-col max-xl:text-black max-xl:text-xs">
-      <div className="xl:w-[730px]  max-xl:h-[400px] mb-2">
-        {loadding ? (
-          <>
-            <LoadingSkeleton className=" xl:max-w-[830px] xl:h-[490px] max-xl:h-[320px]  mb-5 "></LoadingSkeleton>
-            <div className=" flex  gap-4 xl:max-w-[830px] xl:h-[50px] max-xl:h-[40px] ">
-              {Array(6)
+    <>
+      <div className="flex gap-4 lg:mt-2 max-xl:flex-col max-xl:text-black max-xl:text-xs">
+        <div className="xl:w-[730px]  max-xl:h-[400px] mb-2">
+          {loadding ? (
+            <>
+              <LoadingSkeleton className=" xl:max-w-[830px] xl:h-[490px] max-xl:h-[320px]  mb-5 "></LoadingSkeleton>
+              <div className=" flex  gap-4 xl:max-w-[830px] xl:h-[50px] max-xl:h-[40px] ">
+                {Array(6)
+                  .fill(null)
+                  ?.map((_, index) => {
+                    return <LoadingSkeleton key={index} className=" w-[150px] h-[60px]"></LoadingSkeleton>;
+                  })}
+              </div>
+            </>
+          ) : (
+            <GalaryImg imgArr={imgArr}></GalaryImg>
+          )}
+        </div>
+
+        <div className="xl:min-w-[600px]  text-black">
+          {loadding ? (
+            <>
+              <LoadingSkeleton className="px-[10px] xl:w-[500px]   h-[30px] mb-2"></LoadingSkeleton>
+            </>
+          ) : (
+            <Title className="text-black font-semibold py-0 max-xl:text-black ">{productList?.name!}</Title>
+          )}
+
+          {loadding ? (
+            <div className="flex gap-2 my-2 px-[10px]">
+              {/*<LoadingSkeleton className="px-[10px] xl:w-[500px]  h-[30px] mb-2"></LoadingSkeleton>*/}
+              {Array(3)
                 .fill(null)
-                .map((_, index) => {
-                  return <LoadingSkeleton key={index} className=" w-[150px] h-[60px]"></LoadingSkeleton>;
+                ?.map((_, index) => {
+                  return <LoadingSkeleton key={index} className="w-[120px] h-[40px]"></LoadingSkeleton>;
                 })}
             </div>
-          </>
-        ) : (
-          <GalaryImg imgArr={imgArr}></GalaryImg>
-        )}
-      </div>
-
-      <div className="xl:min-w-[600px]  text-black">
-        {loadding ? (
-          <>
-            <LoadingSkeleton className="px-[10px] xl:w-[500px]   h-[30px] mb-2"></LoadingSkeleton>
-          </>
-        ) : (
-          <Title className="text-black font-semibold py-0 max-xl:text-black ">{productList?.name!}</Title>
-        )}
-
-        {loadding ? (
-          <div className="flex gap-2 my-2 px-[10px]">
-            {/*<LoadingSkeleton className="px-[10px] xl:w-[500px]  h-[30px] mb-2"></LoadingSkeleton>*/}
-            {Array(3)
-              .fill(null)
-              .map((_, index) => {
-                return <LoadingSkeleton key={index} className="w-[120px] h-[40px]"></LoadingSkeleton>;
-              })}
-          </div>
-        ) : (
-          <div className="color flex gap-4 px-[10px] py-2 text-black  max-xl:flex-wrap h-auto">
-            {productList?.option?.length! > 0 &&
-              productList?.option?.map((item: Option, index) => {
-                return (
-                  <Button
-                    key={index}
-                    className={`py-1 px-4 bg-[#F3F4F6] text-black border-[1px] 
+          ) : (
+            <div className="color flex gap-4 px-[10px] py-2 text-black  max-xl:flex-wrap h-auto">
+              {productList?.option?.length! > 0 &&
+                productList?.option?.map((item: Option, index) => {
+                  return (
+                    <Button
+                      key={index}
+                      className={`py-1 px-4 bg-[#F3F4F6] text-black border-[1px] 
                       hover:bg-white hover:text-black  max-xl:text-black
                       ${color === item.color ? 'bg-white' : ' bg-[#F3F4F6]'}
                       `}
-                    onClick={() => {
-                      setColor(item.color);
-                    }}
-                  >
-                    {item.color}
-                  </Button>
-                );
-              })}
-          </div>
-        )}
+                      onClick={() => {
+                        setColor(item.color);
+                      }}
+                    >
+                      {item.color}
+                    </Button>
+                  );
+                })}
+            </div>
+          )}
 
-        {loadding ? (
-          <div className=" my-3 px-[10px] flex gap-2 items-center">
-            <div className="">Giá Tiền:</div>
-            <LoadingSkeleton className="px-[10px] xl:w-[100px]  h-[30px] mb-2"></LoadingSkeleton>
+          {loadding ? (
+            <div className=" my-3 px-[10px] flex gap-2 items-center">
+              <div className="">Giá Tiền:</div>
+              <LoadingSkeleton className="px-[10px] xl:w-[100px]  h-[30px] mb-2"></LoadingSkeleton>
+            </div>
+          ) : (
+            <div className="my-4 px-[10px] text-red">
+              Giá Tiền: <span className="text-[#d70018] font-bold">{price}đ</span>
+            </div>
+          )}
+          <div className="Specificaitons lg:my-4 ml-[10px] bg-[#F3F4F6] text-black border-2 border-slate-400 rounded-lg">
+            <Table>
+              <TableBody>
+                {/* Màn hình */}
+                <TableRow>
+                  <TableCell className="font-medium rounded-lg">Màn hình:</TableCell>
+                  <TableCell className="text-left rounded-lg">{productList?.screen}</TableCell>
+                </TableRow>
+                {/* Chip */}
+                <TableRow className="bg-white">
+                  <TableCell className="font-medium">Chip:</TableCell>
+                  <TableCell className="text-left">{productList?.chip}</TableCell>
+                </TableRow>
+                {/* RAM */}
+                <TableRow>
+                  <TableCell className="font-medium">RAM:</TableCell>
+                  <TableCell className="text-left">{productList?.ram}</TableCell>
+                </TableRow>
+                {/* Dung lượng lưu trữ */}
+                <TableRow className="bg-white">
+                  <TableCell className="font-medium">Dung lượng lưu trữ:</TableCell>
+                  <TableCell className="text-left">{productList?.rom}</TableCell>
+                </TableRow>
+                {/* SIM */}
+                <TableRow>
+                  <TableCell className="font-medium">SIM:</TableCell>
+                  <TableCell className="text-left">{productList?.sim}</TableCell>
+                </TableRow>
+                {/* Pin */}
+                <TableRow className="bg-white ">
+                  <TableCell className="font-medium rounded-lg ">Pin:</TableCell>
+                  <TableCell className="text-left rounded-lg ">{productList?.battery}</TableCell>
+                </TableRow>
+              </TableBody>
+            </Table>
           </div>
-        ) : (
-          <div className="my-4 px-[10px] text-red">
-            Giá Tiền: <span className="text-[#d70018] font-bold">{price}đ</span>
+          {/*<Button className="text-center ml-[10px] bg-white text-black border-[1px] border-blue-600  hover:bg-[#F3F4F6] hover:text-blue-600">
+          Xem Thêm Cấu Hình Chi Tiết <TriangleRightIcon />
+        </Button>*/}
+
+          <div className=" flex gap-2 items-center  mx-2 my-2 text-white">
+            <div
+              className="text-center bg-blue-600 px-4 py-2 rounded-lg w-full cursor-pointer"
+              onClick={handleAddToCart}
+            >
+              Thêm Vào Giỏ
+            </div>
+            <div
+              className="bg-[#FB6E2E]  px-4 py-2 rounded-lg w-full cursor-pointer text-center"
+              onClick={handleBuyNow}
+            >
+              Mua Ngay
+            </div>
           </div>
-        )}
-        <div className="Specificaitons lg:my-4 ml-[10px] bg-[#F3F4F6] text-black border-2 border-slate-400 rounded-lg">
+        </div>
+      </div>
+
+      <div className="lg:mt-2 max-xl:text-black max-xl:text-xs pb-32">
+        <div className="max-w-[730px]   max-xl:h-[400px] mb-2 border-2  rounded-xl">
+          <div className="text-center text-2xl p-3 font-semibold">Thông Số Kỹ Thuật</div>
           <Table>
             <TableBody>
-              {/* Màn hình */}
-              <TableRow>
-                <TableCell className="font-medium rounded-lg">Màn hình:</TableCell>
-                <TableCell className="text-left rounded-lg">{productList?.screen}</TableCell>
-              </TableRow>
-              {/* Chip */}
               <TableRow className="bg-white">
-                <TableCell className="font-medium">Chip:</TableCell>
-                <TableCell className="text-left">APPLE A13 Bionic</TableCell>
+                <TableCell className="font-medium ">Màn Hình:</TableCell>
+                <TableCell className="text-left ">{productList?.screen}</TableCell>
               </TableRow>
-              {/* RAM */}
+
               <TableRow>
+                <TableCell className="font-medium ">Camera Trước:</TableCell>
+                <TableCell className="text-left ">{productList?.cameraBefore}</TableCell>
+              </TableRow>
+
+              <TableRow className="bg-white">
+                <TableCell className="font-medium ">Camera Camera Sau:</TableCell>
+                <TableCell className="text-left ">{productList?.cameraAfter}</TableCell>
+              </TableRow>
+
+              <TableRow>
+                <TableCell className="font-medium ">Hệ Điều Hành:</TableCell>
+                <TableCell className="text-left ">{productList?.os}</TableCell>
+              </TableRow>
+
+              <TableRow className="bg-white">
+                <TableCell className="font-medium ">Hãng Điện Thoại:</TableCell>
+                <TableCell className="text-left ">{productList?.brand}</TableCell>
+              </TableRow>
+
+              <TableRow>
+                <TableCell className="font-medium">Chip Xử Lý:</TableCell>
+                <TableCell className="text-left">{productList?.chip}</TableCell>
+              </TableRow>
+
+              <TableRow className="bg-white">
                 <TableCell className="font-medium">RAM:</TableCell>
                 <TableCell className="text-left">{productList?.ram}</TableCell>
               </TableRow>
-              {/* Dung lượng lưu trữ */}
-              <TableRow className="bg-white">
+
+              <TableRow>
                 <TableCell className="font-medium">Dung lượng lưu trữ:</TableCell>
                 <TableCell className="text-left">{productList?.rom}</TableCell>
               </TableRow>
-              {/* SIM */}
-              <TableRow>
+
+              <TableRow className="bg-white">
                 <TableCell className="font-medium">SIM:</TableCell>
-                <TableCell className="text-left">1 Nano SIM & 1 eSIMHỗ trợ 4G&apos;</TableCell>
+                <TableCell className="text-left">{productList?.special}</TableCell>
               </TableRow>
-              {/* Pin, Sạc */}
-              <TableRow className="bg-white ">
-                <TableCell className="font-medium rounded-lg ">Pin, Sạc:</TableCell>
-                <TableCell className="text-left rounded-lg ">{productList?.battery}</TableCell>
+
+              <TableRow>
+                <TableCell className="font-medium">Thiết Kế:</TableCell>
+                <TableCell className="text-left">{productList?.design}</TableCell>
+              </TableRow>
+
+              <TableRow className="bg-white">
+                <TableCell className="font-medium">Thông Số Đặc Biệt:</TableCell>
+                <TableCell className="text-left">{productList?.special}</TableCell>
+              </TableRow>
+
+              <TableRow>
+                <TableCell className="font-medium  ">Pin:</TableCell>
+                <TableCell className="text-left  ">{productList?.battery}</TableCell>
               </TableRow>
             </TableBody>
           </Table>
         </div>
-        <Button className="text-center ml-[10px] bg-white text-black border-[1px] border-blue-600  hover:bg-[#F3F4F6] hover:text-blue-600">
-          Xem Thêm Cấu Hình Chi Tiết <TriangleRightIcon />
-        </Button>
-
-        <div className=" flex gap-2 items-center  mx-2 my-2 text-white">
-          <div className="text-center bg-blue-600 px-4 py-2 rounded-lg w-full cursor-pointer" onClick={handleAddToCart}>
-            Thêm Vào Giỏ
-          </div>
-          <div className="bg-[#FB6E2E]  px-4 py-2 rounded-lg w-full cursor-pointer text-center">Mua Ngay</div>
-        </div>
       </div>
-    </div>
+    </>
   );
 };
 

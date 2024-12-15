@@ -43,7 +43,6 @@ export default async function RootLayout({
         url: listApi_Next_Server.detailUser(id?.value!),
         headers: { Authorization: `Bearer ${accessToken_cookie?.value}` },
       });
-      //console.log(`res:`, res);
     } catch (error) {
       console.log(error);
     }
@@ -63,16 +62,9 @@ export default async function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={`bg-[#F4F6F8] overflow-x-hidden ${roboto.className}`}>
-        {/*<ThemeProvider
-          attribute="class"
-          defaultTheme="system"
-          enableSystem
-          disableTransitionOnChange
-        >*/}
         <ProviderRedux initialDataAccount={initialDataAccount}>
           <>{children}</>
         </ProviderRedux>
-        {/*</ThemeProvider>*/}
         <ToastContainer />
       </body>
     </html>

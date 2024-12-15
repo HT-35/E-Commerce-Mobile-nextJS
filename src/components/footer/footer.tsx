@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 'use client';
 
 import Image from 'next/image';
@@ -24,7 +25,7 @@ function Footer() {
                 'Thông tin hoá đơn mua hàng',
                 'Trung tâm bảo hành chính hãng',
                 'Quy định về việc sao lưu dữ liệu',
-              ].map((item, idx) => (
+              ]?.map((item, idx) => (
                 <li key={idx} className="py-2">
                   <a className="text-red-600 font-medium">{item}</a>
                 </li>
@@ -51,7 +52,7 @@ function Footer() {
                   href: 'https://cellphones.com.vn/sforum/huong-dan-su-dung-vnpay-qrcode-tren-website-cellphones',
                   src: 'https://cdn2.cellphones.com.vn/x35,webp/media/logo/payment/vnpay-logo.png',
                 },
-              ].map((item, idx) => (
+              ]?.map((item, idx) => (
                 <li key={idx} className="border border-gray-300 p-1">
                   <a href={item.href}>
                     <Image height={500} width={500} className="w-10" src={item.src} alt="Payment method" />
@@ -72,7 +73,7 @@ function Footer() {
                 'Tuyển dụng',
                 'Dịch vụ bảo hành điện thoại',
                 'Dịch vụ bảo hành mở rộng',
-              ].map((item, idx) => (
+              ]?.map((item, idx) => (
                 <li key={idx} className="py-2">
                   <a className="text-red-600 font-medium">{item}</a>
                 </li>

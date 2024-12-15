@@ -26,11 +26,13 @@ export function InputChatLiveStreamForm({
   const [activeEmojiPicker, setActiveEmojiPicker] = useState(false);
 
   function onSubmitChat(data: z.infer<typeof FormChatLiveStreamSchema>) {
-    console.log(data.chat);
+    console.log(data);
 
-    handleSetMessage({ massage: data.chat });
-    handleSendMessageLiveStream({ message: data.chat });
-    reset({ chat: '' });
+    if (data.chat !== '') {
+      handleSetMessage({ massage: data.chat });
+      handleSendMessageLiveStream({ message: data.chat });
+      reset({ chat: '' });
+    }
   }
 
   const form = useForm<z.infer<typeof FormChatLiveStreamSchema>>({

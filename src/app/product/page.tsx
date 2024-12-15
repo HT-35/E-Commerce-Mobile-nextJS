@@ -184,19 +184,20 @@ const ProductPage = () => {
       <div className="mt-5   flex items-center justify-start">
         <Title className="lg:min-w-14">Hãng Điện Thoại</Title>
         <div className=" min-h-[30px] max-lg:min-h-[20px] flex justify-start gap-20">
-          {ListBrand.map((item: any, index: any) => {
-            return (
-              <div key={index}>
-                <Button
-                  className={`  hover:bg-slate-100 border-[1px] border-slate-400  
-                      ${selectedBrand === item.brand || (item.brand === 'Tất Cả' && selectedBrand === '') ? 'bg-slate-100 text-black' : 'bg-white text-black'}`}
-                  onClick={() => handleBrandFilter(item.brand)}
-                >
-                  {item.brand}
-                </Button>
-              </div>
-            );
-          })}
+          {ListBrand?.length > 0 &&
+            ListBrand?.map((item: any, index: any) => {
+              return (
+                <div key={index}>
+                  <Button
+                    className={`  hover:bg-slate-100 border-[1px] border-slate-400  
+                      ${selectedBrand === item?.brand || (item?.brand === 'Tất Cả' && selectedBrand === '') ? 'bg-slate-100 text-black' : 'bg-white text-black'}`}
+                    onClick={() => handleBrandFilter(item?.brand)}
+                  >
+                    {item?.brand}
+                  </Button>
+                </div>
+              );
+            })}
         </div>
       </div>
 
@@ -234,9 +235,9 @@ const ProductPage = () => {
       </div>
 
       <div className="product grid grid-cols-4 w-full h-full gap-8 my-4 max-lg:grid-cols-2 max-lg:gap-2">
-        {filter.OS === '' &&
-          filter.RAM === '' &&
-          filter.ROM === '' &&
+        {filter?.OS === '' &&
+          filter?.RAM === '' &&
+          filter?.ROM === '' &&
           filterProductList?.length === 0 &&
           productList?.length > 0 &&
           productList?.map((item: any, index) => {

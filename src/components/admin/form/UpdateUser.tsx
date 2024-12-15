@@ -4,25 +4,12 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useFieldArray, useForm } from 'react-hook-form';
 import { z } from 'zod';
 
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from '@/components/ui/form';
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import Image from 'next/image';
 import { useRef, useState } from 'react';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { sendRequest } from '@/utils/fetchApi';
 import { listApi_Next_Server } from '@/utils/listApi';
 import { useAppSelector } from '@/lib/redux/hooks';
@@ -48,26 +35,23 @@ const FormSchema = z.object({
     },
     {} as Record<string, z.ZodString>
   ),
-  email: z
-    .string({ message: 'Bắt buộc phải nhập email' })
-    .email('Phải nhập đúng định dạng email')
-    .min(5),
+  email: z.string({ message: 'Bắt buộc phải nhập email' }).email('Phải nhập đúng định dạng email').min(5),
   role: z.string({ required_error: 'Bắt buộc phải nhập role' }),
+  //numberPhone: z.string({ message: 'Bắt buộc phải nhập số điện thoại' }).refine((val) => /^\d{10}$/.test(val), {
+  //  message: 'Số điện thoại phải là 10 chữ số',
   numberPhone: z
-    .string({ message: 'Bắt buộc phải nhập số điện thoại' })
-    .refine((val) => /^\d{10}$/.test(val), {
-      message: 'Số điện thoại phải là 10 chữ số',
-    }),
+    .string()
+    .optional() // Không bắt buộc
+    .refine(
+      (val) => !val || /^\d{10}$/.test(val), // Chỉ kiểm tra nếu giá trị không phải null/undefined
+      {
+        message: 'Số điện thoại phải là 10 chữ số',
+      }
+    ),
   //image: z.instanceof(File, { message: 'Vui lòng thêm hình ảnh' }),
 });
 
-export default function UpdateUser({
-  setActiveFormUpdate,
-  data,
-}: {
-  setActiveFormUpdate: any;
-  data: any;
-}) {
+export default function UpdateUser({ setActiveFormUpdate, data }: { setActiveFormUpdate: any; data: any }) {
   const router = useRouter();
 
   const { _id, name, role, email, numberPhone } = data;
@@ -93,7 +77,7 @@ export default function UpdateUser({
   async function onSubmit(data: z.infer<typeof FormSchema>) {
     setLoading(true);
 
-    const createAccount = await sendRequest<IBackendRes<any>>({
+    const updateAccount = await sendRequest<IBackendRes<any>>({
       method: `PATCH`,
       url: listApi_Next_Server.updateUser(_id),
       headers: { Authorization: `Bearer ${accessToken}` },
@@ -102,12 +86,12 @@ export default function UpdateUser({
 
     console.log('');
     console.log('');
-    console.log('createAccount   :   ', createAccount);
+    console.log('updateAccount   :   ', updateAccount);
     console.log('');
     console.log('');
     console.log('');
 
-    if (createAccount.statusCode === 200) {
+    if (updateAccount.statusCode === 200) {
       setLoading(false);
       setActiveFormUpdate(false);
       toast.success('Cập nhật tài khoản thành công!', {
@@ -127,7 +111,7 @@ export default function UpdateUser({
     } else {
       setLoading(false);
       //setActiveFormUpdate(false);
-      toast.error(`${createAccount.message}`, {
+      toast.error(`${updateAccount.message}`, {
         position: 'top-right',
         autoClose: 3000,
         hideProgressBar: false,
@@ -150,32 +134,30 @@ export default function UpdateUser({
       <h1 className="text-center text-2xl">Sửa Khoản Nhân Viên</h1>
       <form onSubmit={handleSubmit(onSubmit, onError)} className="w-full ">
         <div className="grid grid-cols-1 max-xl:grid-cols-1 max-lg:grid-cols-1 gap-5">
-          {listFieldSchema.map((item, index) => {
-            return (
-              <div
-                key={index}
-                className="group relative transition-all duration-500"
-              >
-                <FormField
-                  control={control}
-                  name={item.name as any}
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>{item.title}</FormLabel>
-                      <FormControl>
-                        <Input
-                          autoComplete="off"
-                          className="p-0 border-0 border-b-2 rounded-none shadow-none focus:border-0 focus-visible:ring-0 focus-visible:border-b-2 group-hover:border-red-500"
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </div>
-            );
-          })}
+          {listFieldSchema?.length > 0 &&
+            listFieldSchema?.map((item, index) => {
+              return (
+                <div key={index} className="group relative transition-all duration-500">
+                  <FormField
+                    control={control}
+                    name={item?.name as any}
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>{item?.title}</FormLabel>
+                        <FormControl>
+                          <Input
+                            autoComplete="off"
+                            className="p-0 border-0 border-b-2 rounded-none shadow-none focus:border-0 focus-visible:ring-0 focus-visible:border-b-2 group-hover:border-red-500"
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+              );
+            })}
 
           <FormField
             control={form.control}
@@ -183,10 +165,7 @@ export default function UpdateUser({
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Quyền</FormLabel>
-                <Select
-                  onValueChange={field.onChange}
-                  defaultValue={`${field.value}`}
-                >
+                <Select onValueChange={field.onChange} defaultValue={`${field.value}`}>
                   <FormControl>
                     <SelectTrigger>
                       <SelectValue placeholder="Chọn Quyền" />
@@ -243,7 +222,7 @@ export default function UpdateUser({
           type="submit"
           className="xl:mt-20 mt-8 w-full bg-green-400 text-black font-semibold text-xl hover:bg-green-500"
         >
-          Tạo Tài Khoản
+          Cập Nhật Tài khoản
           <div
             className={`${loading ? '' : 'hidden'}  w-7 h-7 rounded-full border-4 border-white border-t-transparent border-b-transparent animate-spin`}
           ></div>

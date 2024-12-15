@@ -19,24 +19,10 @@ import { z } from 'zod';
 
 import { toast } from '@/components/hooks/use-toast';
 
-import {
-  Form,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from '@/components/ui/form';
+import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useEffect, useState } from 'react';
 import { sendRequest } from '@/utils/fetchApi';
 import { env } from '@/utils/listENV';
@@ -45,13 +31,7 @@ import { listApi_Next_Server } from '@/utils/listApi';
 
 const NEXT_PUBLIC_KEY_GHN_DEV = env.NEXT_PUBLIC_KEY_GHN_DEV();
 
-export function ModalAddress({
-  open,
-  setOpen,
-}: {
-  open?: boolean;
-  setOpen?: any;
-}) {
+export function ModalAddress({ open, setOpen }: { open?: boolean; setOpen?: any }) {
   return (
     <AlertDialog open={open}>
       <AlertDialogContent>
@@ -60,8 +40,8 @@ export function ModalAddress({
         </AlertDialogHeader>
         <AddressForm setOpen={setOpen} />
 
-        <AlertDialogFooter className="w-full">
-          <AlertDialogAction onClick={() => setOpen(false)}>
+        <AlertDialogFooter>
+          <AlertDialogAction className="w-full" onClick={() => setOpen(false)}>
             Đóng
           </AlertDialogAction>
         </AlertDialogFooter>
@@ -121,8 +101,8 @@ export function AddressForm({ setOpen }: { setOpen: (open: boolean) => void }) {
         headers: { Token: NEXT_PUBLIC_KEY_GHN_DEV },
       });
 
-      if (province.data.length > 0) {
-        const newProvince = province.data.map((item: any) => {
+      if (province?.data?.length > 0) {
+        const newProvince = province?.data?.map((item: any) => {
           return {
             ProvinceName: item.ProvinceName,
             ProvinceID: item.ProvinceID,
@@ -167,7 +147,7 @@ export function AddressForm({ setOpen }: { setOpen: (open: boolean) => void }) {
 
         console.log(district);
         if (district?.data?.length > 0) {
-          const newDistrict = district.data.map((item: any) => {
+          const newDistrict = district?.data?.map((item: any) => {
             return {
               DistrictName: item.DistrictName,
               DistrictID: item.DistrictID,
@@ -196,7 +176,7 @@ export function AddressForm({ setOpen }: { setOpen: (open: boolean) => void }) {
 
         console.log(Ward);
         if (Ward?.data?.length > 0) {
-          const newWard = Ward.data.map((item: any) => {
+          const newWard = Ward?.data?.map((item: any) => {
             return {
               WardName: item.WardName,
               WardID: item.WardCode,
@@ -239,26 +219,21 @@ export function AddressForm({ setOpen }: { setOpen: (open: boolean) => void }) {
           render={({ field }) => (
             <FormItem>
               <FormLabel>Chọn tỉnh bạn muốn giao hàng tới</FormLabel>
-              <Select
-                onValueChange={field.onChange}
-                defaultValue={field.value.toString()}
-              >
+              <Select onValueChange={field.onChange} defaultValue={field.value.toString()}>
                 <FormControl>
                   <SelectTrigger>
                     <SelectValue placeholder="Chọn tỉnh bạn muốn giao hàng " />
                   </SelectTrigger>
                 </FormControl>
-                <SelectContent>
-                  {province.map((item, index) => {
-                    return (
-                      <SelectItem
-                        key={index}
-                        value={item.ProvinceID.toString()}
-                      >
-                        {item.ProvinceName}
-                      </SelectItem>
-                    );
-                  })}
+                <SelectContent className="max-h-[300px] overflow-y-auto">
+                  {province?.length > 0 &&
+                    province?.map((item, index) => {
+                      return (
+                        <SelectItem key={index} value={item?.ProvinceID?.toString()}>
+                          {item?.ProvinceName}
+                        </SelectItem>
+                      );
+                    })}
                 </SelectContent>
               </Select>
 
@@ -271,26 +246,18 @@ export function AddressForm({ setOpen }: { setOpen: (open: boolean) => void }) {
           name="district_id"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>
-                Chọn thành phố hoặc huyện bạn muốn giao hàng tới
-              </FormLabel>
-              <Select
-                onValueChange={field.onChange}
-                defaultValue={field.value.toString()}
-              >
+              <FormLabel>Chọn thành phố hoặc huyện bạn muốn giao hàng tới</FormLabel>
+              <Select onValueChange={field.onChange} defaultValue={field.value.toString()}>
                 <FormControl>
                   <SelectTrigger>
                     <SelectValue placeholder="Chọn tỉnh bạn muốn giao hàng " />
                   </SelectTrigger>
                 </FormControl>
-                <SelectContent>
-                  {district.map((item, index) => {
+                <SelectContent className="max-h-[300px] overflow-y-auto">
+                  {district?.map((item, index) => {
                     return (
-                      <SelectItem
-                        key={index}
-                        value={item.DistrictID.toString()}
-                      >
-                        {item.DistrictName}
+                      <SelectItem key={index} value={item?.DistrictID?.toString()}>
+                        {item?.DistrictName}
                       </SelectItem>
                     );
                   })}
@@ -306,23 +273,18 @@ export function AddressForm({ setOpen }: { setOpen: (open: boolean) => void }) {
           name="ward_code"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>
-                Chọn chọn phường hoặc huyện bạn muốn giao hàng tới
-              </FormLabel>
-              <Select
-                onValueChange={field.onChange}
-                defaultValue={field.value.toString()}
-              >
+              <FormLabel>Chọn chọn phường hoặc huyện bạn muốn giao hàng tới</FormLabel>
+              <Select onValueChange={field.onChange} defaultValue={field.value.toString()}>
                 <FormControl>
                   <SelectTrigger>
                     <SelectValue placeholder="Chọn tỉnh bạn muốn giao hàng " />
                   </SelectTrigger>
                 </FormControl>
-                <SelectContent>
-                  {ward.map((item, index) => {
+                <SelectContent className="max-h-[200px] overflow-y-auto">
+                  {ward?.map((item, index) => {
                     return (
-                      <SelectItem key={index} value={item.WardID.toString()}>
-                        {item.WardName}
+                      <SelectItem key={index} value={item?.WardID?.toString()}>
+                        {item?.WardName}
                       </SelectItem>
                     );
                   })}
@@ -349,7 +311,9 @@ export function AddressForm({ setOpen }: { setOpen: (open: boolean) => void }) {
           )}
         />
 
-        <Button type="submit">Thêm địa chỉ</Button>
+        <Button type="submit" className="w-full bg-green-500">
+          Thêm địa chỉ
+        </Button>
       </form>
     </Form>
   );

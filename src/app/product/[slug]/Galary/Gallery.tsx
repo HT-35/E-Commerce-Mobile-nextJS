@@ -36,21 +36,16 @@ export default function GalaryImg({ imgArr, className }: { imgArr: IimgArr[]; cl
         modules={[FreeMode, Navigation, Thumbs]}
         className="mySwiper2"
       >
-        {imgArr.map((item, index) => {
-          console.log('');
-          console.log('');
-          console.log('imgArr gallery :   ', item);
-          console.log('');
-          console.log('');
-          console.log('');
-          return (
-            <SwiperSlide key={index} className=" rounded-lg">
-              <SwiperSlide key={index}>
-                <img src={item.link} alt="phone" />
+        {imgArr?.length > 0 &&
+          imgArr?.map((item, index) => {
+            return (
+              <SwiperSlide key={index} className=" rounded-lg">
+                <SwiperSlide key={index}>
+                  <img src={item.link} alt="phone" />
+                </SwiperSlide>
               </SwiperSlide>
-            </SwiperSlide>
-          );
-        })}
+            );
+          })}
       </Swiper>
 
       <Swiper
@@ -63,13 +58,14 @@ export default function GalaryImg({ imgArr, className }: { imgArr: IimgArr[]; cl
         modules={[FreeMode, Navigation, Thumbs]}
         className="mySwiper"
       >
-        {imgArr.map((item, index) => {
-          return (
-            <SwiperSlide key={index} className="w-10 h-20">
-              <img src={item.link} alt="phone" />
-            </SwiperSlide>
-          );
-        })}
+        {imgArr?.length > 0 &&
+          imgArr?.map((item, index) => {
+            return (
+              <SwiperSlide key={index} className="w-10 h-20">
+                <img src={item?.link} alt="phone" />
+              </SwiperSlide>
+            );
+          })}
       </Swiper>
     </div>
   );

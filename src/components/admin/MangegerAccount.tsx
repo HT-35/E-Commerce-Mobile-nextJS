@@ -1,13 +1,6 @@
 'use client';
 import React, { useEffect, useState } from 'react';
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/components/ui/table';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 
 import { InputSearch } from '@/components/input/InputSearch';
 import { Button } from '@/components/ui/button';
@@ -135,9 +128,7 @@ const MangegerAccount = () => {
   }, [allUser, roleAccount, search]);
   useEffect(() => {
     if (search !== '') {
-      const searchAccount = listUser.filter(
-        (item) => item.email.includes(search) || item.name.includes(search)
-      );
+      const searchAccount = listUser.filter((item) => item.email.includes(search) || item.name.includes(search));
       console.log(`searchAccount:`, searchAccount);
       setListUserSearch(searchAccount);
     } else if (search === '') {
@@ -147,14 +138,8 @@ const MangegerAccount = () => {
 
   return (
     <div className="">
-      <ModalUpdate
-        activeFormUpdate={activeFormUpdateUser}
-        setActiveFormUpdate={setActiveFormUpdateUser}
-      >
-        <UpdateUser
-          data={dataUpdateUser}
-          setActiveFormUpdate={setActiveFormUpdateUser}
-        />
+      <ModalUpdate activeFormUpdate={activeFormUpdateUser} setActiveFormUpdate={setActiveFormUpdateUser}>
+        <UpdateUser data={dataUpdateUser} setActiveFormUpdate={setActiveFormUpdateUser} />
       </ModalUpdate>
 
       <DeleteUser
@@ -210,10 +195,7 @@ const MangegerAccount = () => {
       </div>
       <div className="line h-[1px] w-full bg-slate-600 my-2"></div>
 
-      <div
-        className="overflow-hidden overflow-y-auto "
-        style={{ height: `${screenHeight - 30}px` }}
-      >
+      <div className="overflow-hidden overflow-y-auto " style={{ height: `${screenHeight - 30}px` }}>
         <Table>
           <TableHeader>
             <TableRow>
@@ -229,14 +211,14 @@ const MangegerAccount = () => {
           </TableHeader>
           <TableBody>
             {listUserSearch.length > 0 &&
-              listUserSearch.map((item, index) => {
+              listUserSearch?.map((item, index) => {
                 return (
                   <TableRow key={index + 1}>
                     <TableCell>{index + 1}</TableCell>
-                    <TableCell>{item.name}</TableCell>
-                    <TableCell>{item.role}</TableCell>
-                    <TableCell>{item.email}</TableCell>
-                    <TableCell>{item.numberPhone}</TableCell>
+                    <TableCell>{item?.name}</TableCell>
+                    <TableCell>{item?.role}</TableCell>
+                    <TableCell>{item?.email}</TableCell>
+                    <TableCell>{item?.numberPhone}</TableCell>
                     <TableCell className="w-32 cursor-pointer">
                       <div
                         className="w-32 bg-yellow-400 text-center rounded-md py-2 hover:bg-red-600"
@@ -268,14 +250,15 @@ const MangegerAccount = () => {
               })}
 
             {listUserSearch.length === 0 &&
-              listUser.map((item, index) => {
+              listUser?.length > 0 &&
+              listUser?.map((item, index) => {
                 return (
                   <TableRow key={index + 1}>
                     <TableCell>{index + 1}</TableCell>
-                    <TableCell>{item.name}</TableCell>
-                    <TableCell>{item.role}</TableCell>
-                    <TableCell>{item.email}</TableCell>
-                    <TableCell>{item.numberPhone}</TableCell>
+                    <TableCell>{item?.name}</TableCell>
+                    <TableCell>{item?.role}</TableCell>
+                    <TableCell>{item?.email}</TableCell>
+                    <TableCell>{item?.numberPhone}</TableCell>
                     <TableCell className="w-32 cursor-pointer">
                       <div
                         className="w-32 bg-yellow-400 text-center rounded-md py-2 hover:bg-red-600"
@@ -293,8 +276,8 @@ const MangegerAccount = () => {
                         className="w-32 bg-red-400 text-center rounded-md py-2 hover:bg-red-600"
                         onClick={() => {
                           setDataDeleteUser({
-                            name: item.name,
-                            _id: item._id,
+                            name: item?.name,
+                            _id: item?._id,
                           });
                           setActiveDelete(true);
                         }}

@@ -7,7 +7,7 @@ interface Product {
 
 // Handle percentage discount for products
 export const handlePercentDiscount = (products: Product[]): Product[] => {
-  const newList = products.map((product) => {
+  const newList = products?.map((product) => {
     const percentDiscount = 100 - Math.round((product.salePrice * 100) / product.price);
 
     return { ...product, percentDiscount: percentDiscount };

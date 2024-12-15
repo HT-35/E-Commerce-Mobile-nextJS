@@ -50,12 +50,6 @@ export interface typeProduct {
 
   amount: number;
 
-  blog: string;
-
-  reviews: ReviewProduct[];
-
-  comments: CommentProduct[];
-
   os: string;
 
   ram: string;
@@ -64,6 +58,10 @@ export interface typeProduct {
 
   rom: string;
 
+  chip: string;
+
+  sim: string;
+
   cameraBefore: string;
 
   cameraAfter: string;
@@ -71,6 +69,8 @@ export interface typeProduct {
   special: string;
 
   screen: string;
+
+  design: string;
 
   option: Option[];
 

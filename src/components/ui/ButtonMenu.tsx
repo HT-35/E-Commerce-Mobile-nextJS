@@ -34,14 +34,15 @@ const ButtonMenu = () => {
         <DropdownMenuSeparator />
 
         <DropdownMenuGroup>
-          {brandArr.map((item, index) => {
-            return (
-              <DropdownMenuItem key={index}>
-                {item.brand}
-                <DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut>
-              </DropdownMenuItem>
-            );
-          })}
+          {brandArr?.length > 0 &&
+            brandArr?.map((item, index) => {
+              return (
+                <DropdownMenuItem key={index}>
+                  {item?.brand}
+                  <DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut>
+                </DropdownMenuItem>
+              );
+            })}
         </DropdownMenuGroup>
       </DropdownMenuContent>
     </DropdownMenu>

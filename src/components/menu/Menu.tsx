@@ -18,17 +18,18 @@ const ListBrand: any[] = [
 const Menu = () => {
   return (
     <div className="flex flex-col justify-between items-start h-full w-full">
-      {ListBrand?.map((item, index) => {
-        return (
-          <Link
-            href={`/product?brand=${item.brand}`}
-            key={index}
-            className="py-1 px-4 w-full  hover:bg-slate-200 cursor-pointer hover:rounded-lg"
-          >
-            {item.brand}
-          </Link>
-        );
-      })}
+      {ListBrand?.length > 0 &&
+        ListBrand?.map((item, index) => {
+          return (
+            <Link
+              href={`/product?brand=${item.brand}`}
+              key={index}
+              className="py-1 px-4 w-full  hover:bg-slate-200 cursor-pointer hover:rounded-lg"
+            >
+              {item.brand}
+            </Link>
+          );
+        })}
     </div>
   );
 };

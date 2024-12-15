@@ -1,14 +1,6 @@
 'use client';
 import React, { useEffect, useState } from 'react';
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableFooter,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/components/ui/table';
+import { Table, TableBody, TableCell, TableFooter, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { sendRequest } from '@/utils/fetchApi';
 import { useAppSelector } from '@/lib/redux/hooks';
@@ -75,41 +67,27 @@ const Bill = ({ params }: { params: { id: string } }) => {
 
   return (
     <div className="max-w-[800px] mx-auto bg-white px-10 pt-4 pb-14 mb-10">
-      <div className="title text-center text-green-600 text-2xl font-semibold">
-        Đặt Hàng Thành Công
-      </div>
-      <div className="title text-center">
-        Cảm ơn bạn đã mua hàng tại HTS Store.
-      </div>
+      <div className="title text-center text-green-600 text-2xl font-semibold">Đặt Hàng Thành Công</div>
+      <div className="title text-center">Cảm ơn bạn đã mua hàng tại HTS Store.</div>
       <div className="bg-slate-200 px-5 py-2">
         <div className=""> Đơn Hàng # {bill._id}</div>
         <div className="receiver  flex gap-4">
-          <span className="font-semibold  min-w-36"> - Người đặt hàng:</span>{' '}
-          {name}
+          <span className="font-semibold  min-w-36"> - Người đặt hàng:</span> {name}
         </div>
         <div className="addressShiping flex gap-4">
-          <span className="font-semibold  min-w-36">- Địa chỉ nhận hàng :</span>{' '}
-          {bill.addressShiping ?? ''}
+          <span className="font-semibold  min-w-36">- Địa chỉ nhận hàng :</span> {bill.addressShiping ?? ''}
         </div>
         <div className=" flex gap-4">
           <span className="font-semibold  min-w-36"> - Tổng Tiền: </span>
-          <span className="text-red-600 font-semibold">
-            {' '}
-            {formatCurrency(bill.total as any)}đ
-          </span>
+          <span className="text-red-600 font-semibold"> {formatCurrency(bill.total as any)}đ</span>
         </div>
 
         <div className="receiver  flex gap-4">
-          <span className="font-semibold  min-w-36">
-            {' '}
-            - Đơn vị vận chuyển :
-          </span>{' '}
-          Giao Hàng Nhanh (GHN)
+          <span className="font-semibold  min-w-36"> - Đơn vị vận chuyển :</span> Giao Hàng Nhanh (GHN)
         </div>
 
         <div className="receiver  flex gap-4">
-          <span className="font-semibold  min-w-36"> - Mã giao hàng :</span>{' '}
-          {bill.CodeShipGHN ?? ''}
+          <span className="font-semibold  min-w-36"> - Mã giao hàng :</span> {bill.CodeShipGHN ?? ''}
         </div>
       </div>
       <div className="my-2">Thông Tin về Sản Phẩm</div>
@@ -125,24 +103,20 @@ const Bill = ({ params }: { params: { id: string } }) => {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {bill.itemArr.map((item, index) => {
-            return (
-              <TableRow key={index}>
-                <TableCell className="text-center">1</TableCell>
-                <TableCell className="text-center">{item.name}</TableCell>
-                <TableCell className="text-center">{item.quantity}</TableCell>
-                <TableCell className="text-center">
-                  {formatCurrency(item.price as any)}đ
-                </TableCell>
-                <TableCell className="text-center">
-                  {formatCurrency(
-                    (Number(item.price) * Number(item.quantity)) as any
-                  )}
-                  đ
-                </TableCell>
-              </TableRow>
-            );
-          })}
+          {bill?.itemArr?.length > 0 &&
+            bill?.itemArr?.map((item, index) => {
+              return (
+                <TableRow key={index}>
+                  <TableCell className="text-center">1</TableCell>
+                  <TableCell className="text-center">{item.name}</TableCell>
+                  <TableCell className="text-center">{item.quantity}</TableCell>
+                  <TableCell className="text-center">{formatCurrency(item.price as any)}đ</TableCell>
+                  <TableCell className="text-center">
+                    {formatCurrency((Number(item.price) * Number(item.quantity)) as any)}đ
+                  </TableCell>
+                </TableRow>
+              );
+            })}
         </TableBody>
 
         <TableFooter>
@@ -151,12 +125,8 @@ const Bill = ({ params }: { params: { id: string } }) => {
             <TableHead></TableHead>
 
             <TableHead></TableHead>
-            <TableHead className="text-red-600 font-semibold">
-              Tổng Số Tiền
-            </TableHead>
-            <TableHead className="text-red-600 font-semibold">
-              {formatCurrency(bill.total as any)}đ
-            </TableHead>
+            <TableHead className="text-red-600 font-semibold">Tổng Số Tiền</TableHead>
+            <TableHead className="text-red-600 font-semibold">{formatCurrency(bill.total as any)}đ</TableHead>
           </TableRow>
         </TableFooter>
       </Table>

@@ -130,13 +130,14 @@ export function SelectForm({ setFilter }: { setFilter: any }) {
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
-                  {filterOS.map((item, index) => {
-                    return (
-                      <SelectItem key={index} value={item.value}>
-                        {item.lable}
-                      </SelectItem>
-                    );
-                  })}
+                  {filterOS?.length > 0 &&
+                    filterOS?.map((item, index) => {
+                      return (
+                        <SelectItem key={index} value={item?.value}>
+                          {item?.lable}
+                        </SelectItem>
+                      );
+                    })}
                 </SelectContent>
               </Select>
             </FormItem>
@@ -162,13 +163,14 @@ export function SelectForm({ setFilter }: { setFilter: any }) {
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
-                  {filterRam.map((item, index) => {
-                    return (
-                      <SelectItem key={index} value={item.value}>
-                        {item.lable}
-                      </SelectItem>
-                    );
-                  })}
+                  {filterRam?.length > 0 &&
+                    filterRam?.map((item, index) => {
+                      return (
+                        <SelectItem key={index} value={item?.value}>
+                          {item?.lable}
+                        </SelectItem>
+                      );
+                    })}
                 </SelectContent>
               </Select>
             </FormItem>
@@ -193,13 +195,14 @@ export function SelectForm({ setFilter }: { setFilter: any }) {
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
-                  {filterRom.map((item, index) => {
-                    return (
-                      <SelectItem key={index} value={item.value}>
-                        {item.lable}
-                      </SelectItem>
-                    );
-                  })}
+                  {filterRom?.length > 0 &&
+                    filterRom?.map((item, index) => {
+                      return (
+                        <SelectItem key={index} value={item?.value}>
+                          {item?.lable}
+                        </SelectItem>
+                      );
+                    })}
                 </SelectContent>
               </Select>
             </FormItem>

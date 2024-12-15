@@ -126,16 +126,16 @@ const Cart = () => {
 
   const handleSelectAllChange = () => {
     if (!isCheckAll) {
-      const newCart: selectProduct[] = cart.map((item, index) => {
+      const newCart: selectProduct[] = cart?.map((item, index) => {
         return {
-          color: item.color,
-          slug: item.slug,
-          quantity: item.quantity,
+          color: item?.color,
+          slug: item?.slug,
+          quantity: item?.quantity,
         };
       });
 
-      const totalPrice = cart.reduce((a: number, b) => {
-        return a + Number(b.price);
+      const totalPrice = cart?.reduce((a: number, b) => {
+        return a + Number(b?.price);
       }, 0);
 
       setTotal(totalPrice);
@@ -194,8 +194,8 @@ const Cart = () => {
       console.log('updatedCart', updatedCart);
       console.log('');
       console.log('');
-      const newCart = updatedCart.map((item: any) => {
-        const option = item?.slug?.option?.findIndex((itemOption: any) => itemOption.color === item.color);
+      const newCart = updatedCart?.map((item: any) => {
+        const option = item?.slug?.option?.findIndex((itemOption: any) => itemOption?.color === item?.color);
         return {
           color: item?.color,
           slug: item?.slug?.slug,
@@ -318,31 +318,40 @@ const Cart = () => {
                               )}
                             />
 
-                            <div>
-                              <img
-                                src={product?.img?.length > 0 ? (product?.img[0]?.link as string) : ''}
-                                className="w-[300px] rounded-lg"
-                              ></img>
-                            </div>
+                            <Link href={`/product/${product.slug}`}>
+                              <div>
+                                <img
+                                  src={product?.img?.length > 0 ? (product?.img[0]?.link as string) : ''}
+                                  className="w-[300px] rounded-lg"
+                                ></img>
+                              </div>
+                            </Link>
                           </div>
                         </div>
 
                         <div className="product-info lg:w-3/4 w-full">
                           <div className="flex justify-between items-start max-lg:text-sm">
-                            <p>{product.name}</p>
+                            <Link href={`/product/${product.slug}`}>
+                              <p>{product.name}</p>
+                            </Link>
                             <TrashIcon
                               className="bg-transparent border-0 cursor-pointer p-0 z-10 w-6 h-7"
                               onClick={() => handleRemoveFromCart({ color: product.color, slug: product.slug })}
                             />
                           </div>
-                          <div className="color flex gap-4">
-                            <span className="max-lg:text-sm">Màu Sắc : </span>
-                            <span className="max-lg:text-sm">{product.color}</span>
-                          </div>
-                          <div className="price flex gap-4">
-                            <span className="max-lg:text-sm">Giá Tiền : </span>
-                            <p className="text-red-600/100 max-lg:text-sm"> {formatCurrency(product.price as any)}đ</p>
-                          </div>
+                          <Link href={`/product/${product.slug}`}>
+                            <div className="color flex gap-4">
+                              <span className="max-lg:text-sm">Màu Sắc : </span>
+                              <span className="max-lg:text-sm">{product.color}</span>
+                            </div>
+                            <div className="price flex gap-4">
+                              <span className="max-lg:text-sm">Giá Tiền : </span>
+                              <p className="text-red-600/100 max-lg:text-sm">
+                                {' '}
+                                {formatCurrency(product.price as any)}đ
+                              </p>
+                            </div>
+                          </Link>
                           <div className="flex justify-start  items-center gap-4 mt-[10px] select-none">
                             <span className="max-lg:text-sm">Số lượng : </span>
                             <div className="flex gap-4 justify-start  items-center">
@@ -383,6 +392,7 @@ const Cart = () => {
                 })}
             </div>
           </div>
+
           <div className="flex items-center justify-between bg-white border border-[rgba(145,158,171,0.239)] rounded-t-md shadow-[0_-4px_20px_-1px_rgba(40,124,234,0.15)] fixed bottom-0 left-1/2 transform -translate-x-1/2 w-full max-w-[800px] p-[10px_10px_15px] z-[999]">
             <div className="temp-info flex flex-col">
               <div className="price-temp">
@@ -393,7 +403,7 @@ const Cart = () => {
             </div>
 
             <Button className="bg-[#d1041d] px-6 py-1" onClick={handleBuyNow} disabled={total <= 0}>
-              Mua ngay
+              Mua Ngay
               {/*<Link href="cart/payment" className="px-6 py-1">
               </Link>*/}
             </Button>

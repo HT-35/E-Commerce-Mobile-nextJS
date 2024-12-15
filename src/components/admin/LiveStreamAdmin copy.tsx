@@ -56,25 +56,21 @@ const LiveStream = () => {
   useEffect(() => {
     socket.on('Admin-reciever-client', (viewerId) => {
       // gọi tới client sau khi server gửi viewerId của client
-      navigator?.mediaDevices
-        ?.getUserMedia({ video: { width: 1280, height: 720 }, audio: true })
-        ?.then((stream) => {
-          const call = peerInstance.current?.call(viewerId.viewerId, stream);
-          call?.on('stream', (remoteStream) => {});
-        });
+      navigator?.mediaDevices?.getUserMedia({ video: { width: 1280, height: 720 }, audio: true })?.then((stream) => {
+        const call = peerInstance.current?.call(viewerId.viewerId, stream);
+        call?.on('stream', (remoteStream) => {});
+      });
     });
 
     return () => {};
   }, []);
 
   useEffect(() => {
-    navigator?.mediaDevices
-      ?.getUserMedia({ video: { width: 1280, height: 720 }, audio: true })
-      ?.then((stream) => {
-        if (userVideoRef.current) {
-          userVideoRef.current.srcObject = stream;
-        }
-      });
+    navigator?.mediaDevices?.getUserMedia({ video: { width: 1280, height: 720 }, audio: true })?.then((stream) => {
+      if (userVideoRef.current) {
+        userVideoRef.current.srcObject = stream;
+      }
+    });
 
     return () => {};
   }, []);
@@ -136,44 +132,38 @@ const LiveStream = () => {
   return (
     <>
       <div className="title text-xs max-lg:text-sm flex items-center gap-4 my-2">
-        <p className=" text-xs max-lg:text-sm">
-          Số Người Xem: {countView} người
-        </p>
+        <p className=" text-xs max-lg:text-sm">Số Người Xem: {countView} người</p>
         <Button className="h-6">Kết Thúc</Button>
       </div>
 
       <div className="flex xl:justify-between xl:items-center max-lg:flex-col gap-3 w-full  ">
         {/* video */}
         <div className="basis-8/12  ">
-          <video
-            className=" w-full h-full "
-            ref={userVideoRef}
-            autoPlay
-            playsInline
-          ></video>
+          <video className=" w-full h-full " ref={userVideoRef} autoPlay playsInline></video>
         </div>
 
         {/* message */}
         <div className="basis-4/12 h-full  rounded-md">
           <div className="message h-[500px] max-h-[450px] max-lg:max-h-[300px] max-md:max-h-[450px] overflow-y-auto text-xs max-lg:text-sm">
-            {listMessage.map((item: Imessage, index) => {
-              return (
-                <div
-                  key={index}
-                  className={`flex justify-start items-center  gap-4 text-xs max-lg:text-sm mb-1
+            {listMessage?.length > 0 &&
+              listMessage.map((item: Imessage, index) => {
+                return (
+                  <div
+                    key={index}
+                    className={`flex justify-start items-center  gap-4 text-xs max-lg:text-sm mb-1
                 ${item.role === 'employee' ? 'text-green-400' : 'text-black'}
                 `}
-                >
-                  <div className="author">
-                    <p>
-                      {' '}
-                      {item.name} {item.role === 'employee' ? '(admin)' : ''}:{' '}
-                    </p>
+                  >
+                    <div className="author">
+                      <p>
+                        {' '}
+                        {item.name} {item.role === 'employee' ? '(admin)' : ''}:{' '}
+                      </p>
+                    </div>
+                    <div className="massage">{item.massage}</div>
                   </div>
-                  <div className="massage">{item.massage}</div>
-                </div>
-              );
-            })}
+                );
+              })}
             <div className="" ref={messageEndRef}></div>
           </div>
 

@@ -4,25 +4,12 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useFieldArray, useForm } from 'react-hook-form';
 import { z } from 'zod';
 
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from '@/components/ui/form';
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import Image from 'next/image';
 import { useRef, useState } from 'react';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { sendRequest } from '@/utils/fetchApi';
 import { listApi_Next_Server } from '@/utils/listApi';
 import { useAppSelector } from '@/lib/redux/hooks';
@@ -47,16 +34,11 @@ const FormSchema = z.object({
     },
     {} as Record<string, z.ZodString>
   ),
-  email: z
-    .string({ message: 'Bắt buộc phải nhập email' })
-    .email('Phải nhập đúng định dạng email')
-    .min(5),
+  email: z.string({ message: 'Bắt buộc phải nhập email' }).email('Phải nhập đúng định dạng email').min(5),
   role: z.string({ required_error: 'Bắt buộc phải nhập role' }),
-  numberPhone: z
-    .string({ message: 'Bắt buộc phải nhập số điện thoại' })
-    .refine((val) => /^\d{10}$/.test(val), {
-      message: 'Số điện thoại phải là 10 chữ số',
-    }),
+  numberPhone: z.string({ message: 'Bắt buộc phải nhập số điện thoại' }).refine((val) => /^\d{10}$/.test(val), {
+    message: 'Số điện thoại phải là 10 chữ số',
+  }),
   //image: z.instanceof(File, { message: 'Vui lòng thêm hình ảnh' }),
 });
 
@@ -73,11 +55,7 @@ const defaultValues = {
   //image: '' as unknown as File, // Sử dụng một chuỗi trống thay vì (undefined as unknown as File)
 };
 
-export default function FormCreateUser({
-  setActiveForm,
-}: {
-  setActiveForm: any;
-}) {
+export default function FormCreateUser({ setActiveForm }: { setActiveForm: any }) {
   const { accessToken } = useAppSelector((item) => item.account);
 
   const [loading, setLoading] = useState<boolean>(false);
@@ -146,32 +124,30 @@ export default function FormCreateUser({
       <h1 className="text-center text-2xl">Tạo Tài Khoản Nhân Viên</h1>
       <form onSubmit={handleSubmit(onSubmit, onError)} className="w-full ">
         <div className="grid grid-cols-1 max-xl:grid-cols-1 max-lg:grid-cols-1 gap-5">
-          {listFieldSchema.map((item, index) => {
-            return (
-              <div
-                key={index}
-                className="group relative transition-all duration-500"
-              >
-                <FormField
-                  control={control}
-                  name={item.name as any}
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>{item.title}</FormLabel>
-                      <FormControl>
-                        <Input
-                          autoComplete="off"
-                          className="p-0 border-0 border-b-2 rounded-none shadow-none focus:border-0 focus-visible:ring-0 focus-visible:border-b-2 group-hover:border-red-500"
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </div>
-            );
-          })}
+          {listFieldSchema?.length > 0 &&
+            listFieldSchema?.map((item, index) => {
+              return (
+                <div key={index} className="group relative transition-all duration-500">
+                  <FormField
+                    control={control}
+                    name={item?.name as any}
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>{item.title}</FormLabel>
+                        <FormControl>
+                          <Input
+                            autoComplete="off"
+                            className="p-0 border-0 border-b-2 rounded-none shadow-none focus:border-0 focus-visible:ring-0 focus-visible:border-b-2 group-hover:border-red-500"
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+              );
+            })}
 
           <FormField
             control={form.control}
@@ -179,10 +155,7 @@ export default function FormCreateUser({
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Quyền</FormLabel>
-                <Select
-                  onValueChange={field.onChange}
-                  defaultValue={field.value}
-                >
+                <Select onValueChange={field.onChange} defaultValue={field.value}>
                   <FormControl>
                     <SelectTrigger>
                       <SelectValue placeholder="Chọn Quyền" />

@@ -44,6 +44,18 @@ const listProduct = [
     title: 'Hãng điện thoại',
   },
   {
+    name: 'chip',
+    testData: '',
+    message: 'chip 3 kí tự trở lên',
+    title: 'Chip Xử Lý',
+  },
+  {
+    name: 'sim',
+    testData: '',
+    message: 'sim 2 kí tự trở lên',
+    title: 'Sim',
+  },
+  {
     name: 'ram',
     testData: '8GB',
     message: 'RAM phải từ 1 kí tự trở lên',
@@ -113,7 +125,8 @@ const FormSchema: any = z.object({
 const defaultValues = {
   ...listProduct.reduce(
     (acc, item) => {
-      acc[item.name] = item.testData;
+      //acc[item.name] = item.testData;
+      acc[item.name] = '';
       return acc;
     },
     {} as Record<string, string>
@@ -209,100 +222,102 @@ export function FormCreateProduct() {
     <Form {...form}>
       <form onSubmit={handleSubmit(onSubmit, onError)} className="w-full">
         <div className="grid grid-cols-3 max-xl:grid-cols-2 max-lg:grid-cols-1 gap-5">
-          {listProduct.map((item, index) => {
-            //const typeNumber = ['price', 'amount', 'ram', 'rom', 'battery'];
-            const typeNumber = ['price'];
-            const typeInput = typeNumber.includes(item.name) ? 'number' : 'text';
-            return (
-              <div key={index} className="group relative transition-all duration-500">
+          {listProduct?.length > 0 &&
+            listProduct?.map((item, index) => {
+              //const typeNumber = ['price', 'amount', 'ram', 'rom', 'battery'];
+              const typeNumber = ['price'];
+              const typeInput = typeNumber?.includes(item?.name) ? 'number' : 'text';
+              return (
+                <div key={index} className="group relative transition-all duration-500">
+                  <FormField
+                    control={control}
+                    name={item?.name as any}
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>{item?.title}</FormLabel>
+                        <FormControl>
+                          <Input
+                            type={typeInput}
+                            autoComplete="off"
+                            className="p-0 border-0 border-b-2 rounded-none shadow-none focus:border-0 focus-visible:ring-0 focus-visible:border-b-2 group-hover:border-red-500"
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+              );
+            })}
+        </div>
+
+        {/* Input cho option (bao gồm color, price và img upload) */}
+        <div className="col-span-3 grid">
+          <h3>Options</h3>
+          {optionFields?.length > 0 &&
+            optionFields?.map((option, index) => (
+              <div key={option?.id} className="col-span-3  xl:flex xl:justify-between xl:items-center">
                 <FormField
                   control={control}
-                  name={item.name as any}
+                  name={`option.${index}.color`}
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>{item.title}</FormLabel>
+                      <FormLabel>Màu sắc</FormLabel>
+                      <FormControl>
+                        <Input {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={control}
+                  name={`option.${index}.price`}
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Giá</FormLabel>
+                      <FormControl>
+                        <Input {...field} type="number" />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={control}
+                  name={`option.${index}.img.0.imgItem`}
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Ảnh</FormLabel>
                       <FormControl>
                         <Input
-                          type={typeInput}
-                          autoComplete="off"
-                          className="p-0 border-0 border-b-2 rounded-none shadow-none focus:border-0 focus-visible:ring-0 focus-visible:border-b-2 group-hover:border-red-500"
-                          {...field}
+                          type="file"
+                          multiple
+                          {...register(`option.${index}.img.0.imgItem` as const)}
+                          onChange={(e) => {
+                            const files = e.target.files; // Lấy file từ e.target.files
+                            if (files) {
+                              setFileImage((prv: any) => [...prv, files]);
+                              const fileArray = Array.from(files); // Chuyển file list thành mảng
+
+                              field.onChange(fileArray); // Truyền mảng file vào field.onChange để lưu trữ trong form
+                            }
+                          }}
                         />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
                   )}
                 />
+
+                <Button type="button" onClick={() => remove(index)} className="max-xl:w-full mt-2">
+                  Xóa Option
+                </Button>
               </div>
-            );
-          })}
-        </div>
-
-        {/* Input cho option (bao gồm color, price và img upload) */}
-        <div className="col-span-3 grid">
-          <h3>Options</h3>
-          {optionFields.map((option, index) => (
-            <div key={option.id} className="col-span-3  xl:flex xl:justify-between xl:items-center">
-              <FormField
-                control={control}
-                name={`option.${index}.color`}
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Màu sắc</FormLabel>
-                    <FormControl>
-                      <Input {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={control}
-                name={`option.${index}.price`}
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Giá</FormLabel>
-                    <FormControl>
-                      <Input {...field} type="number" />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={control}
-                name={`option.${index}.img.0.imgItem`}
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Ảnh</FormLabel>
-                    <FormControl>
-                      <Input
-                        type="file"
-                        multiple
-                        {...register(`option.${index}.img.0.imgItem` as const)}
-                        onChange={(e) => {
-                          const files = e.target.files; // Lấy file từ e.target.files
-                          if (files) {
-                            setFileImage((prv: any) => [...prv, files]);
-                            const fileArray = Array.from(files); // Chuyển file list thành mảng
-
-                            field.onChange(fileArray); // Truyền mảng file vào field.onChange để lưu trữ trong form
-                          }
-                        }}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <Button type="button" onClick={() => remove(index)} className="max-xl:w-full mt-2">
-                Xóa Option
-              </Button>
-            </div>
-          ))}
+            ))}
 
           <Button
             type="button"

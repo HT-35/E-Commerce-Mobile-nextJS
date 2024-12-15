@@ -116,6 +116,7 @@ const Header = () => {
               {nameProduct !== '' && arrProduct?.length === 0 ? (
                 <div className="p-4">Không tìm thấy sản phẩm {nameProduct}</div>
               ) : (
+                arrProduct.length > 0 &&
                 arrProduct?.map((item, index) => (
                   <Link href={`/product/${item.slug}`} key={index} onClick={(e) => setNameProduct('')}>
                     <div className="flex justify-start gap-4 p-4">
@@ -218,6 +219,7 @@ const Header = () => {
                   {nameProduct !== '' && arrProduct?.length === 0 ? (
                     <div className="p-4">Không tìm thấy sản phẩm {nameProduct}</div>
                   ) : (
+                    arrProduct?.length > 0 &&
                     arrProduct?.map((item, index) => (
                       <Link href={`/product/${item.slug}`} key={index} onClick={(e) => setNameProduct('')}>
                         <div className="flex justify-start gap-4 p-4">

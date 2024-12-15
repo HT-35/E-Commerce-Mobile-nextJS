@@ -29,6 +29,10 @@ const LiveStream = () => {
   const remoteVideoRef = useRef<HTMLVideoElement>(null);
   const peerInstance = useRef<Peer | null>(null);
 
+  if (!accessToken) {
+    router.push('/auth?callback=/livestream');
+  }
+
   useEffect(() => {
     if (messageEndRef.current) {
       messageEndRef.current.scrollIntoView({ behavior: 'smooth' });
@@ -107,15 +111,9 @@ const LiveStream = () => {
     setListMessage((prev: Imessage[]) => [...prev, newMessage]);
   };
 
-  const handleSendMessageLiveStream = async ({
-    message,
-  }: {
-    message: string;
-  }) => {
+  const handleSendMessageLiveStream = async ({ message }: { message: string }) => {
     const sendMessageChatLiveStream = await sendRequest({
-      url: listApi_Nest_Server_API_Route.clientSendMessageLiveStream(
-        _idLiveStream
-      ),
+      url: listApi_Nest_Server_API_Route.clientSendMessageLiveStream(_idLiveStream),
       method: 'POST',
       body: {
         senderId: _id,
@@ -129,6 +127,27 @@ const LiveStream = () => {
 
     socket.emit('client-chat', { message, name, role: 'client' });
   };
+
+  //  =================
+
+  useEffect(() => {
+    socket.on('chat-all', (e) => {
+      console.log(e);
+      const message: Imessage = {
+        name: e.name,
+        massage: e.message,
+        role: e.role,
+      };
+      setListMessage((prev) => [...prev, message]);
+    });
+    socket.on('count-connect-stream', (e) => {
+      setCountView(e);
+    });
+    return () => {
+      socket.off('chat-all');
+      socket.off('count-connect-stream');
+    };
+  }, []);
 
   return (
     <div className="pt-4 overflow-x-hidden overflow-y-hidden">
@@ -148,10 +167,7 @@ const LiveStream = () => {
                 muted={isMuted} // Điều khiển âm thanh qua muted
               ></video>
               <div className="absolute bottom-5 right-5">
-                <button
-                  onClick={handleToggleMute}
-                  className="bg-white text-black p-3 rounded-xl"
-                >
+                <button onClick={handleToggleMute} className="bg-white text-black p-3 rounded-xl">
                   {isMuted ? 'Unmute' : 'Mute'}
                 </button>
               </div>
@@ -159,19 +175,18 @@ const LiveStream = () => {
 
             <div className="basis-4/12 h-full rounded-md bg-white py-2 px-2">
               <div className="message h-[500px] max-h-[450px] overflow-y-auto">
-                {listMessage.map((item: Imessage, index) => {
+                {listMessage?.map((item: Imessage, index) => {
                   return (
                     <div
                       key={index}
-                      className={`flex justify-start items-center w-full gap-4 text-xs`}
+                      className={`flex justify-start items-center w-full gap-4 text-xs  ${item?.role === 'employee' ? 'text-red-500' : ''} `}
                     >
                       <div className="author">
                         <p>
-                          {item.name}{' '}
-                          {item.role === 'employee' ? '(admin)' : ''}:
+                          {item?.name} {item?.role === 'employee' ? '(admin)' : ''}:
                         </p>
                       </div>
-                      <div className="massage">{item.massage}</div>
+                      <div className="massage">{item?.massage}</div>
                     </div>
                   );
                 })}
@@ -190,12 +205,8 @@ const LiveStream = () => {
         </div>
       ) : (
         <BackGroundLiveStream>
-          <div className="w-full h-full text-center text-2xl mt-6">
-            LiveStream Đã Kết Thúc.
-          </div>
-          <div className="w-full h-full text-center text-2xl mt-6">
-            Hẹn Gặp Lại Các Bạn.
-          </div>
+          <div className="w-full h-full text-center text-2xl mt-6">LiveStream Đã Kết Thúc.</div>
+          <div className="w-full h-full text-center text-2xl mt-6">Hẹn Gặp Lại Các Bạn.</div>
         </BackGroundLiveStream>
       )}
 
