@@ -3,18 +3,17 @@
 import React, { useState, useEffect } from 'react';
 import { Input } from '@/components/ui/input';
 import { CartIcon, IconSearch, UserIcon } from '@/components/icons';
-import { ListBulletIcon } from '@radix-ui/react-icons';
-import { useAppSelector, useAppDispatch } from '@/lib/redux/hooks';
+import { DesktopIcon, ListBulletIcon } from '@radix-ui/react-icons';
+import { useAppSelector } from '@/lib/redux/hooks';
 import ButtonMenu from '@/components/ui/ButtonMenu';
 import Link from 'next/link';
 import { sendRequest } from '@/utils/fetchApi';
-import { listApi_Nest_Server_API_Route, listApi_Next_Server } from '@/utils/listApi';
+import { listApi_Next_Server } from '@/utils/listApi';
 import Image from 'next/image';
-import { formatCurrency } from '@/utils/price';
+
 import { motion } from 'framer-motion';
 
 import { useDebounce } from '@uidotdev/usehooks';
-import { cn } from '@/lib/utils';
 
 interface ITypeProduct {
   slug: string;
@@ -154,6 +153,11 @@ const Header = () => {
               <CartIcon /> Giỏ Hàng
             </div>
           </Link>
+          <Link href={'/livestream'}>
+            <div className="cart flex justify-between items-center gap-2 hover:bg-white hover:bg-opacity-50 p-2 rounded-md cursor-pointer">
+              <DesktopIcon className="w-6 h-6" /> LiveStream
+            </div>
+          </Link>
 
           <Link href={isLoggedIn ? '/user/profile' : '/auth'}>
             <div className="account flex justify-between items-center gap-2 hover:bg-white hover:bg-opacity-50 p-2 rounded-md cursor-pointer">
@@ -172,6 +176,12 @@ const Header = () => {
             <Link href={'/cart'}>
               <div className="cart flex justify-between items-center gap-2 hover:bg-white hover:bg-opacity-50 p-2 rounded-md cursor-pointer text-xs">
                 <CartIcon /> Giỏ Hàng
+              </div>
+            </Link>
+
+            <Link href={'/livestream'}>
+              <div className="cart flex justify-between items-center gap-2 hover:bg-white hover:bg-opacity-50 p-2 rounded-md cursor-pointer">
+                <DesktopIcon className="w-6 h-6" /> LiveStream
               </div>
             </Link>
 
