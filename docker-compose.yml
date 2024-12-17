@@ -24,7 +24,6 @@
 #      - nextjs
 
 version: '3.8'
-
 services:
   nextjs:
     image: node:20.11.1-alpine
@@ -44,7 +43,7 @@ services:
     container_name: nginx
     volumes:
       - ./nginx.conf:/etc/nginx/nginx.conf # Mount file cấu hình Nginx
-      - /etc/nginx/ssl:/etc/nginx/ssl # Mount thư mục chứa chứng chỉ SSL
+      - ./etc/nginx/ssl:/etc/nginx/ssl # Mount thư mục chứa SSL
     ports:
       - '80:80' # Port HTTP
       - '443:443' # Port HTTPS
