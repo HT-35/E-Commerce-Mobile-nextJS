@@ -1,9 +1,9 @@
 import { register } from 'module';
 
-const domain = 'http://localhost:3000';
+//const domain = 'http://localhost:3000';
 //const domain = 'http://14.225.254.209'; // địa chỉ ip của vps deploy nextJS
 //const domain = 'http://huytranfullstack.id.vn/'; // địa chỉ ip của vps deploy nextJS
-//const domain = 'https://htsstore.io.vn'; // địa chỉ ip của vps deploy nextJS
+const domain = 'https://htsstore.io.vn'; // địa chỉ ip của vps deploy nextJS
 
 //const domain = 'http://nextjs:3000';
 
