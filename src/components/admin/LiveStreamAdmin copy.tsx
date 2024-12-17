@@ -51,7 +51,9 @@ const LiveStream = () => {
   const peerInstance = useRef<Peer | null>(null);
 
   //const socket = io(`http://localhost:5001`);
-  const socket = io(apiLiveStream);
+  const socket = io(apiLiveStream, {
+    transports: ['websocket'], // Chỉ sử dụng WebSocket
+  });
 
   useEffect(() => {
     socket.on('Admin-reciever-client', (viewerId) => {

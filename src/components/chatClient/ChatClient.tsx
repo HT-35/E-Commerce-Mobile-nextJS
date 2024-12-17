@@ -13,7 +13,9 @@ import { saveMessage } from '@/utils/saveMessage';
 import { apiChat, listApi_Nest_Server_API_Route } from '@/utils/listApi';
 
 //const socket = io(`http://localhost:5000`);
-const socket = io(apiChat);
+const socket = io(apiChat, {
+  transports: ['websocket'], // Chỉ sử dụng WebSocket
+});
 
 export interface typeMessage {
   sender: 'customer' | 'employee';
@@ -21,9 +23,7 @@ export interface typeMessage {
 }
 
 const ChatClient = () => {
-  const { name, _id, accessToken } = useAppSelector(
-    (state: any) => state.account
-  );
+  const { name, _id, accessToken } = useAppSelector((state: any) => state.account);
 
   const { active, handleActive } = useActive(false);
 
@@ -74,10 +74,7 @@ const ChatClient = () => {
         message: message.message,
         sender: 'employee',
       };
-      setShowMessages((prevMessages: any) => [
-        ...prevMessages,
-        newMessageOfEmployee,
-      ]);
+      setShowMessages((prevMessages: any) => [...prevMessages, newMessageOfEmployee]);
     });
 
     return () => {
@@ -115,10 +112,7 @@ const ChatClient = () => {
         message: message,
         sender: 'customer',
       };
-      setShowMessages((prevMessages: any) => [
-        ...prevMessages,
-        newMessageOfCustomer,
-      ]);
+      setShowMessages((prevMessages: any) => [...prevMessages, newMessageOfCustomer]);
 
       setMessage('');
     }

@@ -12,7 +12,9 @@ import { InputChatLiveStreamForm } from '@/components/admin/form/FormInputLiveSt
 import BackGroundLiveStream from '@/components/animation/BackGroundLiveStream';
 import { apiLiveStream, listApi_Nest_Server_API_Route } from '@/utils/listApi';
 
-const socket = io(apiLiveStream);
+const socket = io(apiLiveStream, {
+  transports: ['websocket'], // Chỉ sử dụng WebSocket
+});
 
 const LiveStream = () => {
   const [_idLiveStream, set_IdLiveStream] = useState<string>('');

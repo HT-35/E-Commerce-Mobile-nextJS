@@ -13,12 +13,12 @@ const domainNextServer = 'https://huytranfullstack.id.vn';
 //const domainNextServer = 'http://nestjs:4000';
 
 //export const apiLiveStream = `http://localhost:5001`;
-export const apiLiveStream = `http://103.90.227.158:5001`;
-//export const apiLiveStream = `https://huytranfullstack.id.vn/ws2/`;
+//export const apiLiveStream = `http://103.90.227.158:5001`;
+export const apiLiveStream = `https://huytranfullstack.id.vn/ws2`;
 
 //export const apiChat = `http://localhost:5000`;
-export const apiChat = `http://103.90.227.158:5000`;
-//export const apiChat = `https://huytranfullstack.id.vn/ws/`;
+//export const apiChat = `http://103.90.227.158:5000`;
+export const apiChat = `https://huytranfullstack.id.vn/ws`;
 
 export const listApi_Next_Server = {
   getAllProduct: () => `${domain}/api/product?current=1&pageSize=1000`,

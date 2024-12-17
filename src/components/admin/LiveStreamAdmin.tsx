@@ -20,7 +20,9 @@ export interface Imessage {
 }
 
 //const socket = io(`http://localhost:5001`);
-const socket = io(apiLiveStream);
+const socket = io(apiLiveStream, {
+  transports: ['websocket'], // Chỉ sử dụng WebSocket
+});
 
 const LiveStream = () => {
   const [countView, setCountView] = useState<number>(0);
