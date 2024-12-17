@@ -137,39 +137,47 @@ const ProductPage = () => {
   };
 
   useEffect(() => {
-    const newProductFilter = productList
-      .filter((item: any) => {
-        // Khởi tạo biến kiểm tra
-        let isValid = true;
+    const newProductFilter =
+      productList.length > 0 &&
+      productList
+        ?.filter((item: any) => {
+          // Khởi tạo biến kiểm tra
+          let isValid = true;
 
-        // Kiểm tra RAM
-        if (filter.RAM !== '') {
-          const splitRam = item?.ram?.toLowerCase()?.split(' ') ?? [''];
-          if (item.ram.toLowerCase() !== filter.RAM.toLowerCase() && filter.RAM.toLowerCase() !== `${splitRam[0]}gb`) {
-            isValid = false;
+          // Kiểm tra RAM
+          if (filter.RAM !== '') {
+            const splitRam = item?.ram?.toLowerCase()?.split(' ') ?? [''];
+            if (
+              item.ram.toLowerCase() !== filter.RAM.toLowerCase() &&
+              filter.RAM.toLowerCase() !== `${splitRam[0]}gb`
+            ) {
+              isValid = false;
+            }
           }
-        }
 
-        // Kiểm tra ROM
-        if (filter.ROM !== '') {
-          const splitRom = item?.rom?.toLowerCase()?.split(' ');
-          if (item.rom.toLowerCase() !== filter.ROM.toLowerCase() && filter.ROM.toLowerCase() !== `${splitRom[0]}gb`) {
-            isValid = false;
+          // Kiểm tra ROM
+          if (filter.ROM !== '') {
+            const splitRom = item?.rom?.toLowerCase()?.split(' ');
+            if (
+              item.rom.toLowerCase() !== filter.ROM.toLowerCase() &&
+              filter.ROM.toLowerCase() !== `${splitRom[0]}gb`
+            ) {
+              isValid = false;
+            }
           }
-        }
 
-        // Kiểm tra OS
-        if (filter.OS !== '') {
-          const splitOS = item?.OS?.toLowerCase()?.split(' ') ?? [''];
-          if (item.os.toLowerCase() !== filter.OS.toLowerCase() && filter.OS.toLowerCase() !== `${splitOS[0]}`) {
-            isValid = false;
+          // Kiểm tra OS
+          if (filter.OS !== '') {
+            const splitOS = item?.OS?.toLowerCase()?.split(' ') ?? [''];
+            if (item.os.toLowerCase() !== filter.OS.toLowerCase() && filter.OS.toLowerCase() !== `${splitOS[0]}`) {
+              isValid = false;
+            }
           }
-        }
 
-        // Trả về kết quả kiểm tra
-        return isValid;
-      })
-      .filter((item) => item); // Loại bỏ null khỏi mảng
+          // Trả về kết quả kiểm tra
+          return isValid;
+        })
+        .filter((item) => item); // Loại bỏ null khỏi mảng
 
     setFilterProductList(newProductFilter as any);
 

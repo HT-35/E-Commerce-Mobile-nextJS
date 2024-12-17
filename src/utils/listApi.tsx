@@ -1,5 +1,3 @@
-import { register } from 'module';
-
 //const domain = 'http://localhost:3000';
 //const domain = 'http://14.225.254.209'; // địa chỉ ip của vps deploy nextJS
 //const domain = 'http://huytranfullstack.id.vn/'; // địa chỉ ip của vps deploy nextJS
@@ -13,22 +11,22 @@ const domainNextServer = 'https://huytranfullstack.id.vn';
 //const domainNextServer = 'http://nestjs:4000';
 
 //export const apiLiveStream = `http://localhost:5001`;
-//export const apiLiveStream = `http://103.90.227.158:5001`;
-export const apiLiveStream = `https://huytranfullstack.id.vn/ws2`;
+export const apiLiveStream = `http://103.90.227.158:5001`;
+//export const apiLiveStream = `https://huytranfullstack.id.vn/`;
 
 //export const apiChat = `http://localhost:5000`;
-//export const apiChat = `http://103.90.227.158:5000`;
-export const apiChat = `https://huytranfullstack.id.vn/ws`;
+export const apiChat = `http://103.90.227.158:5000`;
+//export const apiChat = `https://huytranfullstack.id.vn/`;
 
 export const listApi_Next_Server = {
-  getAllProduct: () => `${domain}/api/product?current=1&pageSize=1000`,
+  getAllProduct: () => `${domain}/api/product?current=1&pageSize=20`,
   updateProduct: (slug: string) => `${domain}/api/product?slug=${slug}`,
 
   detailProductSearchParam: (slug: string) => `${domain}/api/product?slug=${slug}`,
 
   getDetailProductbySlug: (slug: string) => `${domain}/api/product/${slug}`,
   createAccount: () => `${domain}/api/user`,
-  getAllAccount: () => `${domain}/api/user?current=1&pageSize=10000`,
+  getAllAccount: () => `${domain}/api/user?current=1&pageSize=20`,
   deleteUser: (_id: string) => `${domain}/api/user?id=${_id}`,
   updateUser: (_id: string) => `${domain}/api/user?id=${_id}`,
   createAddress: () => `${domain}/api/address`,

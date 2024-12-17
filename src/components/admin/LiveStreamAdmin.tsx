@@ -22,6 +22,8 @@ export interface Imessage {
 //const socket = io(`http://localhost:5001`);
 const socket = io(apiLiveStream, {
   transports: ['websocket'], // Chỉ sử dụng WebSocket
+  //path: '/ws2',
+  path: '/ws2/ws2',
 });
 
 const LiveStream = () => {

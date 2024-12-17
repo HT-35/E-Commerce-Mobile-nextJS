@@ -14,6 +14,8 @@ import { apiLiveStream, listApi_Nest_Server_API_Route } from '@/utils/listApi';
 
 const socket = io(apiLiveStream, {
   transports: ['websocket'], // Chỉ sử dụng WebSocket
+  //path: '/ws2',
+  path: '/ws2/ws2',
 });
 
 const LiveStream = () => {
