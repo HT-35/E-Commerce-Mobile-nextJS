@@ -1,17 +1,15 @@
-//const domain = 'http://localhost:3000';
-//const domain = 'https://htsstore.io.vn'; // địa chỉ ip của vps deploy nextJS
+const domain = 'http://localhost:3000';
 
-const domain = 'https://htsstore.io.vn/'; // port https
-//const domain = 'http://nextjs:3000';
+//const domain = 'https://htsstore.io.vn/'; // port https
 
-//const domainNextServer = 'http://localhost:4000';
-const domainNextServer = 'https://huytranfullstack.id.vn'; // port https
+const domainNextServer = 'http://localhost:4000';
+//const domainNextServer = 'https://huytranfullstack.id.vn'; // port https
 
-//export const apiLiveStream = `http://localhost:5001`;
-export const apiLiveStream = `https://huytranfullstack.id.vn/`;
+export const apiLiveStream = `http://localhost:5001`;
+//export const apiLiveStream = `https://huytranfullstack.id.vn/`;
 
-//export const apiChat = `http://localhost:5000`;
-export const apiChat = `https://huytranfullstack.id.vn/`;
+export const apiChat = `http://localhost:5000`;
+//export const apiChat = `https://huytranfullstack.id.vn/`;
 
 export const listApi_Next_Server = {
   getAllProduct: () => `${domain}/api/product?current=1&pageSize=20`,
@@ -102,7 +100,8 @@ export const listApi_Nest_Server_API_Route = {
   employeeSendMessageLiveStream: (_idLiveStream: string) => `${domainNextServer}/livestream/message/${_idLiveStream}`,
 
   adminCreateLiveStream: () => `${domainNextServer}/livestream`,
-  adminEndLiveStreamDetail: (_idLiveStream: string) => `${domainNextServer}/livestream/end/${_idLiveStream}`,
+  //adminEndLiveStreamDetail: (_idLiveStream: string) => `${domainNextServer}/livestream/end/${_idLiveStream}`,
+  adminEndLiveStreamDetail: (_idLiveStream: string) => `${domainNextServer}/livestream/end`,
 
   // ========================
   clientGetDetailChatRoom: (_id: string) => `${domainNextServer}/chat/room/${_id}`,

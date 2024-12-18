@@ -7,15 +7,12 @@ import MangegerOrder from '@/components/admin/MangegerOrder';
 import MangegerProduct from '@/components/admin/MangegerProduct';
 import useScreen from '@/components/hooks/useScreen';
 import { PhoneIcon } from '@/components/icons';
-import { DropdownMenuGroup, DropdownMenuSeparator } from '@/components/ui/dropdown-menu';
+import { DropdownMenuGroup } from '@/components/ui/dropdown-menu';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { useAppSelector } from '@/lib/redux/hooks';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuLabel,
-  DropdownMenuTrigger,
-} from '@radix-ui/react-dropdown-menu';
+import { sendRequest } from '@/utils/fetchApi';
+import { listApi_Next_Server } from '@/utils/listApi';
+
+import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from '@radix-ui/react-dropdown-menu';
 
 import {
   HomeIcon,
@@ -26,14 +23,27 @@ import {
   Cross1Icon,
   HamburgerMenuIcon,
   FileIcon,
+  TriangleLeftIcon,
+  TriangleRightIcon,
 } from '@radix-ui/react-icons';
 import { useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { Fragment, useEffect, useState } from 'react';
+
+const handleLogout = async (router: { push: (arg0: string) => void; refresh: () => void }) => {
+  await sendRequest({
+    method: 'POST',
+    url: listApi_Next_Server.logout(),
+  });
+  //router.push('/');
+  //router.refresh();
+  window.location.href = '/auths';
+};
 
 const MenuAdmin: {
   value: string;
   icon: JSX.Element;
   title: string;
+  onClick?: any;
   component?: JSX.Element;
 }[] = [
   {
@@ -71,13 +81,22 @@ const MenuAdmin: {
     value: 'livestream',
     icon: <CameraIcon className="w-6 h-6" />,
     title: 'Livestream',
-    component: <LiveStreamAdmin />,
+    //component: <LiveStreamAdmin />,
     //component: <></>,
+  },
+  {
+    value: 'logout',
+    icon: <TriangleRightIcon className="w-6 h-6" />,
+    title: 'LogOut',
+    onClick: handleLogout,
+    component: <></>,
   },
 ];
 
 export default function TabsDemo() {
   const [active, setActive] = useState(false);
+
+  const router = useRouter();
 
   const handleActive = () => {
     setActive((prev) => !prev);
@@ -89,24 +108,27 @@ export default function TabsDemo() {
     <div className="xl:px-10 px-4 ">
       <Tabs defaultValue="home" className="  gap-2  grid grid-cols-1">
         {isLargeScreen ? (
-          <TabsList
-            className="   xl:h-[80px] h-auto  bg-white rounded-md px-2 py-2 
+          <>
+            <TabsList
+              className="   xl:h-[80px] h-auto  bg-white rounded-md px-2 py-2 
         flex justify-between items-center flex-row   max-xl:flex-wrap "
-          >
-            {MenuAdmin?.length > 0 &&
-              MenuAdmin?.map((item, index) => {
-                return (
-                  <TabsTrigger
-                    key={index}
-                    value={item.value}
-                    className="xl:min-w-[190px] flex justify-start items-center gap-3 max-xl:text-sm"
-                  >
-                    {item.icon}
-                    {item.title}
-                  </TabsTrigger>
-                );
-              })}
-          </TabsList>
+            >
+              {MenuAdmin?.length > 0 &&
+                MenuAdmin?.map((item, index) => {
+                  return (
+                    <TabsTrigger
+                      key={index}
+                      value={item.value}
+                      className="xl:min-w-[190px] flex justify-start items-center gap-3 max-xl:text-sm"
+                      onClick={item?.onClick}
+                    >
+                      {item.icon}
+                      {item.title}
+                    </TabsTrigger>
+                  );
+                })}
+            </TabsList>
+          </>
         ) : (
           <>
             <TabsList
@@ -154,6 +176,10 @@ export default function TabsDemo() {
         <div className=" w-full xl:h-[630px] px-[14px]  bg-white rounded-xl  flex flex-col gap-5">
           {MenuAdmin?.length > 0 &&
             MenuAdmin?.map((item, index) => {
+              //if (item.value === 'logout') {
+              //  //handleLogout();
+              //  return <div key={index} onClick={handleLogout}></div>;
+              //}
               return (
                 <TabsContent key={index} value={item.value}>
                   {item.component}

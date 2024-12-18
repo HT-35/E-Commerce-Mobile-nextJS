@@ -4,7 +4,7 @@ import React from 'react';
 import './index.css';
 const BackGroundLiveStream = ({ children }: { children: React.ReactNode }) => {
   return (
-    <div className="relative  max-xl:min-h-[720px] min-h-[750px] overflow-hidden  w-full  flex flex-col bg-transparent pt-20">
+    <div className="relative  max-xl:min-h-[720px] min-h-[700px] overflow-hidden  w-full  flex flex-col bg-transparent pt-20">
       <div className="overflow-hidden bg-animation -z-10">
         <div id="stars"></div>
         <div id="stars2"></div>

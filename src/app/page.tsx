@@ -59,9 +59,9 @@ export default function Home() {
       <Navigation menu subBanner={subBanner} Banner={Banner}></Navigation>
       {/* banner */}
 
-      <div className="">
+      {/*<div className="">
         <ResponsiveBanner></ResponsiveBanner>
-      </div>
+      </div>*/}
 
       {/* SmartPhone Nổi Bật Nhất */}
       <div className="my-6">

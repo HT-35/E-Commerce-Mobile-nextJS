@@ -94,12 +94,6 @@ export function Login() {
         method: 'GET',
         url: listApi_Next_Server.reSendOTP(values.email),
       });
-      console.log('');
-      console.log('');
-      console.log('resendOTP   :   ', resendOTP);
-      console.log('');
-      console.log('');
-      console.log('');
 
       setEmail(values.email);
       setIdUser(res?.message?._idUser);

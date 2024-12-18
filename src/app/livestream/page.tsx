@@ -94,7 +94,6 @@ const LiveStream = () => {
           }
         });
       });
-
       peerInstance.current = peer;
       return () => {
         peer.destroy();
@@ -152,6 +151,12 @@ const LiveStream = () => {
       socket.off('count-connect-stream');
     };
   }, []);
+
+  useEffect(() => {
+    socket.on('end-livestream', (e) => {
+      setTimeout(reload, 3000);
+    });
+  });
 
   return (
     <div className="pt-4 overflow-x-hidden overflow-y-hidden">
@@ -227,3 +232,5 @@ const LiveStream = () => {
 };
 
 export default LiveStream;
+
+const reload = window.location.reload.bind(window.location);

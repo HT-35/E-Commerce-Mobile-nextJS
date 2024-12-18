@@ -41,27 +41,17 @@ const LiveStream = () => {
 
   //useEffect(() => {
   //  const handleEndLiveWhenUnLoad = () => {
-  //    socket.emit('employee-unload', 'unload');
+  //    const url = listApi_Nest_Server_API_Route.adminEndLiveStream();
+  //    const data = new Blob(['unload'], { type: 'text/plain' });
+  //    navigator?.sendBeacon(url, data); // Gửi dữ liệu ngay cả khi trang bị đóng
   //  };
+
   //  window.addEventListener('beforeunload', handleEndLiveWhenUnLoad);
+
   //  return () => {
   //    window.removeEventListener('beforeunload', handleEndLiveWhenUnLoad);
   //  };
   //}, []);
-
-  useEffect(() => {
-    const handleEndLiveWhenUnLoad = () => {
-      const url = listApi_Nest_Server_API_Route.adminEndLiveStream();
-      const data = new Blob(['unload'], { type: 'text/plain' });
-      navigator?.sendBeacon(url, data); // Gửi dữ liệu ngay cả khi trang bị đóng
-    };
-
-    window.addEventListener('beforeunload', handleEndLiveWhenUnLoad);
-
-    return () => {
-      window.removeEventListener('beforeunload', handleEndLiveWhenUnLoad);
-    };
-  }, []);
 
   useEffect(() => {
     if (messageEndRef.current) {
@@ -177,15 +167,27 @@ const LiveStream = () => {
 
   const handleEndLiveStream = async () => {
     const liveStream = await sendRequest<IBackendRes<any>>({
-      method: 'GET',
+      method: 'POST',
 
       url: listApi_Nest_Server_API_Route.adminEndLiveStreamDetail(_idLiveStream),
       headers: { Authorization: `Bearer ${accessToken}` },
     });
     console.log(liveStream);
 
-    window.location.reload();
+    setTimeout(() => {
+      window.location.reload();
+    }, 3000);
   };
+
+  useEffect(() => {
+    const handleEndLiveWhenUnLoad = () => {
+      socket.emit('employee-unload', 'unload');
+    };
+    window.addEventListener('beforeunload', handleEndLiveWhenUnLoad);
+    return () => {
+      window.removeEventListener('beforeunload', handleEndLiveWhenUnLoad);
+    };
+  }, []);
 
   const handleSetMessage = ({ massage }: { massage: string }) => {
     const newMessage: Imessage = {
