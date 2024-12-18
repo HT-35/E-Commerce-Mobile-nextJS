@@ -3,7 +3,8 @@
 //const domain = 'http://huytranfullstack.id.vn/'; // địa chỉ ip của vps deploy nextJS
 //const domain = 'https://htsstore.io.vn'; // địa chỉ ip của vps deploy nextJS
 
-const domain = 'http://nextjs:3000';
+const domain = 'https://htsstore.io.vn/';
+//const domain = 'http://nextjs:3000';
 
 //const domainNextServer = 'http://localhost:4000';
 //const domainNextServer = 'http://103.90.227.158:4000';
