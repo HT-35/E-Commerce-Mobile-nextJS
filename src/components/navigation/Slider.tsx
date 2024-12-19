@@ -3,6 +3,7 @@ import { Card } from '@/components/ui/card';
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
 import Autoplay from 'embla-carousel-autoplay';
 import Image from 'next/image';
+import Link from 'next/link';
 
 const Slider = ({
   menu = true,
@@ -31,30 +32,32 @@ const Slider = ({
           Banner?.map((item, index) => {
             return (
               <CarouselItem key={index} style={{}} className="bg-[#F4F6F8] ">
-                <Card
-                  className={`flex w-full lg:h-[500px]    items-center justify-center  relative  lg:max-h-[500px]
+                <Link href="/product" key={index}>
+                  <Card
+                    className={`flex w-full lg:h-[500px]    items-center justify-center  relative  lg:max-h-[500px]
 									${menu ? 'lg:h-[500px] ' : 'lg:h-[210px]'}
 									`}
-                  style={{}}
-                >
-                  <Image
-                    src={item?.url}
-                    alt="smart-phone"
-                    width="500"
-                    height="500"
-                    quality={100}
-                    sizes="100vw"
-                    style={{
-                      objectFit: 'cover',
-                      width: '100%',
-                      height: '100%',
+                    style={{}}
+                  >
+                    <Image
+                      src={item?.url}
+                      alt="smart-phone"
+                      width="500"
+                      height="500"
+                      quality={100}
+                      sizes="100vw"
+                      style={{
+                        objectFit: 'cover',
+                        width: '100%',
+                        height: '100%',
 
-                      backgroundColor: '#F4F6F8',
-                    }}
-                    className={` w-full  bg-[#F4F6F8]    ${menu ? 'h-[400px]' : 'h-[100px] '}`}
-                    priority
-                  ></Image>
-                </Card>
+                        backgroundColor: '#F4F6F8',
+                      }}
+                      className={` w-full  bg-[#F4F6F8]    ${menu ? 'h-[400px]' : 'h-[100px] '}`}
+                      priority
+                    ></Image>
+                  </Card>
+                </Link>
               </CarouselItem>
             );
           })}

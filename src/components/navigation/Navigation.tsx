@@ -6,8 +6,10 @@ const Navigation = ({
   menu = true,
   subBanner,
   Banner,
+  bannerHome = false,
 }: {
   menu?: boolean;
+  bannerHome?: boolean;
   Banner: {
     index: number;
     url: string;
@@ -24,7 +26,7 @@ const Navigation = ({
       </div>
 
       <div className={`sub-side-bar      shadow-xl  w-full  max-lg:hidden ${menu ? 'basis-1/6' : ''}`}>
-        <SideBar menu={menu} subBanner={subBanner}></SideBar>
+        <SideBar menu={menu} subBanner={subBanner} bannerHome={bannerHome}></SideBar>
       </div>
     </div>
   );

@@ -45,6 +45,12 @@ const nextConfig = {
         port: '',
         pathname: '/**',
       },
+      {
+        protocol: 'https',
+        hostname: 'www.thegioididong.com',
+        port: '',
+        pathname: '/**',
+      },
     ],
   },
 };

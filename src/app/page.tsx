@@ -27,16 +27,16 @@ const brandArr = [
 
 const subBanner = [
   { index: 1, url: 'https://clickbuy.com.vn/uploads/media/637-UFYMP.png' },
-  { index: 2, url: 'https://clickbuy.com.vn/uploads/media/610-glsVP.png' },
+  { index: 2, url: 'https://cdnv2.tgdd.vn/mwg-static/tgdd/Banner/42/3d/423d081dc861810d585b456da26653b9.png' },
   { index: 3, url: 'https://clickbuy.com.vn/uploads/media/630-DgPyL.png' },
 ];
 
 const Banner = [
   { index: 1, url: 'https://clickbuy.com.vn/uploads/media/639-ySdKf.png' },
-  { index: 2, url: 'https://clickbuy.com.vn/uploads/media/640-tBIDM.png' },
   { index: 3, url: 'https://clickbuy.com.vn/uploads/media/636-ugZNo.png' },
   { index: 4, url: 'https://clickbuy.com.vn/uploads/media/617-KpqUC.png' },
-  { index: 5, url: 'https://clickbuy.com.vn/uploads/media/631-ECeac.png' },
+  //{ index: 2, url: 'https://clickbuy.com.vn/uploads/media/640-tBIDM.png' },
+  //{ index: 5, url: 'https://clickbuy.com.vn/uploads/media/631-ECeac.png' },
 ];
 
 export default function Home() {
@@ -101,7 +101,7 @@ export default function Home() {
   return (
     <div className="min-h-[1000px] overflow-x-hidden  banner p-1">
       {/* Navigator */}
-      <Navigation menu subBanner={subBanner} Banner={Banner}></Navigation>
+      <Navigation menu subBanner={subBanner} bannerHome={true} Banner={Banner}></Navigation>
       {/* banner */}
 
       {/*<div className="">
