@@ -162,7 +162,7 @@ const LiveStream = () => {
 
   useEffect(() => {
     socket.on('end-livestream', (e) => {
-      setTimeout(reload, 3000);
+      setTimeout(reload, 1000);
     });
   });
 
@@ -181,7 +181,7 @@ const LiveStream = () => {
           <div className="flex xl:justify-between xl:items-center max-lg:flex-col gap-3 w-full">
             <div className="basis-8/12 relative">
               <video
-                className="w-full h-full"
+                className="w-full h-full max-h-[540px]"
                 ref={remoteVideoRef}
                 id="videoplayer"
                 autoPlay
