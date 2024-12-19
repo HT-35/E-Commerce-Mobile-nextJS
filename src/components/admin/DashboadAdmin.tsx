@@ -9,9 +9,9 @@ import { formatCurrency } from '@/utils/price';
 const DashboardAdmin = () => {
   const { accessToken } = useAppSelector((item) => item.account);
 
-  const [order, setOrder] = useState<number>();
-  const [total, setTotal] = useState<number>();
-  const [message, setMessage] = useState<number>();
+  const [order, setOrder] = useState<number>(0);
+  const [total, setTotal] = useState<number>(0);
+  const [message, setMessage] = useState<number>(0);
 
   useEffect(() => {
     const getAllOrder = async () => {
@@ -22,14 +22,19 @@ const DashboardAdmin = () => {
       });
 
       if (order?.data?.data?.length) {
-        setOrder(order?.data?.data?.length ?? 0);
+        setOrder(+order?.data?.data?.length > 0 ? order?.data?.data?.length : 0);
       }
 
       const arrOrder: number[] = order?.data?.data?.map((item: any) => item.total);
 
-      const total = arrOrder.reduce((price, total) => price + total, 0);
-      setTotal(total ?? 0);
-      //console.log(`arrOrder:`, total);
+      if (arrOrder.length > 0) {
+        const total = arrOrder.reduce((price, total) => {
+          return price + total;
+        });
+        setTotal(+total);
+      } else {
+        setTotal(0);
+      }
     };
     getAllOrder();
 
@@ -76,7 +81,16 @@ const DashboardAdmin = () => {
         </div>
         <div className="number flex gap-2">
           {' '}
-          <p className="min-w-24"> {formatCurrency(total as any)}</p> <p>VND</p>
+          {total > 0 ? (
+            <div className="flex gap-2">
+              <p className="min-w-24">{formatCurrency(total as any)}</p>
+            </div>
+          ) : (
+            <div className="flex gap-2">
+              <p className="min-w-10">0</p>
+              <p>VND</p>
+            </div>
+          )}
         </div>
       </div>
 

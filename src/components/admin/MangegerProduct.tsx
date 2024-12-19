@@ -75,7 +75,9 @@ const MangegerProduct = () => {
         url: listApi_Next_Server.getAllProduct(),
       });
 
-      setProduct(product.data.result);
+      if (product?.data?.result) {
+        setProduct(product?.data?.result);
+      }
     };
     getProduct();
   }, []);
