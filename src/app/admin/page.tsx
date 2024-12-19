@@ -36,7 +36,7 @@ const handleLogout = async (router: { push: (arg0: string) => void; refresh: () 
   });
   //router.push('/');
   //router.refresh();
-  window.location.href = '/auths';
+  window.location.href = '/auth';
 };
 
 const MenuAdmin: {
@@ -81,15 +81,19 @@ const MenuAdmin: {
     value: 'livestream',
     icon: <CameraIcon className="w-6 h-6" />,
     title: 'Livestream',
-    //component: <LiveStreamAdmin />,
-    //component: <></>,
+    component: <LiveStreamAdmin />,
   },
   {
     value: 'logout',
     icon: <TriangleRightIcon className="w-6 h-6" />,
     title: 'LogOut',
     onClick: handleLogout,
-    component: <></>,
+    component: (
+      <div className="max-w-[300px] flex justify-center flex-col items-center mx-auto mt-20">
+        <div className=" w-32 h-32 rounded-full border-8 border-black border-t-transparent border-b-transparent animate-spin"></div>
+        <div className="text-2xl mt-10 text-center">Đăng Xuất</div>
+      </div>
+    ),
   },
 ];
 
@@ -160,6 +164,7 @@ export default function TabsDemo() {
                             key={index}
                             value={item.value}
                             className="w-full flex justify-start items-center gap-3 max-xl:text-sm"
+                            onClick={item?.onClick}
                           >
                             {item.icon}
                             {item.title}

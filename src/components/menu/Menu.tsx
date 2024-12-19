@@ -3,7 +3,7 @@ import React from 'react';
 import { map } from 'zod';
 const ListBrand: any[] = [
   {
-    brand: 'iPhone',
+    brand: 'APPLE',
   },
   {
     brand: 'SAMSUNG',

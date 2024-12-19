@@ -52,7 +52,7 @@ const ListBrand: any = [
     brand: 'Tất Cả',
   },
   {
-    brand: 'iPhone',
+    brand: 'APPLE',
   },
   {
     brand: 'SAMSUNG',

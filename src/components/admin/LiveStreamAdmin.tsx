@@ -29,29 +29,16 @@ const socket = io(apiLiveStream, {
 const LiveStream = () => {
   const [countView, setCountView] = useState<number>(0);
 
+  const [activeLivestream, setActiveLiveStream] = useState(false);
+
   const [listMessage, setListMessage] = useState<Imessage[]>([]);
 
   const [_idLiveStream, set_idLiveStream] = useState<string>('');
+  const [title, setTitle] = useState<string>('');
 
   const router = useRouter();
 
-  //const [message, setMessage] = useState<string>('');
-
   const messageEndRef = useRef<HTMLDivElement>(null);
-
-  //useEffect(() => {
-  //  const handleEndLiveWhenUnLoad = () => {
-  //    const url = listApi_Nest_Server_API_Route.adminEndLiveStream();
-  //    const data = new Blob(['unload'], { type: 'text/plain' });
-  //    navigator?.sendBeacon(url, data); // Gửi dữ liệu ngay cả khi trang bị đóng
-  //  };
-
-  //  window.addEventListener('beforeunload', handleEndLiveWhenUnLoad);
-
-  //  return () => {
-  //    window.removeEventListener('beforeunload', handleEndLiveWhenUnLoad);
-  //  };
-  //}, []);
 
   useEffect(() => {
     if (messageEndRef.current) {
@@ -149,6 +136,8 @@ const LiveStream = () => {
 
   // create livestream
   async function createLiveStream(title: z.infer<typeof CreateLiveStreamFormSchema>) {
+    setTitle(title.livestream);
+
     const livestream = await sendRequest<IBackendRes<any>>({
       url: listApi_Nest_Server_API_Route.adminCreateLiveStream(),
       method: 'POST',
@@ -203,7 +192,8 @@ const LiveStream = () => {
       {_idLiveStream.length > 0 ? (
         <div>
           <div className="title text-xs max-lg:text-sm flex items-center gap-4 my-2">
-            <p className=" text-xs max-lg:text-sm">Số Người Xem: {countView} người</p>
+            {/*<p className=" text-xs max-lg:text-sm">Số Người Xem: {countView} người</p>*/}
+            <p className=" text-lg max-lg:text-sm">Chủ Đề: {title} </p>
             <Button className="h-6" onClick={handleEndLiveStream}>
               Kết Thúc
             </Button>
@@ -211,7 +201,12 @@ const LiveStream = () => {
 
           <div className="flex xl:justify-between xl:items-center max-lg:flex-col gap-3 w-full  ">
             <div className="basis-8/12  ">
-              <video className=" w-full h-full " ref={userVideoRef} autoPlay playsInline></video>
+              <video
+                className=" w-full h-full  max-h-[500px] max-w-[900px]"
+                ref={userVideoRef}
+                autoPlay
+                playsInline
+              ></video>
             </div>
 
             <div className="basis-4/12 h-full  rounded-md">

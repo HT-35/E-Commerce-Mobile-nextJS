@@ -139,6 +139,7 @@ const ChatClient = () => {
       <IconChat active={active} handleActive={handleActive} />
       {/* Form Chat */}
       <InputChat
+        accessToken={accessToken}
         active={active}
         handleActive={handleActive}
         sendMessage={sendMessage}

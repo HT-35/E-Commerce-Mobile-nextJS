@@ -18,7 +18,9 @@ const InputChat = ({
   message,
   showMessages,
   _id,
+  accessToken,
 }: {
+  accessToken: string;
   handleActive: any;
   active: any;
   sendMessage: any;
@@ -27,6 +29,8 @@ const InputChat = ({
   showMessages: typeMessage[];
   _id: string;
 }) => {
+  console.log('accessToken : ', accessToken);
+
   const [activeEmojiPicker, setActiveEmojiPicker] = useState(false);
 
   //console.log('>>showMessages : ', showMessages);
@@ -65,7 +69,7 @@ const InputChat = ({
       </div>
       <div className={`basis-6/12  message h-full  min-h-[300px] max-h-[500px] `}>
         <div className="message pl-4 mt-4 max-h-[300px]  overflow-y-auto">
-          {showMessages.length > 0 && _id?.length ? (
+          {accessToken !== '' && _id?.length ? (
             showMessages?.map((item: { message: string; sender: string }, index) => {
               const showAvatar =
                 index === showMessages?.length - 1 || showMessages[index].sender !== showMessages[index + 1].sender;

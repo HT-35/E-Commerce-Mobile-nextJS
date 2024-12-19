@@ -11,6 +11,7 @@ import { sendRequest, sendRequestFile } from '@/utils/fetchApi';
 import { useAppSelector } from '@/lib/redux/hooks';
 import { useState } from 'react';
 import { listApi_Nest_Server_API_Route, listApi_Next_Server } from '@/utils/listApi';
+import { Bounce, toast } from 'react-toastify';
 
 const listProduct = [
   {
@@ -25,12 +26,12 @@ const listProduct = [
     title: 'Màn Hình',
     message: 'Màn Hình phải từ 6 kí tự trở lên',
   },
-  {
-    name: 'amount',
-    testData: '100',
-    message: 'Số Lượng phải từ 1 kí tự trở lên',
-    title: 'Số Lượng',
-  },
+  //{
+  //  name: 'amount',
+  //  testData: '100',
+  //  message: 'Số Lượng phải từ 1 kí tự trở lên',
+  //  title: 'Số Lượng',
+  //},
   {
     name: 'os',
     testData: 'android',
@@ -99,6 +100,30 @@ const listProduct = [
   },
 ];
 
+//const FormSchema: any = z.object({
+//  ...listProduct.reduce(
+//    (acc, item) => {
+//      acc[item.name] = z.string().min(1, {
+//        message: `${item.message}`,
+//      });
+//      return acc;
+//    },
+//    {} as Record<string, z.ZodString>
+//  ),
+//  option: z.array(
+//    z.object({
+//      color: z.string().min(1, 'Màu là bắt buộc'),
+//      price: z.string().min(1, 'Giá là bắt buộc'),
+//      amount: z.number().min(1, 'Số lượng phải lớn hơn 0'), // Thêm amount
+//      img: z.array(
+//        z.object({
+//          imgItem: z.any(),
+//        })
+//      ),
+//    })
+//  ),
+//});
+
 const FormSchema: any = z.object({
   ...listProduct.reduce(
     (acc, item) => {
@@ -113,6 +138,7 @@ const FormSchema: any = z.object({
     z.object({
       color: z.string().min(1, 'Màu là bắt buộc'),
       price: z.string().min(1, 'Giá là bắt buộc'),
+      amount: z.number().min(1, 'Số lượng phải lớn hơn 0'),
       img: z.array(
         z.object({
           imgItem: z.any(),
@@ -135,12 +161,13 @@ const defaultValues = {
     {
       color: '',
       price: '',
+      amount: 1,
       img: [{ imgItem: undefined }],
     },
   ],
 };
 
-export function FormCreateProduct() {
+export function FormCreateProduct({ setActiveForm }: { setActiveForm?: any }) {
   const [filesImgage, setFileImage] = useState<any>([]);
 
   const form = useForm<z.infer<typeof FormSchema>>({
@@ -148,6 +175,8 @@ export function FormCreateProduct() {
     defaultValues,
   });
   const { accessToken } = useAppSelector((item) => item.account);
+
+  const [loading, setLoading] = useState<boolean>(false);
 
   const { control, handleSubmit, register } = form;
   const {
@@ -162,9 +191,11 @@ export function FormCreateProduct() {
   async function onSubmit(newData: z.infer<typeof FormSchema>) {
     //console.log('Form submitted:', data);
 
+    setLoading(true);
+
     const data = {
       ...newData,
-      amount: Number(newData.amount),
+      //amount: Number(newData.amount),
     };
 
     try {
@@ -207,6 +238,36 @@ export function FormCreateProduct() {
         body: { ...data },
         headers: { Authorization: `Bearer ${accessToken}` },
       });
+      console.log(`createProduct:`, createProduct);
+
+      if (createProduct.statusCode === 201) {
+        setActiveForm(false);
+        setLoading(false);
+        toast.success(`Tạo Sản Phẩm Thành Công ${newData.name}`, {
+          position: 'top-right',
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: 'light',
+          transition: Bounce,
+        });
+      } else {
+        setLoading(false);
+        toast.error(`${createProduct?.message}`, {
+          position: 'top-right',
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: 'light',
+          transition: Bounce,
+        });
+      }
 
       console.log('Product created:', createProduct);
     } catch (error) {
@@ -286,6 +347,38 @@ export function FormCreateProduct() {
                   )}
                 />
 
+                {/*<FormField
+                  control={control}
+                  name={`option.${index}.amount`}
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Số Lượng :</FormLabel>
+                      <FormControl>
+                        <Input {...field} type="number" />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />*/}
+
+                <FormField
+                  control={control}
+                  name={`option.${index}.amount`}
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Số Lượng :</FormLabel>
+                      <FormControl>
+                        <Input
+                          {...field}
+                          type="number"
+                          onChange={(e) => field.onChange(parseInt(e.target.value, 10))}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
                 <FormField
                   control={control}
                   name={`option.${index}.img.0.imgItem`}
@@ -325,6 +418,7 @@ export function FormCreateProduct() {
               append({
                 color: '',
                 price: '',
+                amount: 1,
                 img: [{ imgItem: undefined }],
               })
             }
@@ -335,7 +429,11 @@ export function FormCreateProduct() {
         </div>
 
         <Button type="submit" className="xl:mt-20 mt-8 w-full bg-green-400">
-          Submit
+          {loading ? (
+            <div className=" w-6 h-6 rounded-full border-4 border-black border-t-transparent border-b-transparent animate-spin"></div>
+          ) : (
+            <p>Submit </p>
+          )}
         </Button>
       </form>
     </Form>

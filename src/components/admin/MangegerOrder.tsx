@@ -57,7 +57,7 @@ const ListOrder: {
   },
 ];
 
-interface IOrder {
+export interface IOrder {
   _id: string;
   orderDay: string;
   userName: string;
@@ -93,12 +93,6 @@ const MangegerOrder = () => {
         url: listApi_Nest_Server_API_Route.getAdminGetAllOrder(),
         headers: { Authorization: `Bearer ${accessToken}` },
       });
-      console.log('');
-      console.log('');
-      console.log('order', order);
-      console.log('');
-      console.log('');
-      console.log('');
 
       const arrOrder: IOrder[] = order?.data?.data?.map((item: any) => {
         return {
@@ -118,13 +112,6 @@ const MangegerOrder = () => {
     };
     getAllOrder();
   }, [accessToken]);
-
-  console.log('');
-  console.log('');
-  console.log('');
-  console.log('order  :  ', order);
-  console.log('');
-  console.log('');
 
   return (
     <div className="">
@@ -151,6 +138,7 @@ const MangegerOrder = () => {
           <TableBody>
             {order?.length > 0 &&
               order?.map((item: any, index) => {
+                console.log(`item:`, item.product);
                 return (
                   <TableRow key={index + 1} className="">
                     <TableCell>{index + 1}</TableCell>
@@ -160,8 +148,9 @@ const MangegerOrder = () => {
                     <TableCell className="min-w-48">{item?.email}</TableCell>
                     <TableHead className="min-w-14 text-black">{item.numberPhone}</TableHead>
                     <TableCell className="min-w-52">
-                      {item.products?.length > 0 &&
+                      {item.product?.length > 0 &&
                         item.product.map((item: any, index: number) => {
+                          console.log(`item:`, item);
                           return (
                             <div className="mb-3" key={index}>
                               <div className="">{item.name}</div>

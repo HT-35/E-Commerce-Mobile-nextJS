@@ -23,7 +23,7 @@ const LiveStream = () => {
   const [countView, setCountView] = useState<number>(0);
   const [isLiveStream, setIsLiveStream] = useState<boolean>(false);
   const [isMuted, setIsMuted] = useState<boolean>(true); // state để theo dõi âm thanh
-
+  const [title, setTitle] = useState<string>('');
   const router = useRouter();
   const [listMessage, setListMessage] = useState<Imessage[]>([]);
   const messageEndRef = useRef<HTMLDivElement>(null);
@@ -51,7 +51,15 @@ const LiveStream = () => {
         headers: { Authorization: `Bearer ${accessToken}` },
       });
 
+      console.log('');
+      console.log('');
+      console.log('');
+      console.log('liveStream  :   ', liveStream);
+      console.log('');
+      console.log('');
+
       if (liveStream?.data?.length > 0) {
+        setTitle(liveStream?.data[0]?.title);
         const _id = liveStream?.data[0]?._id ?? '';
         const newListMassage =
           liveStream?.data[0]?.messages?.map((item: any) => {
@@ -159,12 +167,16 @@ const LiveStream = () => {
   });
 
   return (
-    <div className="pt-4 overflow-x-hidden overflow-y-hidden">
+    <div className="pt-8 overflow-x-hidden overflow-y-hidden px-2">
       {isLiveStream ? (
-        <div className="lg:px-16 pt-20">
-          <div className="viewer flex gap-3">
+        <div className="lg:px-16 pt-16 max-lg:pt-[100px]">
+          {/*<div className="viewer flex gap-3">
             <span>Số Người Xem : </span>
             <span>{countView} người</span>
+          </div>*/}
+          <div className="viewer flex gap-3 text-2xl lg:text-base">
+            <span>Chủ Đề : {title}</span>
+            <span></span>
           </div>
           <div className="flex xl:justify-between xl:items-center max-lg:flex-col gap-3 w-full">
             <div className="basis-8/12 relative">

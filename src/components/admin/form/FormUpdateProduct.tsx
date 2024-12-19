@@ -13,11 +13,18 @@ import { useForm } from 'react-hook-form';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Bounce, toast } from 'react-toastify';
 import { listApi_Next_Server } from '@/utils/listApi';
+import { useState } from 'react';
+import { color } from 'framer-motion';
+import { useRouter } from 'next/navigation';
 
 export function FormUpdateProduct({ data, setActiveFormUpdate }: { data: any; setActiveFormUpdate: any }) {
   const slug = data?.slug;
 
+  const router = useRouter();
+
   console.log(data);
+
+  const [loading, setLoading] = useState<boolean>(false);
 
   const listProduct = [
     {
@@ -105,7 +112,6 @@ export function FormUpdateProduct({ data, setActiveFormUpdate }: { data: any; se
       },
       {} as Record<string, z.ZodString>
     ),
-    amount: z.any(),
   });
 
   const defaultValues = {
@@ -116,7 +122,6 @@ export function FormUpdateProduct({ data, setActiveFormUpdate }: { data: any; se
       },
       {} as Record<string, string>
     ),
-    amount: data?.amount || '',
   };
 
   const form = useForm<z.infer<typeof FormSchema>>({
@@ -128,10 +133,10 @@ export function FormUpdateProduct({ data, setActiveFormUpdate }: { data: any; se
   const { control, handleSubmit } = form;
 
   async function onSubmit(newData: z.infer<typeof FormSchema>) {
+    setLoading(true);
     try {
       const data = {
         ...newData,
-        amount: Number(newData.amount),
       };
       const createProduct = await sendRequest<IBackendRes<any>>({
         method: 'PATCH',
@@ -142,6 +147,7 @@ export function FormUpdateProduct({ data, setActiveFormUpdate }: { data: any; se
 
       console.log('Product created:', createProduct);
       if ((createProduct.statusCode = 200)) {
+        setLoading(false);
         setActiveFormUpdate(false);
         toast.success(`Cập Nhật Sản Phẩm ${newData?.name} Thành Công !`, {
           position: 'top-right',
@@ -154,8 +160,11 @@ export function FormUpdateProduct({ data, setActiveFormUpdate }: { data: any; se
           theme: 'light',
           transition: Bounce,
         });
+
+        router.refresh();
       } else {
         //setActiveFormUpdate(false);
+        setLoading(false);
         toast.error(`Cập Nhật Sản Phẩm ${newData?.name} Không Thành Công !`, {
           position: 'top-right',
           autoClose: 3000,
@@ -179,14 +188,14 @@ export function FormUpdateProduct({ data, setActiveFormUpdate }: { data: any; se
 
   return (
     <Form {...form}>
-      <h1 className="text-3xl text-center font-semibold">Sửa Sản Phẩm</h1>
+      <h1 className="text-3xl text-center font-semibold">Cập Nhật Sản Phẩm</h1>
       <form onSubmit={handleSubmit(onSubmit, onError)} className="w-full">
         <div className="grid grid-cols-3 max-xl:grid-cols-2 max-lg:grid-cols-1 gap-5">
           {listProduct?.length > 0 &&
             listProduct?.map((data, index) => {
-              //const typeNumber = ['price', 'amount', 'ram', 'rom', 'battery'];
               const typeNumber = ['price'];
               const typeInput = typeNumber?.includes(data?.name) ? 'number' : 'text';
+
               return (
                 <div key={index} className="group relative transition-all duration-500">
                   <FormField
@@ -210,28 +219,14 @@ export function FormUpdateProduct({ data, setActiveFormUpdate }: { data: any; se
                 </div>
               );
             })}
-          <FormField
-            control={control}
-            name={'amount'}
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Số Lượng</FormLabel>
-                <FormControl>
-                  <Input
-                    type="number"
-                    autoComplete="off"
-                    className="p-0 border-0 border-b-2 rounded-none shadow-none focus:border-0 focus-visible:ring-0 focus-visible:border-b-2 group-hover:border-red-500"
-                    {...field}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
         </div>
 
         <Button type="submit" className="xl:mt-20 mt-8 w-full bg-green-400">
-          Submit
+          {loading ? (
+            <div className=" w-6 h-6 rounded-full border-4 border-black border-t-transparent border-b-transparent animate-spin"></div>
+          ) : (
+            <p>Submit </p>
+          )}
         </Button>
       </form>
     </Form>

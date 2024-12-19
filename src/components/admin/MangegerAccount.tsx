@@ -15,6 +15,8 @@ import { listApi_Next_Server } from '@/utils/listApi';
 import { DeleteUser } from '@/components/admin/form/DeleteUser';
 import UpdateUser from '@/components/admin/form/UpdateUser';
 import ModalUpdate from '@/components/admin/modal/ModalUpdate';
+import { Input } from '@/components/ui/input';
+import { IconSearch } from '@/components/icons';
 
 enum Role {
   all = 'all',
@@ -150,13 +152,16 @@ const MangegerAccount = () => {
         accessToken={accessToken!}
       ></DeleteUser>
 
-      <div className="menu flex justify-between items-center mb-4">
-        <div className="search">
-          <InputSearch
-            placeholder="Nhập email..."
-            className="placeholder:text-black"
-            setSearch={setSearch}
-          ></InputSearch>
+      <div className="menu flex justify-between items-center mb-4 gap-5 max-sm:max-w-[400px] overflow-y-auto">
+        <div className="search min-w-[200px] relative">
+          <Input
+            className={`pr-10  placeholder:text-white `}
+            placeholder="Bạn tìm gì ..."
+            onChange={(e) => setSearch(e.target.value)}
+          ></Input>
+          <div className="absolute top-[50%] -translate-y-[50%] right-2">
+            <IconSearch></IconSearch>
+          </div>
         </div>
 
         <Button
@@ -193,9 +198,10 @@ const MangegerAccount = () => {
           Tạo Tài Khoản Nhân Viên
         </Button>
       </div>
+
       <div className="line h-[1px] w-full bg-slate-600 my-2"></div>
 
-      <div className="overflow-hidden overflow-y-auto " style={{ height: `${screenHeight - 30}px` }}>
+      <div className="overflow-hidden overflow-y-auto " style={{ height: `${screenHeight - 100}px` }}>
         <Table>
           <TableHeader>
             <TableRow>

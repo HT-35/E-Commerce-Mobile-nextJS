@@ -76,7 +76,7 @@ export default function Home() {
                   <Link
                     key={index}
                     href={`/product?brand=${item.brand}`}
-                    className="px-2 py-1 border-2 rounded-lg bg-[#F3F4F6] dark:text-black"
+                    className="px-2 py-1 border-2 min-w-[100px] text-center rounded-lg bg-white dark:text-black"
                   >
                     {item.brand}
                   </Link>

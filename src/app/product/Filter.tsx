@@ -48,6 +48,10 @@ const filterRom: { lable: string; value: string }[] = [
     lable: '256GB',
     value: '256GB',
   },
+  {
+    lable: '1TB',
+    value: '1TB',
+  },
 ];
 
 const filterOS: { lable: string; value: string }[] = [

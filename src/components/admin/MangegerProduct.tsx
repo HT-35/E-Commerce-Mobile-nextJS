@@ -16,13 +16,15 @@ import ModalUpdate from '@/components/admin/modal/ModalUpdate';
 
 import { listApi_Nest_Server_API_Route, listApi_Next_Server } from '@/utils/listApi';
 import { formatCurrency } from '@/utils/price';
+import { Input } from '@/components/ui/input';
+import { IconSearch } from '@/components/icons';
 
 const ListBrand: any = [
   {
     brand: 'Tất Cả',
   },
   {
-    brand: 'iPhone',
+    brand: 'APPLE',
   },
   {
     brand: 'SAMSUNG',
@@ -50,10 +52,7 @@ const MangegerProduct = () => {
   const [activeFormCreate, setActiveFormCreate] = useState<boolean>(false);
 
   const [activeFormUpdate, setActiveFormUpdate] = useState<boolean>(false);
-  const [dataUpdateProdcut, setDataUpdateProduct] = useState<{
-    slug: string;
-    name: string;
-  }>({ slug: '', name: '' });
+  const [dataUpdateProdcut, setDataUpdateProduct] = useState<any>();
 
   const [search, setSearch] = useState<string>('');
 
@@ -142,13 +141,16 @@ const MangegerProduct = () => {
         <FormUpdateProduct data={dataUpdateProdcut} setActiveFormUpdate={setActiveFormUpdate} />
       </ModalUpdate>
 
-      <div className="menu flex justify-between items-center mb-4">
-        <div className="search">
-          <InputSearch
-            placeholder="Nhập Tên Sản Phẩm..."
-            className="placeholder:text-black"
-            setSearch={setSearch}
-          ></InputSearch>
+      <div className="menu flex justify-between items-center mb-4 gap-5 max-sm:max-w-[400px] overflow-y-auto">
+        <div className="search min-w-[200px] relative">
+          <Input
+            className={`pr-10  placeholder:text-white `}
+            placeholder="Bạn nhập tên sản phẩm ..."
+            onChange={(e) => setSearch(e.target.value)}
+          ></Input>
+          <div className="absolute top-[50%] -translate-y-[50%] right-2">
+            <IconSearch></IconSearch>
+          </div>
         </div>
 
         {ListBrand?.length > 0 &&
@@ -171,12 +173,12 @@ const MangegerProduct = () => {
         </Button>
 
         <ModalCreate activeForm={activeFormCreate} setActiveForm={setActiveFormCreate}>
-          <FormCreateProduct />
+          <FormCreateProduct setActiveForm={setActiveFormCreate} />
         </ModalCreate>
       </div>
 
       <div className="line h-[1px] w-full bg-slate-600 my-2 "></div>
-      <div className="overflow-hidden overflow-y-auto " style={{ height: `${screenHeight - 30}px` }}>
+      <div className="overflow-hidden overflow-y-auto " style={{ height: `${screenHeight - 100}px` }}>
         <Table>
           <TableHeader>
             <TableRow>
