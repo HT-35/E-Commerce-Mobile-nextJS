@@ -1,12 +1,12 @@
-const domain = 'http://localhost:3000';
-const domainNextServer = 'http://localhost:4000';
-export const apiLiveStream = `http://localhost:5001`;
-export const apiChat = `http://localhost:5000`;
+//const domain = 'http://localhost:3000';
+//const domainNextServer = 'http://localhost:4000';
+//export const apiLiveStream = `http://localhost:5001`;
+//export const apiChat = `http://localhost:5000`;
 
-//const domain = 'https://htsstore.io.vn/'; // port https
-//const domainNextServer = 'https://huytranfullstack.id.vn'; // port https
-//export const apiLiveStream = `https://huytranfullstack.id.vn/`;
-//export const apiChat = `https://huytranfullstack.id.vn/`;
+const domain = 'https://htsstore.io.vn/'; // port https
+const domainNextServer = 'https://huytranfullstack.id.vn'; // port https
+export const apiLiveStream = `https://huytranfullstack.id.vn/`;
+export const apiChat = `https://huytranfullstack.id.vn/`;
 
 /**
  *
