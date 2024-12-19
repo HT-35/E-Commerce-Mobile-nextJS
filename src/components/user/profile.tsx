@@ -5,59 +5,59 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { useAppSelector } from '@/lib/redux/hooks';
+import { it } from 'node:test';
+import { Table, TableBody, TableCell, TableRow } from '@/components/ui/table';
 
 const FormProfile = () => {
   const info = useAppSelector((state: any) => state.account);
-  console.log(`info:`, info);
 
   const [name, setName] = useState(info.name || '');
   const [email, setEmail] = useState(info.email || '');
-  const [phone, setPhone] = useState(info.phone || '');
-  const [address, setAddress] = useState(info.address || '');
+
+  const [address, setAddress] = useState<[]>([]);
 
   const fileInputRef = useRef(null);
-
-  const handleFileClick = () => {
-    if (fileInputRef.current) {
-      //fileInputRef.current.click();
-    }
-  };
 
   // Optional: Update local state if info from Redux changes (reloading profile)
   useEffect(() => {
     setName(info.name || '');
     setEmail(info.email || '');
-    setPhone(info.phone || '');
-    setAddress(info.address || '');
+    const newArrAddress = info.address.map((item: any) => {
+      return item.address_detail;
+    });
+    setAddress(newArrAddress);
   }, [info]);
 
   return (
     <>
-      <div className="flex flex-col-reverse md:flex-row md:items-start">
+      <div className="flex flex-col-reverse md:flex-row md:items-start  px-2 overflow-x-auto max-sm:w-[400px]  max-md:w-[650px] max-lg:w-[900px]">
         <div className="mt-6 flex-grow md:mt-0 md:pr-12">
-          <Input type="email" placeholder="Email" value={email} className="mt-2 mb-2" onChange={(e) => setEmail(e.target.value)} />
-          <Input type="text" placeholder="Tên" value={name} className="mt-2 mb-2" onChange={(e) => setName(e.target.value)} />
-          <Input type="number" placeholder="Số điện thoại" value={phone} className="mt-2 mb-2" onChange={(e) => setPhone(e.target.value)} />
-          <Input type="email" placeholder="Địa chỉ" value={address} className="mt-2 mb-2" onChange={(e) => setAddress(e.target.value)} />
-          <Button className="bg-[#dc0000] text-white">Lưu</Button>
-        </div>
-        <div className="flex justify-center md:w-72 md:border-l md:border-l-gray-200">
-          <div className="flex flex-col items-center">
-            <div className="my-5 h-24 w-24">
-              <img
-                src="https://shopee-clone-reactjs.vercel.app/assets/user.bd6b3c66.svg"
-                alt="user"
-                className="h-full w-full rounded-full object-cover"
-              />
-            </div>
-            <Input ref={fileInputRef} type="file" className="hidden" accept=".jpg,.jpeg,.png" />
-            <Button
-              onClick={handleFileClick}
-              className="flex h-10 items-center justify-end rounded-sm border bg-white px-6 text-sm text-gray-600 shadow-sm"
-            >
-              Chọn ảnh
-            </Button>
-          </div>
+          <Table>
+            <TableBody>
+              <TableRow className="">
+                <TableCell className="font-medium rounded-lg">Họ Và Tên </TableCell>
+                <TableCell className="text-left rounded-lg">{name}</TableCell>
+              </TableRow>
+
+              <TableRow className="">
+                <TableCell className="font-medium">Email</TableCell>
+                <TableCell className="text-left">{email}</TableCell>
+              </TableRow>
+
+              <TableRow className="">
+                <TableCell className="font-medium">Địa Chỉ Giao Hàng</TableCell>
+                <TableCell className="text-left">
+                  {address.map((item, index) => {
+                    return (
+                      <div key={index} className="mb-1">
+                        {index + 1}) {item}
+                      </div>
+                    );
+                  })}
+                </TableCell>
+              </TableRow>
+            </TableBody>
+          </Table>
         </div>
       </div>
     </>

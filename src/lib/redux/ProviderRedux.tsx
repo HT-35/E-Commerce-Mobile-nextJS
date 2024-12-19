@@ -34,6 +34,7 @@ export default function ProviderRedux({
         !pathname.startsWith('/auth') &&
         !pathname.startsWith('/cart') &&
         !pathname.startsWith('/bill') &&
+        !pathname.startsWith('/user') &&
         !pathname.startsWith('/livestream') && (
           <div
             className="fixed  right-4 z-[9999]  max-lg:w-[100px]"

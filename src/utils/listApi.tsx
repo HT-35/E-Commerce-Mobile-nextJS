@@ -1,15 +1,25 @@
-//const domain = 'http://localhost:3000';
+const domain = 'http://localhost:3000';
+const domainNextServer = 'http://localhost:4000';
+export const apiLiveStream = `http://localhost:5001`;
+export const apiChat = `http://localhost:5000`;
 
-const domain = 'https://htsstore.io.vn/'; // port https
+//const domain = 'https://htsstore.io.vn/'; // port https
+//const domainNextServer = 'https://huytranfullstack.id.vn'; // port https
+//export const apiLiveStream = `https://huytranfullstack.id.vn/`;
+//export const apiChat = `https://huytranfullstack.id.vn/`;
 
-//const domainNextServer = 'http://localhost:4000';
-const domainNextServer = 'https://huytranfullstack.id.vn'; // port https
-
-//export const apiLiveStream = `http://localhost:5001`;
-export const apiLiveStream = `https://huytranfullstack.id.vn/`;
-
-//export const apiChat = `http://localhost:5000`;
-export const apiChat = `https://huytranfullstack.id.vn/`;
+/**
+ *
+ * Next client call api tới nextJS server (listApi_Next_Server) = > nextJS server call api tới NestJS server (listApi_Nest_Server_API_Route)
+ *              => NestJS response data to NextJS server => NextJS server response data to NextJS client
+ *
+ *
+ *
+ *
+ *Next client call api tới nestJS server (listApi_Nest_Server_API_Route) => nestJS server response data to NextJS client
+ *
+ *
+ */
 
 export const listApi_Next_Server = {
   getAllProduct: () => `${domain}/api/product?current=1&pageSize=20`,
@@ -21,7 +31,11 @@ export const listApi_Next_Server = {
   createAccount: () => `${domain}/api/user`,
   getAllAccount: () => `${domain}/api/user?current=1&pageSize=20`,
   deleteUser: (_id: string) => `${domain}/api/user?id=${_id}`,
+
   updateUser: (_id: string) => `${domain}/api/user?id=${_id}`,
+
+  updateBill: (_id: string) => `${domain}/api/vnpay?id=${_id}`,
+
   createAddress: () => `${domain}/api/address`,
   getAllAddress: () => `${domain}/api/address`,
   cart: () => `${domain}/api/cart`,
@@ -78,7 +92,11 @@ export const listApi_Nest_Server_API_Route = {
 
   user: () => `${domainNextServer}/user`,
   detailUser: (slug: string) => `${domainNextServer}/user/${slug}`,
+
   updateUser: (id: string) => `${domainNextServer}/user/update/${id}`,
+
+  updateBill: (id: string) => `${domainNextServer}/user/bill/vnpay/${id}`,
+
   deleteUser: (id: string) => `${domainNextServer}/user/delete/${id}`,
 
   getProductByBrandToLowerCase: (brand: string) => `${domainNextServer}/product/brand/${brand.toLowerCase()}`,

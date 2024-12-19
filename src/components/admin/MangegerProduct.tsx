@@ -67,6 +67,7 @@ const MangegerProduct = () => {
   useEffect(() => {
     setScreenHeight(Number(window.innerHeight - 160));
   }, [screenHeight]);
+
   useEffect(() => {
     const getProduct = async () => {
       const product = await sendRequest<IBackendRes<any>>({

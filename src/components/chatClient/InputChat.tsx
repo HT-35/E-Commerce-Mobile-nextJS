@@ -29,8 +29,6 @@ const InputChat = ({
   showMessages: typeMessage[];
   _id: string;
 }) => {
-  console.log('accessToken : ', accessToken);
-
   const [activeEmojiPicker, setActiveEmojiPicker] = useState(false);
 
   //console.log('>>showMessages : ', showMessages);

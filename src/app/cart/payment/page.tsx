@@ -160,15 +160,14 @@ const Payment = () => {
           headers: { Authorization: `Bearer ${accessToken}` },
         });
 
+        console.log(crateOrder);
+
         if (crateOrder.statusCode === 201) {
           setLoadingOrder(false);
           window.location.href = crateOrder?.data?.vnpUrl;
         } else {
-          console.log('');
-          //console.log(' crateOrder.data.vnpUrl Error:  ', crateOrder?.data?.vnpUrl);
-          console.log('');
           setLoadingOrder(false);
-          toast.error(`${crateOrder.message}`, {
+          toast.error(`Sản Phẩm Đã Hết Hàng !`, {
             position: 'top-right',
             autoClose: 3000,
             hideProgressBar: false,

@@ -238,9 +238,6 @@ const ProductDetail = ({ params }: { params: { slug: string } }) => {
               </TableBody>
             </Table>
           </div>
-          {/*<Button className="text-center ml-[10px] bg-white text-black border-[1px] border-blue-600  hover:bg-[#F3F4F6] hover:text-blue-600">
-          Xem Thêm Cấu Hình Chi Tiết <TriangleRightIcon />
-        </Button>*/}
 
           <div className=" flex gap-2 items-center  mx-2 my-2 text-white">
             <div
