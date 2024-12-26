@@ -1,7 +1,7 @@
 version: '3.8'
 services:
   nextjs:
-    image: node:20.11.1-alpine
+    image: node:20.11.1
     container_name: nextjs
     working_dir: /usr/src/app
     volumes:
@@ -10,8 +10,8 @@ services:
     ports:
       - '3000:3000'
     environment:
-      NODE_ENV: development
-    command: sh -c "npm run build && npm run start"
+      NODE_ENV: production
+    command: sh -c "npm i --force && npm run build && npm run start"
 
   nginx:
     image: nginx:alpine
