@@ -162,7 +162,11 @@ const LiveStream = () => {
 
   useEffect(() => {
     socket.on('end-livestream', (e) => {
-      setTimeout(reload, 1000);
+      setTimeout(() => {
+        if (typeof window !== 'undefined') {
+          window?.location?.reload?.bind(window?.location);
+        }
+      }, 1000);
     });
   });
 
@@ -244,5 +248,3 @@ const LiveStream = () => {
 };
 
 export default LiveStream;
-
-const reload = window.location.reload.bind(window.location);
