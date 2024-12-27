@@ -17,8 +17,8 @@ const roboto = Roboto({
 
 export const metadata: Metadata = {
   title: {
-    template: '%s | Store Iphone', //  Store Iphone là tên website
-    default: 'Store Iphone',
+    template: '%s | HTS Store', //  HTS Store là tên website
+    default: 'HTS Store',
   },
   description: 'Store Smart Phone by Huy',
 };
@@ -71,9 +71,9 @@ export default async function RootLayout({
 
   return (
     <html lang="en" suppressHydrationWarning>
-      {/*<Head>
+      <Head>
         <link rel="icon" href="./favicon.ico" />
-      </Head>*/}
+      </Head>
       <body className={`bg-[#F4F6F8] overflow-x-hidden ${roboto.className}`}>
         <ProviderRedux initialDataAccount={initialDataAccount}>
           <>{children}</>

@@ -34,7 +34,7 @@ export async function generateMetadata({ params }: { params: { slug: string } })
       title: title,
       description: description,
       url: url,
-      siteName: 'Store Iphone',
+      siteName: 'HTS Store',
       images: [
         {
           url: urlImg || '', // Phải là một URL tuyệt đối
