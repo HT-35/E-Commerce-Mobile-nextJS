@@ -7,11 +7,21 @@ import { sendRequest } from '@/utils/fetchApi';
 import { cookies } from 'next/headers';
 import { InitialAccountRedux } from '@/lib/redux/slices/accountSlice';
 import { listApi_Next_Server } from '@/utils/listApi';
+import { Metadata } from 'next';
+import Head from 'next/head';
 
 const roboto = Roboto({
   weight: '400',
   subsets: ['latin'],
 });
+
+export const metadata: Metadata = {
+  title: {
+    template: '%s | Store Iphone', //  Store Iphone là tên website
+    default: 'Store Iphone',
+  },
+  description: 'Store Smart Phone by Huy',
+};
 
 export default async function RootLayout({
   children,
@@ -61,6 +71,9 @@ export default async function RootLayout({
 
   return (
     <html lang="en" suppressHydrationWarning>
+      {/*<Head>
+        <link rel="icon" href="./favicon.ico" />
+      </Head>*/}
       <body className={`bg-[#F4F6F8] overflow-x-hidden ${roboto.className}`}>
         <ProviderRedux initialDataAccount={initialDataAccount}>
           <>{children}</>

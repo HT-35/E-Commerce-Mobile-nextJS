@@ -138,7 +138,7 @@ const ProductPage = () => {
 
   useEffect(() => {
     const newProductFilter =
-      productList.length > 0 &&
+      productList?.length > 0 &&
       productList
         ?.filter((item: any) => {
           // Khởi tạo biến kiểm tra

@@ -16,7 +16,7 @@ import type { Swiper as SwiperType } from 'swiper';
 
 // import required modules
 import { FreeMode, Navigation, Thumbs } from 'swiper/modules';
-import { IimgArr } from '@/app/product/[slug]/page';
+import { IimgArr } from '@/app/product/[slug]/pageClient';
 
 export default function GalaryImg({ imgArr, className }: { imgArr: IimgArr[]; className?: string }) {
   const [thumbsSwiper, setThumbsSwiper] = useState<SwiperType | null>(null);

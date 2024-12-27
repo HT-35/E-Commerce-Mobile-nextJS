@@ -99,7 +99,7 @@
 }*/
 
 .formatPage {
-  @apply lg:px-16  pt-20  overflow-x-hidden max-lg:px-3 max-lg:pt-[136px];
+  @apply lg:px-10  pt-20  overflow-x-hidden max-lg:px-3 max-lg:pt-[136px];
 }
 
 @keyframes slide-down {
