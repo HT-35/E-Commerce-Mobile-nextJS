@@ -15,13 +15,50 @@ const roboto = Roboto({
   subsets: ['latin'],
 });
 
-export const metadata: Metadata = {
-  title: {
-    template: '%s | HTS Store', //  HTS Store là tên website
-    default: 'HTS Store',
-  },
-  description: 'Store Smart Phone by Huy',
-};
+//export const metadata: Metadata = {
+//  title: {
+//    template: '%s | HTS Store', //  HTS Store là tên website
+//    default: 'HTS Store',
+//  },
+//  description: 'Store Smart Phone by Huy',
+//};
+
+export async function generateMetadata(): Promise<Metadata> {
+  return {
+    title: 'HTS Store | Store Smart Phone by Huy',
+    description: 'Store Smart Phone by Huy',
+    openGraph: {
+      title: 'HTS Store | Store Smart Phone by Huy',
+      description: 'Store Smart Phone by Huy',
+      url: 'https://htsstore.io.vn/',
+      siteName: 'HTS Store',
+      images: [
+        {
+          url: 'https://res.cloudinary.com/huysa/image/upload/v1734582801/product/njyjzrdfrtc4siuv4bvf.jpg',
+          width: 800,
+          height: 600,
+          alt: 'HTS Store product image', // Thêm alt text để cải thiện SEO
+        },
+      ],
+      videos: [
+        {
+          url: 'https://www.youtube.com/watch?v=7OMFlDUz8JA',
+          width: 800,
+          height: 600,
+        },
+      ],
+      locale: 'en_US',
+      type: 'website',
+    },
+    alternates: {
+      canonical: 'https://htsstore.io.vn',
+      languages: {
+        'en-US': 'https://htsstore.io.vn/en-US',
+        'de-DE': 'https://htsstore.io.vn/de-DE',
+      },
+    },
+  };
+}
 
 export default async function RootLayout({
   children,
