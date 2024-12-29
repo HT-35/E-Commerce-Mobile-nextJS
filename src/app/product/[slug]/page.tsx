@@ -78,13 +78,12 @@ const DetailProduct = async ({ params }: { params: { slug: string } }) => {
   }
 
   return (
-    <div className="overflow-y-hidden">
-      <div className=""></div>
+    <div className="h-full pb-10">
       <h1 className="text-2xl text-black font-semibold py-0 max-xl:text-black ">{res.data.name}</h1>
       <ProductDetail slug={slug}></ProductDetail>
 
-      <div className="lg:mt-2 max-xl:text-black max-xl:text-xs pb-32">
-        <div className="max-w-[730px]   max-xl:h-[400px] mb-2 border-2  rounded-xl">
+      <div className="lg:mt-2 max-xl:text-black max-xl:text-xs  h-full ">
+        <div className="max-w-[730px]    mb-2 border-2  rounded-xl ">
           <div className="text-center text-2xl p-3 font-semibold">Thông Số Kỹ Thuật</div>
           <Table>
             <TableBody>
